@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260" fill="none">
+  
+  
+  <text x="60" y="118" font-family="&#39;Playfair Display&#39;, &#39;Times New Roman&#39;, serif" font-weight="900" font-size="116" fill="#1a1a1a" letter-spacing="-0.04em">data</text>
+  
+  <circle cx="322" cy="115" r="10" fill="#d4447a"></circle>
+  
+  <text x="60" y="230" font-family="&#39;Playfair Display&#39;, &#39;Times New Roman&#39;, serif" font-weight="900" font-size="116" fill="#1a1a1a" letter-spacing="-0.04em">by</text>
+  <text x="192" y="230" font-family="&#39;Playfair Display&#39;, &#39;Times New Roman&#39;, serif" font-weight="900" font-size="116" fill="#d4447a" letter-spacing="-0.04em">milo</text>
+  
+  <path d="M356 58 L362 80 L384 86 L362 92 L356 114 L350 92 L328 86 L350 80 Z" fill="#8b1a4a"></path>
+  <path d="M395 85 L398 96 L409 99 L398 102 L395 113 L392 102 L381 99 L392 96 Z" fill="#8b1a4a"></path>
+  <path d="M378 120 L380 128 L388 130 L380 132 L378 140 L376 132 L368 130 L376 128 Z" fill="#8b1a4a"></path>
+</svg>
