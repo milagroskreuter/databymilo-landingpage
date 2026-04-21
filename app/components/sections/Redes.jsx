@@ -3,7 +3,7 @@ import TypeEyebrow from "../primitives/TypeEyebrow";
 
 const links = [
   { label: "@databymilo", sub: "Instagram", bg: "var(--rosa)", icon: "IG", href: "https://www.instagram.com/databymilo" },
-  { label: "databymilo@gmail.com", sub: "Contame tu lío de datos", bg: "#2a1520", icon: "@", href: "mailto:databymilo@gmail.com" },
+  { label: "databymilo@gmail.com", sub: "Email", bg: "#2a1520", icon: "@", href: "mailto:databymilo@gmail.com" },
 ];
 
 export default function Redes() {
@@ -23,7 +23,7 @@ export default function Redes() {
       </Reveal>
 
       <Reveal delay={100}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 480, marginTop: 64 }}>
+        <div style={{ display: "flex", flexDirection: "row", gap: 14, marginTop: 64, flexWrap: "wrap" }}>
           {links.map((l, i) => (
             <a
               key={i}
@@ -33,19 +33,20 @@ export default function Redes() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 18,
+                gap: 14,
                 background: l.bg,
-                padding: "20px 24px",
+                padding: "18px 24px",
                 borderRadius: 12,
                 textDecoration: "none",
                 boxShadow: "0 8px 18px rgba(139,26,74,.16)",
                 transition: "transform 200ms",
+                flex: "1 1 220px",
               }}
             >
               <div
                 style={{
-                  width: 44,
-                  height: 44,
+                  width: 40,
+                  height: 40,
                   borderRadius: 999,
                   background: "rgba(255,255,255,.14)",
                   display: "flex",
@@ -55,36 +56,43 @@ export default function Redes() {
                   fontFamily: "var(--font-display)",
                   fontStyle: "italic",
                   fontWeight: 700,
-                  fontSize: 16,
+                  fontSize: 15,
+                  flexShrink: 0,
                 }}
               >
                 {l.icon}
               </div>
-              <div style={{ flex: 1 }}>
+              <div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    fontSize: 10,
+                    letterSpacing: ".14em",
+                    textTransform: "uppercase",
+                    color: "var(--cream)",
+                    opacity: 0.75,
+                    marginBottom: 3,
+                  }}
+                >
+                  {l.sub}
+                </div>
                 <div
                   style={{
                     fontFamily: "var(--font-display)",
                     fontStyle: "italic",
                     fontWeight: 700,
-                    fontSize: 20,
+                    fontSize: 17,
                     color: "var(--cream)",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    maxWidth: 200,
                   }}
                 >
                   {l.label}
                 </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--cream)",
-                    opacity: 0.85,
-                    marginTop: 2,
-                  }}
-                >
-                  {l.sub}
-                </div>
               </div>
-              <span style={{ fontSize: 18, color: "var(--cream)" }}>→</span>
             </a>
           ))}
         </div>
