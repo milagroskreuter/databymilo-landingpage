@@ -294,7 +294,7 @@ body[data-mood="night"] .paper-bg::before { opacity: 0.18; }
   position: relative;
   padding: 80px 0 40px;
 }
-.section + .section { border-top: 1px dashed rgba(139, 26, 74, 0.18); padding-top: 80px; }
+.section + .section { padding-top: 80px; }
 
 .section-head {
   display: grid;
@@ -587,6 +587,11 @@ button { font-family: inherit; }
   50%       { opacity: 0; }
 }
 
+@keyframes sticker-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 @keyframes input-shake {
   0%, 100% { transform: translateX(0); }
   20%       { transform: translateX(-8px); }
@@ -625,6 +630,8 @@ button { font-family: inherit; }
 }
 
 /* ---------- Responsive ---------- */
+@media (max-width: 1200px) { .margin-note { display: none !important; } }
+
 @media (max-width: 860px) {
   .grid-split { grid-template-columns: 1fr !important; }
   .hero-grid  { grid-template-columns: 1fr !important; }

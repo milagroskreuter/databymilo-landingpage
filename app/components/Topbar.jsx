@@ -1,8 +1,49 @@
+"use client";
+import { useRef } from "react";
+
+function burst(x, y) {
+  const chars = ["✦", "✧", "♥", "✿", "·"];
+  const colors = ["#d4447a", "#8b1a4a", "#f2b7d1", "#fbe7a8", "#fadbe8"];
+  for (let i = 0; i < 28; i++) {
+    const el = document.createElement("span");
+    el.textContent = chars[Math.floor(Math.random() * chars.length)];
+    const angle = (Math.PI * 2 * i) / 28 + Math.random() * 0.4;
+    const speed = 60 + Math.random() * 120;
+    el.style.cssText = `
+      position:fixed;pointer-events:none;z-index:9999;
+      font-size:${10 + Math.random() * 10}px;
+      color:${colors[Math.floor(Math.random() * colors.length)]};
+      left:${x}px;top:${y}px;
+      --tx:${Math.cos(angle) * speed}px;
+      --ty:${Math.sin(angle) * speed - 50}px;
+      --rot:${Math.random() * 720 - 360}deg;
+      animation:confetti-fall ${500 + Math.random() * 400}ms ease-out forwards;
+      user-select:none;font-family:serif;
+    `;
+    document.body.appendChild(el);
+    el.addEventListener("animationend", () => el.remove(), { once: true });
+  }
+}
+
 export default function Topbar() {
+  const clicks = useRef(0);
+
+  const handleLogoClick = (e) => {
+    clicks.current++;
+    if (clicks.current >= 3) {
+      clicks.current = 0;
+      const rect = e.currentTarget.getBoundingClientRect();
+      burst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
+  };
+
   return (
     <header className="topbar">
       <div className="topbar-inner">
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div
+          onClick={handleLogoClick}
+          style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", userSelect: "none" }}
+        >
           <img src="/assets/logo-monogram.svg" alt="Data by Milo logo" width={32} height={32} />
           <div>
             <div

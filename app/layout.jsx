@@ -4,6 +4,7 @@ import Topbar from "./components/Topbar";
 import ScrollProgress from "./components/ScrollProgress";
 import CursorSparkles from "./components/CursorSparkles";
 import JsonLd from "./components/JsonLd";
+import WelcomeConfetti from "./components/WelcomeConfetti";
 import "./globals.css";
 
 const playfair = localFont({
@@ -112,6 +113,7 @@ export default function RootLayout({ children }) {
     <html lang="es" className={`${playfair.variable} ${montserrat.variable} ${caveat.variable}`}>
       <body data-paper="aged" data-density="balanced" data-mood="day">
         <JsonLd />
+        <WelcomeConfetti />
         <ScrollProgress />
         <CursorSparkles />
         <div className="paper-bg" style={{ position: "fixed", inset: 0, zIndex: 0 }} />

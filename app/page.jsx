@@ -6,6 +6,7 @@ import Newsletter from "./components/sections/Newsletter";
 import Redes from "./components/sections/Redes";
 import Footer from "./components/sections/Footer";
 import Marquee from "./components/Marquee";
+import SectionDivider from "./components/SectionDivider";
 
 export default function Page() {
   return (
@@ -17,9 +18,13 @@ export default function Page() {
         <Marquee />
         <div className="journal">
           <About />
+          <SectionDivider />
           <Highlights />
+          <SectionDivider />
           <Resources />
+          <SectionDivider />
           <Newsletter />
+          <SectionDivider />
           <Redes />
         </div>
       </main>

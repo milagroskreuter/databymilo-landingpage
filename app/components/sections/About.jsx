@@ -1,6 +1,7 @@
 import Reveal from "../primitives/Reveal";
 import Hi from "../primitives/Hi";
 import TypeEyebrow from "../primitives/TypeEyebrow";
+import MarginNote from "../primitives/MarginNote";
 
 export default function About() {
   const values = [
@@ -48,6 +49,8 @@ export default function About() {
       >
         <Reveal delay={100}>
           <div style={{ position: "relative" }}>
+            <MarginNote top={80}>← esto me cambió todo</MarginNote>
+            <MarginNote top={220}>ojo acá ✦</MarginNote>
             <div className="tape" style={{ top: -10, left: 40, transform: "rotate(-4deg)" }}></div>
             <div className="tape" style={{ top: -10, right: 40, transform: "rotate(4deg)" }}></div>
             <div className="card" style={{ padding: 40 }}>

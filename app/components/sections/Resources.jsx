@@ -154,13 +154,27 @@ function ResourceCard({ type, pages, title, desc, color, index, href }) {
         boxShadow: hovered ? "0 24px 48px rgba(139,26,74,.22)" : "0 8px 24px rgba(139,26,74,.1)",
         transform,
         transition: hovered ? "box-shadow 260ms, transform 80ms" : "all 400ms cubic-bezier(.2,.8,.2,1)",
-        overflow: "hidden",
+        overflow: "visible",
         border: "1px solid rgba(139,26,74,.08)",
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        position: "relative",
       }}
     >
+      {href && (
+        <div style={{ position: "absolute", top: -18, right: -18, zIndex: 3, animation: "sticker-spin 14s linear infinite" }}>
+          <svg viewBox="0 0 70 70" width="70" height="70">
+            <defs>
+              <path id={`c${index}`} d="M 35,35 m -22,0 a 22,22 0 1,1 44,0 a 22,22 0 1,1 -44,0" />
+            </defs>
+            <circle cx="35" cy="35" r="22" fill="#8b1a4a" />
+            <text fontSize="7.2" fontFamily="var(--font-body)" fontWeight="800" letterSpacing="2.4" fill="#f2b7d1" textAnchor="start">
+              <textPath href={`#c${index}`}>✦ DISPONIBLE ✦ AHORA ✦</textPath>
+            </text>
+          </svg>
+        </div>
+      )}
       <div
         style={{
           background: color,
@@ -169,6 +183,8 @@ function ResourceCard({ type, pages, title, desc, color, index, href }) {
           alignItems: "center",
           gap: 16,
           borderBottom: "1px dashed rgba(139,26,74,.18)",
+          borderRadius: "10px 10px 0 0",
+          overflow: "hidden",
         }}
       >
         <div

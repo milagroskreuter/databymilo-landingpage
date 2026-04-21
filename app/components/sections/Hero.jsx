@@ -4,9 +4,22 @@ import { useState, useEffect, useRef } from "react";
 
 const FULL_TEXT = "sin llorar";
 
+const SUBTEXTS = [
+  "Data by Milo es el cuaderno donde junto cheatsheets, plantillas y guías para mujeres que están aprendiendo análisis de datos en español, sin tecnicismos y sin condescendencia.",
+  "Si alguna vez asentiste en una reunión sin entender nada, este cuaderno es para vos. Todo en español, desde cero, sin hacerte sentir tonta.",
+  "Cheatsheets, plantillas y guías para las que quieren entender los datos — sin que les expliquen como si recién arrancaran.",
+];
+
 export default function Hero() {
   const [typed, setTyped] = useState("");
   const [typingDone, setTypingDone] = useState(false);
+  const [subtext, setSubtext] = useState(SUBTEXTS[0]);
+
+  useEffect(() => {
+    const n = parseInt(localStorage.getItem("visitCount") || "0");
+    localStorage.setItem("visitCount", String(n + 1));
+    setSubtext(SUBTEXTS[n % SUBTEXTS.length]);
+  }, []);
   const headlineRef = useRef(null);
   const subtextRef = useRef(null);
 
@@ -96,7 +109,7 @@ export default function Hero() {
             willChange: "transform",
           }}
         >
-          Data by Milo es el cuaderno donde junto cheatsheets, plantillas y guías para mujeres que están aprendiendo análisis de datos en español, sin tecnicismos y sin condescendencia.
+          {subtext}
         </p>
 
         <div style={{ display: "flex", gap: 14, marginTop: 44, flexWrap: "wrap" }}>
