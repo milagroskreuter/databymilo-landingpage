@@ -21,7 +21,9 @@
       "Bash(scoop --version)",
       "Bash(winget install *)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth status)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create databymilo-landingpage --public --description \"Landing page de Data by Milo — educación de datos para mujeres en LATAM\" --source \"C:/Users/Milagros/Downloads/DataByMilo/landingpage\" --remote origin --push)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create databymilo-landingpage --public --description \"Landing page de Data by Milo — educación de datos para mujeres en LATAM\" --source \"C:/Users/Milagros/Downloads/DataByMilo/landingpage\" --remote origin --push)",
+      "Bash(sed 's/databymilo\\\\.com/databymilo.me/g')",
+      "Bash(sed -i 's/databymilo\\\\.com/databymilo.me/g' app/layout.jsx app/components/JsonLd.jsx app/opengraph-image.jsx app/robots.js app/sitemap.js)"
     ]
   }
 }

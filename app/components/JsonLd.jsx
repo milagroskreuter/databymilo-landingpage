@@ -3,24 +3,24 @@ const schema = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://databymilo.com/#website",
-      url: "https://databymilo.com",
+      "@id": "https://databymilo.me/#website",
+      url: "https://databymilo.me",
       name: "Data by Milo",
       description:
         "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM.",
       inLanguage: "es",
-      publisher: { "@id": "https://databymilo.com/#person" },
+      publisher: { "@id": "https://databymilo.me/#person" },
       potentialAction: {
         "@type": "SearchAction",
-        target: "https://databymilo.com/?q={search_term_string}",
+        target: "https://databymilo.me/?q={search_term_string}",
         "query-input": "required name=search_term_string",
       },
     },
     {
       "@type": "Person",
-      "@id": "https://databymilo.com/#person",
+      "@id": "https://databymilo.me/#person",
       name: "Milo",
-      url: "https://databymilo.com",
+      url: "https://databymilo.me",
       sameAs: [
         "https://www.instagram.com/databymilo",
       ],
@@ -35,11 +35,11 @@ const schema = {
     },
     {
       "@type": "WebPage",
-      "@id": "https://databymilo.com/#webpage",
-      url: "https://databymilo.com",
+      "@id": "https://databymilo.me/#webpage",
+      url: "https://databymilo.me",
       name: "Data by Milo — Análisis de datos en español, sin tecnicismos",
-      isPartOf: { "@id": "https://databymilo.com/#website" },
-      about: { "@id": "https://databymilo.com/#person" },
+      isPartOf: { "@id": "https://databymilo.me/#website" },
+      about: { "@id": "https://databymilo.me/#person" },
       description:
         "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Aprendé Excel, SQL y Python gratis.",
       inLanguage: "es",

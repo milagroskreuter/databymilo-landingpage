@@ -93,7 +93,7 @@ export default function OgImage() {
             letterSpacing: "0.04em",
           }}
         >
-          databymilo.com
+          databymilo.me
         </div>
       </div>
     ),

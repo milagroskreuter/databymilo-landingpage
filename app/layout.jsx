@@ -48,7 +48,7 @@ const caveat = Caveat({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://databymilo.com"),
+  metadataBase: new URL("https://databymilo.me"),
   title: {
     default: "Data by Milo — Análisis de datos en español, sin tecnicismos",
     template: "%s | Data by Milo",
@@ -65,12 +65,12 @@ export const metadata = {
     "data analytics español",
     "aprender datos sin bootcamp",
   ],
-  authors: [{ name: "Milo", url: "https://databymilo.com" }],
+  authors: [{ name: "Milo", url: "https://databymilo.me" }],
   creator: "Milo",
   openGraph: {
     type: "website",
     locale: "es_AR",
-    url: "https://databymilo.com",
+    url: "https://databymilo.me",
     siteName: "Data by Milo",
     title: "Data by Milo — Análisis de datos en español, sin tecnicismos",
     description:
@@ -103,7 +103,7 @@ export const metadata = {
     },
   },
   alternates: {
-    canonical: "https://databymilo.com",
+    canonical: "https://databymilo.me",
   },
 };
 
