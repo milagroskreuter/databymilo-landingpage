@@ -18,6 +18,7 @@ const resources = [
     title: "SQL desde cero",
     desc: "SELECT, WHERE, JOIN — las queries que te sacan del ochenta por ciento de los apuros.",
     color: "#fbe7a8",
+    href: "/sql-desde-cero.pdf",
   },
   {
     type: "Cheatsheet · PDF",
