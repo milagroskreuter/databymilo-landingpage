@@ -42,7 +42,7 @@ const resources = [
   },
   {
     type: "Glosario · PDF",
-    pages: "16 páginas",
+    pages: "21 páginas",
     title: "Diccionario anti-jerga",
     desc: "Doscientos términos de datos traducidos al español, con ejemplos cotidianos.",
     color: "var(--cream-200)",
@@ -169,7 +169,7 @@ function ResourceCard({ type, pages, title, desc, color, index, href }) {
               <path id={`c${index}`} d="M 35,35 m -22,0 a 22,22 0 1,1 44,0 a 22,22 0 1,1 -44,0" />
             </defs>
             <circle cx="35" cy="35" r="22" fill="#8b1a4a" />
-            <text fontSize="7.2" fontFamily="var(--font-body)" fontWeight="800" letterSpacing="2.4" fill="#f2b7d1" textAnchor="start">
+            <text fontSize="7.2" fontFamily="var(--font-body)" fontWeight="800" letterSpacing="2.4" fill="#ffffff" textAnchor="start">
               <textPath href={`#c${index}`}>✦ DISPONIBLE ✦ AHORA ✦</textPath>
             </text>
           </svg>
