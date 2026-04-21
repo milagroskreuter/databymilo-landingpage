@@ -2,8 +2,8 @@ import Reveal from "../primitives/Reveal";
 import TypeEyebrow from "../primitives/TypeEyebrow";
 
 const links = [
-  { label: "@databymilo", sub: "Instagram", bg: "var(--rosa)", icon: "IG" },
-  { label: "databymilo@gmail.com", sub: "Contame tu lío de datos", bg: "#2a1520", icon: "@" },
+  { label: "@databymilo", sub: "Instagram", bg: "var(--rosa)", icon: "IG", href: "https://www.instagram.com/databymilo" },
+  { label: "databymilo@gmail.com", sub: "Contame tu lío de datos", bg: "#2a1520", icon: "@", href: "mailto:databymilo@gmail.com" },
 ];
 
 export default function Redes() {
@@ -27,7 +27,9 @@ export default function Redes() {
           {links.map((l, i) => (
             <a
               key={i}
-              href="#"
+              href={l.href}
+              target={l.href.startsWith("http") ? "_blank" : undefined}
+              rel={l.href.startsWith("http") ? "noopener noreferrer" : undefined}
               style={{
                 display: "flex",
                 alignItems: "center",
