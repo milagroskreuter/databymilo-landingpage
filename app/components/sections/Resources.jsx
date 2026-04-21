@@ -246,24 +246,23 @@ function ResourceCard({ type, pages, title, desc, color, index }) {
         >
           {desc}
         </p>
-        <button
+        <div
           style={{
             alignSelf: "flex-start",
             fontFamily: "var(--font-body)",
             fontWeight: 700,
-            fontSize: 12,
-            padding: "10px 20px",
+            fontSize: 11,
+            padding: "8px 16px",
             borderRadius: 999,
-            background: hovered ? "var(--vino)" : "transparent",
-            color: hovered ? "#fff" : "var(--vino)",
-            border: "1.5px solid var(--vino)",
-            cursor: "pointer",
-            transition: "all 200ms",
-            letterSpacing: ".02em",
+            background: "var(--cream-200)",
+            color: "var(--fg-3)",
+            border: "1.5px dashed rgba(139,26,74,.25)",
+            letterSpacing: ".1em",
+            textTransform: "uppercase",
           }}
         >
-          Descargar →
-        </button>
+          Próximamente
+        </div>
       </div>
     </div>
   );
