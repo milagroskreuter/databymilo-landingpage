@@ -70,7 +70,7 @@ export default function Hero() {
             willChange: "transform",
           }}
         >
-          los datos, <br />
+          aprende de datos, <br />
           <em style={{ fontStyle: "italic", color: "var(--vino)" }}>
             {typed}
             {!typingDone && (

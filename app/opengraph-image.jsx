@@ -58,7 +58,7 @@ export default function OgImage() {
             maxWidth: 820,
           }}
         >
-          Los datos,{" "}
+          Aprendé de datos,{" "}
           <span style={{ fontStyle: "italic", color: "#f2b7d1" }}>
             sin llorar
           </span>
