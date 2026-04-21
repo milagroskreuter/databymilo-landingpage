@@ -46,6 +46,7 @@ const resources = [
     title: "Diccionario anti-jerga",
     desc: "Doscientos términos de datos traducidos al español, con ejemplos cotidianos.",
     color: "var(--cream-200)",
+    href: "/diccionario-anti-jerga.pdf",
   },
 ];
 
@@ -126,7 +127,7 @@ export default function Resources() {
   );
 }
 
-function ResourceCard({ type, pages, title, desc, color, index }) {
+function ResourceCard({ type, pages, title, desc, color, index, href }) {
   const [hovered, setHovered] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
@@ -246,23 +247,47 @@ function ResourceCard({ type, pages, title, desc, color, index }) {
         >
           {desc}
         </p>
-        <div
-          style={{
-            alignSelf: "flex-start",
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            fontSize: 11,
-            padding: "8px 16px",
-            borderRadius: 999,
-            background: "var(--cream-200)",
-            color: "var(--fg-3)",
-            border: "1.5px dashed rgba(139,26,74,.25)",
-            letterSpacing: ".1em",
-            textTransform: "uppercase",
-          }}
-        >
-          Próximamente
-        </div>
+        {href ? (
+          <a
+            href={href}
+            download
+            style={{
+              alignSelf: "flex-start",
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              fontSize: 12,
+              padding: "10px 20px",
+              borderRadius: 999,
+              background: hovered ? "var(--vino)" : "transparent",
+              color: hovered ? "#fff" : "var(--vino)",
+              border: "1.5px solid var(--vino)",
+              cursor: "pointer",
+              transition: "all 200ms",
+              letterSpacing: ".02em",
+              textDecoration: "none",
+            }}
+          >
+            Descargar →
+          </a>
+        ) : (
+          <div
+            style={{
+              alignSelf: "flex-start",
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              fontSize: 11,
+              padding: "8px 16px",
+              borderRadius: 999,
+              background: "var(--cream-200)",
+              color: "var(--fg-3)",
+              border: "1.5px dashed rgba(139,26,74,.25)",
+              letterSpacing: ".1em",
+              textTransform: "uppercase",
+            }}
+          >
+            Próximamente
+          </div>
+        )}
       </div>
     </div>
   );
