@@ -10,17 +10,19 @@ import Marquee from "./components/Marquee";
 export default function Page() {
   return (
     <>
-      <div className="journal">
-        <Hero />
-      </div>
-      <Marquee />
-      <div className="journal">
-        <About />
-        <Highlights />
-        <Resources />
-        <Newsletter />
-        <Redes />
-      </div>
+      <main>
+        <div className="journal">
+          <Hero />
+        </div>
+        <Marquee />
+        <div className="journal">
+          <About />
+          <Highlights />
+          <Resources />
+          <Newsletter />
+          <Redes />
+        </div>
+      </main>
       <Footer />
     </>
   );

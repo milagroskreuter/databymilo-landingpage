@@ -3,7 +3,7 @@ export default function Topbar() {
     <header className="topbar">
       <div className="topbar-inner">
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <img src="/assets/logo-monogram.svg" alt="M" style={{ width: 32, height: 32 }} />
+          <img src="/assets/logo-monogram.svg" alt="Data by Milo logo" width={32} height={32} />
           <div>
             <div
               style={{
