@@ -42,7 +42,7 @@ const resources = [
   },
   {
     type: "Glosario · PDF",
-    pages: "21 páginas",
+    pages: "41 páginas",
     title: "Diccionario anti-jerga",
     desc: "Doscientos términos de datos traducidos al español, con ejemplos cotidianos.",
     color: "var(--cream-200)",
@@ -154,7 +154,7 @@ function ResourceCard({ type, pages, title, desc, color, index, href }) {
         boxShadow: hovered ? "0 24px 48px rgba(139,26,74,.22)" : "0 8px 24px rgba(139,26,74,.1)",
         transform,
         transition: hovered ? "box-shadow 260ms, transform 80ms" : "all 400ms cubic-bezier(.2,.8,.2,1)",
-        overflow: "visible",
+        overflow: "hidden",
         border: "1px solid rgba(139,26,74,.08)",
         height: "100%",
         display: "flex",
@@ -163,16 +163,36 @@ function ResourceCard({ type, pages, title, desc, color, index, href }) {
       }}
     >
       {href && (
-        <div style={{ position: "absolute", top: -18, right: -18, zIndex: 3, animation: "sticker-spin 14s linear infinite" }}>
-          <svg viewBox="0 0 70 70" width="70" height="70">
-            <defs>
-              <path id={`c${index}`} d="M 35,35 m -22,0 a 22,22 0 1,1 44,0 a 22,22 0 1,1 -44,0" />
-            </defs>
-            <circle cx="35" cy="35" r="22" fill="#8b1a4a" />
-            <text fontSize="7.2" fontFamily="var(--font-body)" fontWeight="800" letterSpacing="2.4" fill="#ffffff" textAnchor="start">
-              <textPath href={`#c${index}`}>✦ DISPONIBLE ✦ AHORA ✦</textPath>
-            </text>
-          </svg>
+        <div style={{
+          position: "absolute",
+          top: 22,
+          right: -30,
+          width: 130,
+          background: "#8b1a4a",
+          color: "#fff",
+          fontSize: 8,
+          fontFamily: "var(--font-body)",
+          fontWeight: 800,
+          letterSpacing: ".2em",
+          textTransform: "uppercase",
+          textAlign: "center",
+          padding: "7px 0",
+          transform: "rotate(45deg)",
+          zIndex: 3,
+          boxShadow: "0 2px 8px rgba(0,0,0,.2)",
+          pointerEvents: "none",
+          overflow: "hidden",
+        }}>
+          DISPONIBLE
+          <span style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,.45) 50%, transparent 100%)",
+            animation: "ribbon-shine 2.8s ease-in-out infinite",
+          }} />
         </div>
       )}
       <div
