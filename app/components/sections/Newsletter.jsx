@@ -138,6 +138,7 @@ export default function Newsletter() {
                     setTimeout(() => setShake(false), 420);
                     return;
                   }
+                  const submitTarget = e.currentTarget;
                   setLoading(true);
                   setError("");
                   try {
@@ -147,7 +148,7 @@ export default function Newsletter() {
                       body: JSON.stringify({ email }),
                     });
                     if (!res.ok) throw new Error();
-                    burst(e);
+                    burst({ currentTarget: submitTarget });
                     setSent(true);
                   } catch {
                     setError("Algo salió mal — intentá de nuevo.");
