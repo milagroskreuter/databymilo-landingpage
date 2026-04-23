@@ -59,9 +59,18 @@ export default function Topbar() {
   return (
     <header className="topbar">
       <div className="topbar-inner">
-        <div
+        <Link
+          href="/"
           onClick={handleLogoClick}
-          style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", userSelect: "none" }}
+          aria-label="Data by Milo, volver al inicio"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            cursor: "pointer",
+            userSelect: "none",
+            textDecoration: "none",
+          }}
         >
           <img src="/assets/logo-monogram.svg" alt="Data by Milo logo" width={32} height={32} />
           <div>
@@ -90,7 +99,7 @@ export default function Topbar() {
               data, pero cutie.
             </div>
           </div>
-        </div>
+        </Link>
         <nav>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href}>

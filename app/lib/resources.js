@@ -10,7 +10,7 @@ export const resources = [
     type: "Cheatsheet · PDF",
     pages: "10 páginas",
     title: "SQL desde cero",
-    desc: "SELECT, WHERE, JOIN — las queries que te sacan del ochenta por ciento de los apuros.",
+    desc: "SELECT, WHERE, JOIN: las queries que te sacan del ochenta por ciento de los apuros.",
     color: "#fbe7a8",
     href: "/sql-desde-cero.pdf",
   },
@@ -25,7 +25,7 @@ export const resources = [
     type: "Plantilla · XLSX",
     pages: "Excel · Sheets",
     title: "Dashboard de métricas personales",
-    desc: "Mi tracker mensual — ingresos, gastos, hábitos — con fórmulas explicadas.",
+    desc: "Mi tracker mensual (ingresos, gastos, hábitos) con fórmulas explicadas.",
     color: "#fdf0f6",
   },
   {

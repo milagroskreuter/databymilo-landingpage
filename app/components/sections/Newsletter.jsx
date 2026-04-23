@@ -151,7 +151,7 @@ export default function Newsletter() {
                     burst({ currentTarget: submitTarget });
                     setSent(true);
                   } catch {
-                    setError("Algo salió mal — intentá de nuevo.");
+                    setError("Algo salió mal. Intentá de nuevo.");
                   } finally {
                     setLoading(false);
                   }

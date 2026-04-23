@@ -37,11 +37,11 @@ const schema = {
       "@type": "WebPage",
       "@id": "https://databymilo.me/#webpage",
       url: "https://databymilo.me",
-      name: "Data by Milo — Análisis de datos en español, sin tecnicismos",
+      name: "Data by Milo · Análisis de datos en español, sin tecnicismos",
       isPartOf: { "@id": "https://databymilo.me/#website" },
       about: { "@id": "https://databymilo.me/#person" },
       description:
-        "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Aprendé Excel, SQL y Python gratis.",
+        "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Aprendé Excel, SQL y Python.",
       inLanguage: "es",
       audience: {
         "@type": "Audience",

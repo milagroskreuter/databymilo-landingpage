@@ -24,7 +24,7 @@ export default function CTABlock() {
       if (!res.ok) throw new Error();
       setSent(true);
     } catch {
-      setError("Algo salió mal — intentá de nuevo.");
+      setError("Algo salió mal. Intentá de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -151,7 +151,7 @@ export default function CTABlock() {
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`${s.name} — ${s.handle}`}
+                    aria-label={`${s.name}: ${s.handle}`}
                     style={{
                       display: "flex",
                       alignItems: "center",

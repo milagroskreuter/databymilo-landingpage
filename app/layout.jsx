@@ -53,14 +53,14 @@ const caveat = Caveat({
 export const metadata = {
   metadataBase: new URL("https://databymilo.me"),
   title: {
-    default: "Data by Milo — Análisis de datos en español, sin tecnicismos",
+    default: "Data by Milo · Análisis de datos en español, sin tecnicismos",
     template: "%s | Data by Milo",
   },
   description:
-    "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Aprendé Excel, SQL y Python gratis — sin jerga y sin condescendencia.",
+    "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Aprendé Excel, SQL y Python, sin jerga y sin condescendencia.",
   keywords: [
     "análisis de datos en español",
-    "aprender Excel gratis",
+    "aprender Excel",
     "SQL para principiantes",
     "Python pandas tutorial",
     "cheatsheet datos",
@@ -75,23 +75,23 @@ export const metadata = {
     locale: "es_AR",
     url: "https://databymilo.me",
     siteName: "Data by Milo",
-    title: "Data by Milo — Análisis de datos en español, sin tecnicismos",
+    title: "Data by Milo · Análisis de datos en español, sin tecnicismos",
     description:
-      "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Excel, SQL, Python — gratis.",
+      "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Excel, SQL, Python.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Data by Milo — análisis de datos en español",
+        alt: "Data by Milo · análisis de datos en español",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Data by Milo — Análisis de datos en español",
+    title: "Data by Milo · Análisis de datos en español",
     description:
-      "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Excel, SQL, Python — gratis.",
+      "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Excel, SQL, Python.",
     creator: "@databymilo",
     images: ["/og-image.png"],
   },

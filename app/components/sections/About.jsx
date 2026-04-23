@@ -8,7 +8,7 @@ export default function About() {
     {
       n: "01",
       t: "En español real",
-      b: "Nada de traducciones literales. Hablamos como hablás vos — con vos, con che, con memes.",
+      b: "Nada de traducciones literales. Hablamos como hablás vos: con vos, con che, con memes.",
     },
     {
       n: "02",
@@ -20,6 +20,36 @@ export default function About() {
       t: "Para usar, no para guardar",
       b: "Cada recurso está hecho para abrirlo mientras trabajás. No para que quede archivado en una carpeta de descargas.",
     },
+  ];
+
+  const workflow = [
+    {
+      n: "01",
+      t: "Primero entender, después explicar",
+      b: "No publico sobre algo que apenas uso. Cada cheatsheet salió de una tarea real donde me hacía falta.",
+    },
+    {
+      n: "02",
+      t: "Ejemplos antes que teoría",
+      b: "La fórmula importa menos que cuándo usarla. Siempre arranco con un caso concreto y después voy a lo abstracto.",
+    },
+    {
+      n: "03",
+      t: "Lo corto antes que lo completo",
+      b: "Prefiero decir tres cosas bien que diez a medias. Si algo no cabe en dos páginas, probablemente no lo entendí bien.",
+    },
+  ];
+
+  const stack = [
+    "Excel",
+    "Google Sheets",
+    "SQL",
+    "BigQuery",
+    "Python",
+    "Pandas",
+    "Looker Studio",
+    "Notion",
+    "Figma",
   ];
 
   return (
@@ -51,8 +81,6 @@ export default function About() {
           <div style={{ position: "relative" }}>
             <MarginNote top={80}>← esto me cambió todo</MarginNote>
             <MarginNote top={220}>ojo acá ✦</MarginNote>
-            <div className="tape" style={{ top: -10, left: 40, transform: "rotate(-4deg)" }}></div>
-            <div className="tape" style={{ top: -10, right: 40, transform: "rotate(4deg)" }}></div>
             <div className="card" style={{ padding: 40 }}>
               <p
                 style={{
@@ -63,7 +91,7 @@ export default function About() {
                   margin: "0 0 18px",
                 }}
               >
-                En 2021 entré a mi primer trabajo de analista y <Hi color="#fadbe8">no entendía nada</Hi>. Todos hablaban en siglas — SQL, KPI, ETL — y yo asentía como si supiera.
+                En 2021 entré a mi primer trabajo de analista y <Hi color="#fadbe8">no entendía nada</Hi>. Todos hablaban en siglas (SQL, KPI, ETL) y yo asentía como si supiera.
               </p>
               <p
                 style={{
@@ -92,12 +120,12 @@ export default function About() {
                 style={{
                   marginTop: 28,
                   fontFamily: "var(--font-accent)",
-                  fontSize: 22,
+                  fontSize: 28,
                   color: "var(--vino)",
                   textAlign: "right",
                 }}
               >
-                — milo
+                milo
               </div>
             </div>
           </div>
@@ -156,6 +184,110 @@ export default function About() {
           </div>
         </Reveal>
       </div>
+
+      <Reveal delay={80}>
+        <div style={{ marginTop: 96 }}>
+          <h2 className="section-title">
+            Cómo <em>trabajo</em>.
+          </h2>
+          <p className="section-sub">
+            Tres cosas que trato de cumplir en cada recurso.
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: 20,
+              marginTop: 48,
+            }}
+          >
+            {workflow.map((v, i) => (
+              <div key={i} className="card" style={{ padding: 28 }}>
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 999,
+                    background: "var(--rosa-50)",
+                    border: "1.5px solid var(--vino)",
+                    color: "var(--vino)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "var(--font-display)",
+                    fontStyle: "italic",
+                    fontWeight: 800,
+                    fontSize: 15,
+                    marginBottom: 16,
+                  }}
+                >
+                  {v.n}
+                </div>
+                <h3
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 700,
+                    fontSize: 20,
+                    color: "var(--ink)",
+                    margin: "0 0 10px",
+                    lineHeight: 1.25,
+                  }}
+                >
+                  {v.t}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    lineHeight: 1.6,
+                    color: "var(--fg-2)",
+                    margin: 0,
+                  }}
+                >
+                  {v.b}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Reveal>
+
+      <Reveal delay={120}>
+        <div style={{ marginTop: 96 }}>
+          <h2 className="section-title">
+            Qué <em>uso</em>.
+          </h2>
+          <p className="section-sub">
+            El stack que aparece todos los días en mi trabajo y en lo que escribo.
+          </p>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 10,
+              marginTop: 36,
+            }}
+          >
+            {stack.map((tool) => (
+              <span
+                key={tool}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  color: "var(--vino)",
+                  background: "var(--rosa-50)",
+                  border: "1px dashed rgba(139,26,74,.28)",
+                  padding: "10px 18px",
+                  borderRadius: 999,
+                }}
+              >
+                {tool}
+              </span>
+            ))}
+          </div>
+        </div>
+      </Reveal>
     </section>
   );
 }

@@ -4,7 +4,7 @@ import SectionDivider from "../components/SectionDivider";
 
 export const metadata = {
   title: "Portfolio",
-  description: "Portfolio de Data by Milo — próximamente.",
+  description: "Portfolio de Data by Milo: próximamente.",
   robots: { index: false, follow: true },
 };
 
@@ -46,7 +46,7 @@ export default function PortfolioPage() {
               style={{ maxWidth: 560, margin: 0 }}
             >
               Estoy armando este espacio con mis proyectos favoritos de análisis
-              de datos. Volvé en unos días — va a valer la pena.
+              de datos. Volvé en unos días: va a valer la pena.
             </p>
             <a href="/" className="btn btn-primary" style={{ marginTop: 12 }}>
               ← Volver al inicio

@@ -4,7 +4,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import CTABlock from "../../components/sections/CTABlock";
 import Footer from "../../components/sections/Footer";
 import SectionDivider from "../../components/SectionDivider";
-import { getAllPosts, getPostBySlug, formatDate } from "../../lib/blog";
+import TypeEyebrow from "../../components/primitives/TypeEyebrow";
+import { getAllPosts, getPostBySlug, getRelatedPosts, formatDate } from "../../lib/blog";
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -148,9 +149,119 @@ const mdxComponents = {
   ),
 };
 
+function Signature() {
+  return (
+    <div
+      style={{
+        marginTop: 56,
+        fontFamily: "var(--font-accent)",
+        fontSize: 40,
+        color: "var(--vino)",
+        textAlign: "right",
+        lineHeight: 1,
+      }}
+    >
+      milo
+    </div>
+  );
+}
+
+function RelatedPosts({ posts }) {
+  if (!posts || posts.length === 0) return null;
+  return (
+    <aside style={{ marginTop: 72 }}>
+      <div
+        className="eyebrow-j"
+        style={{ color: "var(--vino)", marginBottom: 18 }}
+      >
+        Seguir leyendo
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+          gap: 18,
+        }}
+      >
+        {posts.map((post) => (
+          <Link
+            key={post.slug}
+            href={`/blog/${post.slug}`}
+            style={{ textDecoration: "none" }}
+          >
+            <article
+              style={{
+                background: "var(--cream)",
+                borderRadius: 12,
+                padding: "22px 20px",
+                border: "1px solid rgba(139,26,74,.12)",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
+                  fontSize: 10,
+                  letterSpacing: ".14em",
+                  textTransform: "uppercase",
+                  color: "var(--vino)",
+                  opacity: 0.7,
+                }}
+              >
+                Entrada Nº {post.entradaStr}
+              </div>
+              <h3
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontStyle: "italic",
+                  fontWeight: 700,
+                  fontSize: 20,
+                  color: "var(--ink)",
+                  margin: 0,
+                  lineHeight: 1.25,
+                }}
+              >
+                {post.title}
+              </h3>
+              {post.tags?.length > 0 && (
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: "auto" }}>
+                  {post.tags.slice(0, 3).map((t) => (
+                    <span
+                      key={t}
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 10,
+                        fontWeight: 700,
+                        letterSpacing: ".08em",
+                        textTransform: "uppercase",
+                        color: "var(--vino)",
+                        background: "var(--rosa-50)",
+                        padding: "3px 8px",
+                        borderRadius: 999,
+                      }}
+                    >
+                      #{t}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </article>
+          </Link>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
 export default function BlogPostPage({ params }) {
   const post = getPostBySlug(params.slug);
   if (!post) notFound();
+  const related = getRelatedPosts(post.slug, 3);
+  const pagenum = String(post.entrada * 4).padStart(2, "0");
 
   return (
     <>
@@ -173,12 +284,18 @@ export default function BlogPostPage({ params }) {
             >
               ← Volver al blog
             </Link>
+            <div className="section-head">
+              <TypeEyebrow className="eyebrow-j">Entrada Nº {post.entradaStr}</TypeEyebrow>
+              <div className="rule"></div>
+              <div className="pagenum">pág. {pagenum}</div>
+            </div>
             {post.date && (
               <div
                 style={{
                   fontFamily: "var(--font-body)",
                   fontSize: 13,
                   color: "var(--fg-3)",
+                  marginTop: 16,
                   marginBottom: 12,
                 }}
               >
@@ -217,6 +334,8 @@ export default function BlogPostPage({ params }) {
             <div>
               <MDXRemote source={post.content} components={mdxComponents} />
             </div>
+            <Signature />
+            <RelatedPosts posts={related} />
           </article>
           <SectionDivider />
           <CTABlock />

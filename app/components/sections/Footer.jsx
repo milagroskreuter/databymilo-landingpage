@@ -94,7 +94,7 @@ export default function Footer() {
                   href={s.href}
                   target={s.external ? "_blank" : undefined}
                   rel={s.external ? "noopener noreferrer" : undefined}
-                  aria-label={`${s.name} — ${s.handle}`}
+                  aria-label={`${s.name}: ${s.handle}`}
                   style={{
                     display: "flex",
                     alignItems: "center",

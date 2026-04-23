@@ -3,7 +3,7 @@ import CTABlock from "../components/sections/CTABlock";
 import Footer from "../components/sections/Footer";
 import SectionDivider from "../components/SectionDivider";
 import TypeEyebrow from "../components/primitives/TypeEyebrow";
-import { getAllPosts, formatDate } from "../lib/blog";
+import { getAllPosts, getAllTags, formatDate } from "../lib/blog";
 
 export const metadata = {
   title: "Blog",
@@ -17,15 +17,49 @@ export const metadata = {
   },
 };
 
-export default function BlogIndexPage() {
-  const posts = getAllPosts();
+function TagChip({ label, href, active, count }) {
+  return (
+    <Link
+      href={href}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        fontFamily: "var(--font-body)",
+        fontWeight: 700,
+        fontSize: 12,
+        letterSpacing: ".08em",
+        textTransform: "uppercase",
+        color: active ? "var(--cream)" : "var(--vino)",
+        background: active ? "var(--vino)" : "transparent",
+        border: `1.5px solid var(--vino)`,
+        padding: "8px 16px",
+        borderRadius: 999,
+        textDecoration: "none",
+        transition: "background 160ms, color 160ms",
+      }}
+    >
+      {label}
+      {typeof count === "number" && (
+        <span style={{ opacity: 0.65, fontWeight: 500 }}>· {count}</span>
+      )}
+    </Link>
+  );
+}
+
+export default function BlogIndexPage({ searchParams }) {
+  const activeTag = searchParams?.tag || null;
+  const allPosts = getAllPosts();
+  const allTags = getAllTags();
+  const posts = activeTag ? allPosts.filter((p) => p.tags.includes(activeTag)) : allPosts;
+
   return (
     <>
       <main>
         <div className="journal">
           <section className="section">
             <div className="section-head">
-              <TypeEyebrow className="eyebrow-j">El blog</TypeEyebrow>
+              <TypeEyebrow className="eyebrow-j">Capítulo 03</TypeEyebrow>
               <div className="rule"></div>
               <div className="pagenum">pág. 50</div>
             </div>
@@ -33,13 +67,41 @@ export default function BlogIndexPage() {
               Historias <em>largas</em>.
             </h1>
             <p className="section-sub">
-              Lo que no entra en un reel — casos reales, errores y data traducida al español.
+              Lo que no entra en un reel: casos reales, errores y data traducida al español.
             </p>
+
+            {allTags.length > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 10,
+                  marginTop: 40,
+                  alignItems: "center",
+                }}
+              >
+                <TagChip
+                  label="Todos"
+                  href="/blog"
+                  active={!activeTag}
+                  count={allPosts.length}
+                />
+                {allTags.map(({ tag, count }) => (
+                  <TagChip
+                    key={tag}
+                    label={`#${tag}`}
+                    href={`/blog?tag=${encodeURIComponent(tag)}`}
+                    active={activeTag === tag}
+                    count={count}
+                  />
+                ))}
+              </div>
+            )}
 
             {posts.length === 0 ? (
               <div
                 style={{
-                  marginTop: 64,
+                  marginTop: 48,
                   padding: 48,
                   borderRadius: 16,
                   background: "var(--rosa-50)",
@@ -56,7 +118,9 @@ export default function BlogIndexPage() {
                     margin: 0,
                   }}
                 >
-                  Todavía no hay posts publicados. Volvé pronto ✦
+                  {activeTag
+                    ? `No hay posts con #${activeTag} todavía. Probá con otro filtro.`
+                    : "Todavía no hay posts publicados. Volvé pronto ✦"}
                 </p>
               </div>
             ) : (
@@ -65,7 +129,7 @@ export default function BlogIndexPage() {
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
                   gap: 24,
-                  marginTop: 64,
+                  marginTop: 48,
                 }}
               >
                 {posts.map((post) => (
@@ -87,7 +151,14 @@ export default function BlogIndexPage() {
                         boxShadow: "0 4px 12px rgba(139,26,74,.08)",
                       }}
                     >
-                      {post.date && (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "baseline",
+                          marginBottom: 14,
+                        }}
+                      >
                         <div
                           style={{
                             fontFamily: "var(--font-body)",
@@ -96,13 +167,23 @@ export default function BlogIndexPage() {
                             letterSpacing: ".14em",
                             textTransform: "uppercase",
                             color: "var(--vino)",
-                            opacity: 0.7,
-                            marginBottom: 12,
+                            opacity: 0.75,
                           }}
                         >
-                          {formatDate(post.date)}
+                          Entrada Nº {post.entradaStr}
                         </div>
-                      )}
+                        {post.date && (
+                          <div
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: 11,
+                              color: "var(--fg-3)",
+                            }}
+                          >
+                            {formatDate(post.date)}
+                          </div>
+                        )}
+                      </div>
                       <h2
                         style={{
                           fontFamily: "var(--font-display)",

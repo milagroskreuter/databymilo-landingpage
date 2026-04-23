@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Data by Milo — análisis de datos en español";
+export const alt = "Data by Milo · análisis de datos en español";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -77,7 +77,7 @@ export default function OgImage() {
             fontFamily: "serif",
           }}
         >
-          Cheatsheets, plantillas y guías de datos en español — gratis.
+          Cheatsheets, plantillas y guías de datos en español.
         </div>
 
         {/* Bottom badge */}

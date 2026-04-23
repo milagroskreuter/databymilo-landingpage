@@ -16,7 +16,7 @@ export default function Redes() {
         <h2 className="section-title">
           Donde <em>nos vemos</em>.
         </h2>
-        <p className="section-sub">Instagram es la casa principal — los tips del día a día viven allá.</p>
+        <p className="section-sub">Instagram es la casa principal: los tips del día a día viven allá.</p>
       </Reveal>
 
       <Reveal delay={100}>
@@ -29,7 +29,7 @@ export default function Redes() {
                 href={s.href}
                 target={s.external ? "_blank" : undefined}
                 rel={s.external ? "noopener noreferrer" : undefined}
-                aria-label={`${s.name} — ${s.handle}`}
+                aria-label={`${s.name}: ${s.handle}`}
                 style={{
                   display: "flex",
                   alignItems: "center",

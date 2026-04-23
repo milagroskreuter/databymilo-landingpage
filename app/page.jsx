@@ -36,7 +36,7 @@ function AboutTeaser() {
           }}
         >
           En 2021 entré a mi primer trabajo de analista y no entendía nada. Todos hablaban
-          en siglas — SQL, KPI, ETL — y yo asentía como si supiera. Así empecé a escribir
+          en siglas (SQL, KPI, ETL) y yo asentía como si supiera. Así empecé a escribir
           lo que iba aprendiendo, en español, como si le explicara a una amiga.
         </p>
         <Link href="/sobre" className="btn btn-ghost">
@@ -52,7 +52,7 @@ function ResourcesTeaser() {
   return (
     <section className="section">
       <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 03</TypeEyebrow>
+        <TypeEyebrow className="eyebrow-j">Capítulo 02</TypeEyebrow>
         <div className="rule"></div>
         <div className="pagenum">pág. 20</div>
       </div>
@@ -60,7 +60,7 @@ function ResourcesTeaser() {
         <h2 className="section-title">
           La <em>biblioteca</em>.
         </h2>
-        <p className="section-sub">Cheatsheets, plantillas y guías — todo gratis, todo en español.</p>
+        <p className="section-sub">Cheatsheets, plantillas y guías, todo en español, todo para descargar.</p>
       </Reveal>
       <div
         style={{

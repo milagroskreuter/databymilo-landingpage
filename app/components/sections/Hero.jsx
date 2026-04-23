@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 const FULL_TEXT = "sin llorar";
 
 const SUBTEXTS = [
   "Data by Milo es el cuaderno donde junto cheatsheets, plantillas y guías para mujeres que están aprendiendo análisis de datos en español, sin tecnicismos y sin condescendencia.",
   "Si alguna vez asentiste en una reunión sin entender nada, este cuaderno es para vos. Todo en español, desde cero, sin hacerte sentir tonta.",
-  "Cheatsheets, plantillas y guías para las que quieren entender los datos — sin que les expliquen como si recién arrancaran.",
+  "Cheatsheets, plantillas y guías para las que quieren entender los datos, sin que les expliquen como si recién arrancaran.",
 ];
 
 export default function Hero() {
@@ -40,7 +41,7 @@ export default function Hero() {
     return () => clearTimeout(id);
   }, []);
 
-  // Parallax (direct DOM — no re-renders)
+  // Parallax (direct DOM, no re-renders)
   useEffect(() => {
     const handler = () => {
       const y = window.scrollY;
@@ -51,9 +52,6 @@ export default function Hero() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <section
@@ -113,12 +111,12 @@ export default function Hero() {
         </p>
 
         <div style={{ display: "flex", gap: 14, marginTop: 44, flexWrap: "wrap" }}>
-          <button className="btn btn-primary" onClick={() => scrollTo("recursos")}>
-            Ver recursos gratis →
-          </button>
-          <button className="btn btn-ghost" onClick={() => scrollTo("sobre")}>
+          <Link href="/recursos" className="btn btn-primary">
+            Ver recursos →
+          </Link>
+          <Link href="/sobre" className="btn btn-ghost">
             Sobre Milo
-          </button>
+          </Link>
         </div>
       </div>
     </section>

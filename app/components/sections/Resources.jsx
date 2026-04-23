@@ -9,7 +9,7 @@ export default function Resources() {
   return (
     <section id="recursos" className="section">
       <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 03</TypeEyebrow>
+        <TypeEyebrow className="eyebrow-j">Capítulo 02</TypeEyebrow>
         <div className="rule"></div>
         <div className="pagenum">pág. 20</div>
       </div>
@@ -207,7 +207,7 @@ function ResourceCard({ type, pages, title, desc, color, index, href }) {
               marginTop: 3,
             }}
           >
-            {pages} · gratis
+            {pages}
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ export default function Highlights() {
     {
       tag: "Cheatsheets",
       title: "PDFs descargables",
-      body: "Excel, SQL, Python en una sola hoja — para imprimir y pegar al lado del monitor.",
+      body: "Excel, SQL, Python en una sola hoja, para imprimir y pegar al lado del monitor.",
     },
     {
       tag: "Plantillas",
@@ -23,7 +23,7 @@ export default function Highlights() {
   return (
     <section className="section">
       <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 02</TypeEyebrow>
+        <TypeEyebrow className="eyebrow-j">En este cuaderno</TypeEyebrow>
         <div className="rule"></div>
         <div className="pagenum">pág. 12</div>
       </div>
@@ -33,7 +33,7 @@ export default function Highlights() {
           Lo que vive <em>en este cuaderno</em>.
         </h2>
         <p className="section-sub">
-          Cuatro formatos — todos gratis, todos en español, todos pensados para las que están empezando.
+          Cuatro formatos, todos en español, todos pensados para las que están empezando.
         </p>
       </Reveal>
 

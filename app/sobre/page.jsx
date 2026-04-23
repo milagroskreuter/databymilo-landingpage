@@ -11,7 +11,7 @@ export const metadata = {
   openGraph: {
     title: "Sobre Milo | Data by Milo",
     description:
-      "La historia detrás de Data by Milo — análisis de datos en español, sin tecnicismos.",
+      "La historia detrás de Data by Milo: análisis de datos en español, sin tecnicismos.",
     url: "https://databymilo.me/sobre",
   },
 };
