@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const dynamic = "force-dynamic";
 
 export async function POST(request) {
   const ct = request.headers.get("content-type") ?? "";
@@ -22,6 +22,7 @@ export async function POST(request) {
     return Response.json({ error: "Mensaje inválido" }, { status: 400 });
   }
 
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const { error } = await resend.emails.send({
     from: "Data by Milo <noreply@databymilo.me>",
     to: "databymilo@gmail.com",
