@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import { Caveat } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import Topbar from "./components/Topbar";
 import ScrollProgress from "./components/ScrollProgress";
 import CursorSparkles from "./components/CursorSparkles";
@@ -121,6 +122,7 @@ export default function RootLayout({ children }) {
         <div className="paper-bg" style={{ position: "fixed", inset: 0, zIndex: 0 }} />
         <Topbar />
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
+        <Analytics />
       </body>
     </html>
   );
