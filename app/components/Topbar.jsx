@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 function burst(x, y) {
   const chars = ["✦", "✧", "♥", "✿", "·"];
@@ -27,6 +27,7 @@ function burst(x, y) {
 
 export default function Topbar() {
   const clicks = useRef(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogoClick = (e) => {
     clicks.current++;
@@ -36,6 +37,15 @@ export default function Topbar() {
       burst(rect.left + rect.width / 2, rect.top + rect.height / 2);
     }
   };
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <header className="topbar">
@@ -79,7 +89,43 @@ export default function Topbar() {
           <a href="#newsletter">Newsletter</a>
           <a href="#ig">Redes</a>
         </nav>
+        <button
+          type="button"
+          className="topbar-burger"
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span className={`burger-icon ${menuOpen ? "is-open" : ""}`} aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+        </button>
       </div>
+      <div
+        id="mobile-menu"
+        className={`topbar-mobile-menu ${menuOpen ? "is-open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!menuOpen}
+      >
+        <nav onClick={closeMenu}>
+          <a href="/portfolio">Portfolio</a>
+          <a href="#sobre">Sobre</a>
+          <a href="#recursos">Recursos</a>
+          <a href="#newsletter">Newsletter</a>
+          <a href="#ig">Redes</a>
+        </nav>
+      </div>
+      {menuOpen && (
+        <div
+          className="topbar-mobile-backdrop"
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+      )}
     </header>
   );
 }
