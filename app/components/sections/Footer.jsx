@@ -1,5 +1,13 @@
 "use client";
+import Link from "next/link";
 import { socials, email } from "../../lib/socials";
+
+const biblioteca = [
+  { label: "Recursos", href: "/recursos" },
+  { label: "Blog", href: "/blog" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Sobre", href: "/sobre" },
+];
 
 export default function Footer() {
   const seguime = [...socials, email];
@@ -54,21 +62,24 @@ export default function Footer() {
           </div>
           <div>
             <div className="eyebrow-j" style={{ color: "var(--rosa-200)" }}>
-              Biblioteca
+              El cuaderno
             </div>
-            {["Cheatsheets", "Plantillas", "Guías", "Glosario"].map((x, i) => (
-              <div
-                key={i}
+            {biblioteca.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
                 style={{
+                  display: "block",
                   fontFamily: "var(--font-body)",
                   fontSize: 14,
                   marginTop: 12,
                   color: "var(--cream)",
                   opacity: 0.88,
+                  textDecoration: "none",
                 }}
               >
-                {x}
-              </div>
+                {item.label}
+              </Link>
             ))}
           </div>
           <div>

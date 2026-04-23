@@ -641,6 +641,10 @@ body { padding-top: 62px; }
   .topbar-mobile-menu, .topbar-mobile-backdrop { display: none !important; }
 }
 
+@media (max-width: 860px) {
+  .cta-grid { grid-template-columns: 1fr !important; gap: 32px !important; padding: 36px 28px !important; }
+}
+
 input:focus, button:focus { outline: none; }
 button { font-family: inherit; }
 

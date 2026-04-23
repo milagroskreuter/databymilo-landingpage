@@ -1,5 +1,14 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
+import Link from "next/link";
+
+const navItems = [
+  { label: "Inicio", href: "/" },
+  { label: "Recursos", href: "/recursos" },
+  { label: "Blog", href: "/blog" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Sobre", href: "/sobre" },
+];
 
 function burst(x, y) {
   const chars = ["✦", "✧", "♥", "✿", "·"];
@@ -83,11 +92,11 @@ export default function Topbar() {
           </div>
         </div>
         <nav>
-          <a href="/portfolio">Portfolio</a>
-          <a href="#sobre">Sobre</a>
-          <a href="#recursos">Recursos</a>
-          <a href="#newsletter">Newsletter</a>
-          <a href="#ig">Redes</a>
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href}>
+              {item.label}
+            </Link>
+          ))}
         </nav>
         <button
           type="button"
@@ -112,11 +121,11 @@ export default function Topbar() {
         aria-hidden={!menuOpen}
       >
         <nav onClick={closeMenu}>
-          <a href="/portfolio">Portfolio</a>
-          <a href="#sobre">Sobre</a>
-          <a href="#recursos">Recursos</a>
-          <a href="#newsletter">Newsletter</a>
-          <a href="#ig">Redes</a>
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href}>
+              {item.label}
+            </Link>
+          ))}
         </nav>
       </div>
       {menuOpen && (
