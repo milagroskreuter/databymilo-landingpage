@@ -1,4 +1,4 @@
-import { getAllPosts } from "../../lib/blog";
+import { getAllPosts } from "../lib/blog";
 
 const BASE = "https://databymilo.me";
 
