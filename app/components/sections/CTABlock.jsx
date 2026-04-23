@@ -4,27 +4,44 @@ import { useState } from "react";
 import Reveal from "../primitives/Reveal";
 import { socials } from "../../lib/socials";
 
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
+
 export default function CTABlock() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [shake, setShake] = useState(false);
+
+  const triggerError = (msg) => {
+    setError(msg);
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!email) return;
+    const trimmed = email.trim();
+    if (!trimmed) {
+      triggerError("Escribí tu email para continuar.");
+      return;
+    }
+    if (!EMAIL_RE.test(trimmed)) {
+      triggerError("Ese email no parece válido. Revisalo.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: trimmed }),
       });
       if (!res.ok) throw new Error();
       setSent(true);
     } catch {
-      setError("Algo salió mal. Intentá de nuevo.");
+      triggerError("Ups, algo se enredó. Probá de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -94,13 +111,16 @@ export default function CTABlock() {
               >
                 <input
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) setError("");
+                  }}
                   type="email"
                   placeholder="vale@datos.com"
                   aria-label="Tu email"
                   style={{
                     flex: "1 1 220px",
-                    border: "none",
+                    border: `1.5px ${error ? "solid" : "none"} ${error ? "var(--rosa)" : "transparent"}`,
                     background: "var(--cream)",
                     padding: "12px 16px",
                     borderRadius: 10,
@@ -109,6 +129,7 @@ export default function CTABlock() {
                     fontSize: 17,
                     color: "var(--ink)",
                     outline: "none",
+                    animation: shake ? "input-shake 500ms ease-in-out" : "none",
                   }}
                 />
                 <button
@@ -130,7 +151,7 @@ export default function CTABlock() {
                       lineHeight: 1.4,
                     }}
                   >
-                    ✦ Ups, algo se enredó. Probá de nuevo.
+                    ✦ {error}
                   </div>
                 )}
               </form>

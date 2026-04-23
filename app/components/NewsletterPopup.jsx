@@ -1,12 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
+
 export default function NewsletterPopup() {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [shake, setShake] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("popup_seen")) return;
@@ -19,23 +22,37 @@ export default function NewsletterPopup() {
     setVisible(false);
   };
 
+  const triggerError = (msg) => {
+    setError(msg);
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
+  };
+
   const submit = async (e) => {
     e.preventDefault();
-    if (!email) return;
+    const trimmed = email.trim();
+    if (!trimmed) {
+      triggerError("Escribí tu email para continuar.");
+      return;
+    }
+    if (!EMAIL_RE.test(trimmed)) {
+      triggerError("Ese email no parece válido. Revisalo.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: trimmed }),
       });
       if (!res.ok) throw new Error();
       setSent(true);
       localStorage.setItem("popup_seen", "1");
       setTimeout(dismiss, 2200);
     } catch {
-      setError("Ups, algo se enredó. Probá de nuevo.");
+      triggerError("Ups, algo se enredó. Probá de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -65,10 +82,8 @@ export default function NewsletterPopup() {
         boxShadow: "0 32px 80px rgba(26,10,16,.35)",
         animation: "slideUp 340ms cubic-bezier(.2,.8,.2,1)",
       }}>
-        {/* tape */}
         <div className="tape" style={{ top: -10, left: "35%", transform: "rotate(-3deg)" }} />
 
-        {/* close */}
         <button
           onClick={dismiss}
           aria-label="Cerrar"
@@ -123,18 +138,36 @@ export default function NewsletterPopup() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError("");
+                }}
                 placeholder="vale@datos.com"
                 style={{
                   width: "100%", border: "none",
-                  borderBottom: "1.5px dashed rgba(139,26,74,.4)",
+                  borderBottom: `1.5px ${error ? "solid" : "dashed"} ${
+                    error ? "var(--rosa)" : "rgba(139,26,74,.4)"
+                  }`,
                   background: "transparent", padding: "10px 0",
                   fontFamily: "var(--font-display)", fontStyle: "italic",
                   fontSize: 18, color: "var(--ink)",
-                  marginTop: 8, marginBottom: 22, outline: "none",
+                  marginTop: 8, marginBottom: error ? 6 : 22, outline: "none",
                   boxSizing: "border-box",
+                  animation: shake ? "input-shake 500ms ease-in-out" : "none",
                 }}
               />
+              {error && (
+                <div style={{
+                  fontFamily: "var(--font-display)",
+                  fontStyle: "italic",
+                  fontSize: 13,
+                  color: "var(--rosa)",
+                  marginBottom: 14,
+                  lineHeight: 1.4,
+                }}>
+                  ✦ {error}
+                </div>
+              )}
               <button
                 type="submit"
                 className="btn btn-primary"
@@ -143,21 +176,6 @@ export default function NewsletterPopup() {
               >
                 {loading ? "Enviando…" : "Sumame →"}
               </button>
-              {error && (
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontStyle: "italic",
-                    fontSize: 14,
-                    color: "var(--vino)",
-                    textAlign: "center",
-                    marginTop: 10,
-                    lineHeight: 1.4,
-                  }}
-                >
-                  ✦ {error}
-                </div>
-              )}
               <button
                 type="button"
                 onClick={dismiss}

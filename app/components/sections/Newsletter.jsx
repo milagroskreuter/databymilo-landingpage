@@ -4,6 +4,8 @@ import { useState } from "react";
 import Reveal from "../primitives/Reveal";
 import TypeEyebrow from "../primitives/TypeEyebrow";
 
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
+
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
@@ -36,6 +38,12 @@ export default function Newsletter() {
       document.body.appendChild(el);
       el.addEventListener("animationend", () => el.remove(), { once: true });
     }
+  };
+
+  const triggerError = (msg) => {
+    setError(msg);
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
   };
 
   return (
@@ -134,9 +142,13 @@ export default function Newsletter() {
                 noValidate
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  if (!email) {
-                    setShake(true);
-                    setTimeout(() => setShake(false), 420);
+                  const trimmed = email.trim();
+                  if (!trimmed) {
+                    triggerError("Escribí tu email para continuar.");
+                    return;
+                  }
+                  if (!EMAIL_RE.test(trimmed)) {
+                    triggerError("Ese email no parece válido. Revisalo.");
                     return;
                   }
                   const submitTarget = e.currentTarget;
@@ -146,13 +158,13 @@ export default function Newsletter() {
                     const res = await fetch("/api/subscribe", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ email }),
+                      body: JSON.stringify({ email: trimmed }),
                     });
                     if (!res.ok) throw new Error();
                     burst({ currentTarget: submitTarget });
                     setSent(true);
                   } catch {
-                    setError("Algo salió mal. Intentá de nuevo.");
+                    triggerError("Ups, algo se enredó. Probá de nuevo.");
                   } finally {
                     setLoading(false);
                   }
@@ -172,13 +184,18 @@ export default function Newsletter() {
                 </label>
                 <input
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) setError("");
+                  }}
                   type="email"
                   placeholder="vale@datos.com"
                   style={{
                     width: "100%",
                     border: "none",
-                    borderBottom: `1.5px dashed ${shake ? "var(--rosa)" : "rgba(139,26,74,.4)"}`,
+                    borderBottom: `1.5px ${error ? "solid" : "dashed"} ${
+                      error ? "var(--rosa)" : "rgba(139,26,74,.4)"
+                    }`,
                     background: "transparent",
                     padding: "10px 0",
                     fontFamily: "var(--font-display)",
@@ -186,11 +203,25 @@ export default function Newsletter() {
                     fontSize: 20,
                     color: "var(--ink)",
                     marginTop: 8,
-                    marginBottom: 26,
+                    marginBottom: error ? 8 : 26,
                     outline: "none",
-                    animation: shake ? "input-shake 420ms ease-in-out" : "none",
+                    animation: shake ? "input-shake 500ms ease-in-out" : "none",
                   }}
                 />
+                {error && (
+                  <div
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontStyle: "italic",
+                      fontSize: 13,
+                      color: "var(--rosa)",
+                      marginBottom: 16,
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    ✦ {error}
+                  </div>
+                )}
                 <button
                   type="submit"
                   className="btn btn-primary"
@@ -199,21 +230,6 @@ export default function Newsletter() {
                 >
                   {loading ? "Enviando…" : "Sumame →"}
                 </button>
-                {error && (
-                  <div
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontStyle: "italic",
-                      fontSize: 14,
-                      color: "var(--vino)",
-                      textAlign: "center",
-                      marginTop: 10,
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    ✦ Ups, algo se enredó. Probá de nuevo.
-                  </div>
-                )}
                 <div
                   style={{
                     fontFamily: "var(--font-body)",
