@@ -1,4 +1,8 @@
+"use client";
+import { socials, email } from "../../lib/socials";
+
 export default function Footer() {
+  const seguime = [...socials, email];
   return (
     <footer
       style={{
@@ -71,20 +75,33 @@ export default function Footer() {
             <div className="eyebrow-j" style={{ color: "var(--rosa-200)" }}>
               Seguime
             </div>
-            {["Instagram", "Newsletter", "Email"].map((x, i) => (
-              <div
-                key={i}
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 14,
-                  marginTop: 12,
-                  color: "var(--cream)",
-                  opacity: 0.88,
-                }}
-              >
-                {x}
-              </div>
-            ))}
+            {seguime.map((s) => {
+              const Icon = s.Icon;
+              return (
+                <a
+                  key={s.name}
+                  href={s.href}
+                  target={s.external ? "_blank" : undefined}
+                  rel={s.external ? "noopener noreferrer" : undefined}
+                  aria-label={`${s.name} — ${s.handle}`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    marginTop: 12,
+                    color: "var(--cream)",
+                    opacity: 0.88,
+                    textDecoration: "none",
+                    transition: "opacity 180ms",
+                  }}
+                >
+                  <Icon size={16} aria-hidden="true" style={{ flexShrink: 0 }} />
+                  <span>{s.name}</span>
+                </a>
+              );
+            })}
           </div>
         </div>
         <div
