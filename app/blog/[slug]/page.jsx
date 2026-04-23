@@ -25,6 +25,18 @@ export async function generateMetadata({ params }) {
       url: `https://databymilo.me/blog/${post.slug}`,
       publishedTime: post.date || undefined,
       tags: post.tags,
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: `${post.title} | Data by Milo`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: ["/opengraph-image"],
     },
   };
 }
@@ -257,6 +269,54 @@ function RelatedPosts({ posts }) {
   );
 }
 
+function PostJsonLd({ post }) {
+  const base = "https://databymilo.me";
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": `${base}/blog/${post.slug}`,
+        url: `${base}/blog/${post.slug}`,
+        headline: post.title,
+        description: post.excerpt || undefined,
+        datePublished: post.date || undefined,
+        dateModified: post.date || undefined,
+        inLanguage: "es",
+        keywords: post.tags.length ? post.tags.join(", ") : undefined,
+        author: {
+          "@type": "Person",
+          "@id": `${base}/#person`,
+          name: "Milo",
+          url: base,
+        },
+        publisher: { "@id": `${base}/#person` },
+        isPartOf: { "@id": `${base}/#website` },
+        image: {
+          "@type": "ImageObject",
+          url: `${base}/opengraph-image`,
+          width: 1200,
+          height: 630,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Inicio", item: base },
+          { "@type": "ListItem", position: 2, name: "Blog", item: `${base}/blog` },
+          { "@type": "ListItem", position: 3, name: post.title, item: `${base}/blog/${post.slug}` },
+        ],
+      },
+    ],
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 export default function BlogPostPage({ params }) {
   const post = getPostBySlug(params.slug);
   if (!post) notFound();
@@ -265,6 +325,7 @@ export default function BlogPostPage({ params }) {
 
   return (
     <>
+      <PostJsonLd post={post} />
       <main>
         <div className="journal">
           <article className="section" style={{ maxWidth: 760, margin: "0 auto" }}>

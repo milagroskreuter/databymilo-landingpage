@@ -1,3 +1,4 @@
+import Link from "next/link";
 import CTABlock from "../components/sections/CTABlock";
 import Footer from "../components/sections/Footer";
 import SectionDivider from "../components/SectionDivider";
@@ -48,9 +49,9 @@ export default function PortfolioPage() {
               Estoy armando este espacio con mis proyectos favoritos de análisis
               de datos. Volvé en unos días: va a valer la pena.
             </p>
-            <a href="/" className="btn btn-primary" style={{ marginTop: 12 }}>
+            <Link href="/" className="btn btn-primary" style={{ marginTop: 12 }}>
               ← Volver al inicio
-            </a>
+            </Link>
           </section>
           <SectionDivider />
           <CTABlock />

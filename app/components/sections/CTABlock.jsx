@@ -88,6 +88,7 @@ export default function CTABlock() {
               </div>
             ) : (
               <form
+                noValidate
                 onSubmit={onSubmit}
                 style={{ display: "flex", flexWrap: "wrap", gap: 10, maxWidth: 460 }}
               >
@@ -95,7 +96,6 @@ export default function CTABlock() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   type="email"
-                  required
                   placeholder="vale@datos.com"
                   aria-label="Tu email"
                   style={{
@@ -123,12 +123,14 @@ export default function CTABlock() {
                   <div
                     style={{
                       flex: "1 0 100%",
-                      fontFamily: "var(--font-body)",
-                      fontSize: 12,
+                      fontFamily: "var(--font-display)",
+                      fontStyle: "italic",
+                      fontSize: 14,
                       color: "var(--rosa-200)",
+                      lineHeight: 1.4,
                     }}
                   >
-                    {error}
+                    ✦ Ups, algo se enredó. Probá de nuevo.
                   </div>
                 )}
               </form>

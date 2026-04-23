@@ -6,6 +6,7 @@ export default function NewsletterPopup() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("popup_seen")) return;
@@ -22,6 +23,7 @@ export default function NewsletterPopup() {
     e.preventDefault();
     if (!email) return;
     setLoading(true);
+    setError("");
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
@@ -32,6 +34,8 @@ export default function NewsletterPopup() {
       setSent(true);
       localStorage.setItem("popup_seen", "1");
       setTimeout(dismiss, 2200);
+    } catch {
+      setError("Ups, algo se enredó. Probá de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -110,7 +114,7 @@ export default function NewsletterPopup() {
               Cada domingo: un recurso nuevo, una historia y data que podés aplicar ese mismo día. Sin spam.
             </p>
 
-            <form onSubmit={submit}>
+            <form noValidate onSubmit={submit}>
               <label style={{
                 fontFamily: "var(--font-body)", fontWeight: 700,
                 fontSize: 10, letterSpacing: ".18em", textTransform: "uppercase",
@@ -139,6 +143,21 @@ export default function NewsletterPopup() {
               >
                 {loading ? "Enviando…" : "Sumame →"}
               </button>
+              {error && (
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontStyle: "italic",
+                    fontSize: 14,
+                    color: "var(--vino)",
+                    textAlign: "center",
+                    marginTop: 10,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  ✦ {error}
+                </div>
+              )}
               <button
                 type="button"
                 onClick={dismiss}

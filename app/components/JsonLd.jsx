@@ -10,11 +10,6 @@ const schema = {
         "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM.",
       inLanguage: "es",
       publisher: { "@id": "https://databymilo.me/#person" },
-      potentialAction: {
-        "@type": "SearchAction",
-        target: "https://databymilo.me/?q={search_term_string}",
-        "query-input": "required name=search_term_string",
-      },
     },
     {
       "@type": "Person",
@@ -23,6 +18,8 @@ const schema = {
       url: "https://databymilo.me",
       sameAs: [
         "https://www.instagram.com/databymilo",
+        "https://ar.pinterest.com/databymilo/",
+        "https://www.linkedin.com/in/milagroskreuter/",
       ],
       knowsAbout: [
         "Análisis de datos",

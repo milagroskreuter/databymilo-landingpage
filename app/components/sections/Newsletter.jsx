@@ -131,6 +131,7 @@ export default function Newsletter() {
               </div>
             ) : (
               <form
+                noValidate
                 onSubmit={async (e) => {
                   e.preventDefault();
                   if (!email) {
@@ -199,8 +200,18 @@ export default function Newsletter() {
                   {loading ? "Enviando…" : "Sumame →"}
                 </button>
                 {error && (
-                  <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--rosa)", textAlign: "center", marginTop: 10 }}>
-                    {error}
+                  <div
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontStyle: "italic",
+                      fontSize: 14,
+                      color: "var(--vino)",
+                      textAlign: "center",
+                      marginTop: 10,
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    ✦ Ups, algo se enredó. Probá de nuevo.
                   </div>
                 )}
                 <div

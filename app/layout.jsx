@@ -80,7 +80,7 @@ export const metadata = {
       "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Excel, SQL, Python.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Data by Milo · análisis de datos en español",
@@ -93,7 +93,7 @@ export const metadata = {
     description:
       "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Excel, SQL, Python.",
     creator: "@databymilo",
-    images: ["/og-image.png"],
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
