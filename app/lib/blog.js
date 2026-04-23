@@ -10,6 +10,12 @@ function ensureDir() {
   if (!fs.existsSync(BLOG_DIR)) fs.mkdirSync(BLOG_DIR, { recursive: true });
 }
 
+function calcReadingTime(content) {
+  const words = content.trim().split(/\s+/).length;
+  const mins = Math.max(1, Math.ceil(words / 200));
+  return `${mins} min de lectura`;
+}
+
 function parsePost(filename) {
   const slug = filename.replace(/\.mdx?$/, "");
   const raw = fs.readFileSync(path.join(BLOG_DIR, filename), "utf8");
@@ -21,6 +27,7 @@ function parsePost(filename) {
     excerpt: data.excerpt || "",
     tags: data.tags || [],
     coverImage: data.coverImage || null,
+    readingTime: calcReadingTime(content),
     content,
   };
 }

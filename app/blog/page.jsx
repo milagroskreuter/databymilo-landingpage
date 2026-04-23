@@ -172,17 +172,24 @@ export default function BlogIndexPage({ searchParams }) {
                         >
                           Entrada Nº {post.entradaStr}
                         </div>
-                        {post.date && (
-                          <div
-                            style={{
-                              fontFamily: "var(--font-body)",
-                              fontSize: 11,
-                              color: "var(--fg-3)",
-                            }}
-                          >
-                            {formatDate(post.date)}
-                          </div>
-                        )}
+                        <div style={{ display: "flex", gap: 10, alignItems: "baseline" }}>
+                          {post.readingTime && (
+                            <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--fg-3)" }}>
+                              {post.readingTime}
+                            </div>
+                          )}
+                          {post.date && (
+                            <div
+                              style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: 11,
+                                color: "var(--fg-3)",
+                              }}
+                            >
+                              {formatDate(post.date)}
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <h2
                         style={{

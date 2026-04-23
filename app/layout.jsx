@@ -107,6 +107,9 @@ export const metadata = {
   },
   alternates: {
     canonical: "https://databymilo.me",
+    types: {
+      "application/rss+xml": "https://databymilo.me/feed.xml",
+    },
   },
 };
 

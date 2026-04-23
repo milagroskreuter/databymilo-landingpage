@@ -5,6 +5,7 @@ import CTABlock from "../../components/sections/CTABlock";
 import Footer from "../../components/sections/Footer";
 import SectionDivider from "../../components/SectionDivider";
 import TypeEyebrow from "../../components/primitives/TypeEyebrow";
+import ShareButtons from "../../components/ShareButtons";
 import { getAllPosts, getPostBySlug, getRelatedPosts, formatDate } from "../../lib/blog";
 
 export async function generateStaticParams() {
@@ -350,19 +351,18 @@ export default function BlogPostPage({ params }) {
               <div className="rule"></div>
               <div className="pagenum">pág. {pagenum}</div>
             </div>
-            {post.date && (
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color: "var(--fg-3)",
-                  marginTop: 16,
-                  marginBottom: 12,
-                }}
-              >
-                {formatDate(post.date)}
-              </div>
-            )}
+            <div style={{ display: "flex", gap: 16, alignItems: "center", marginTop: 16, marginBottom: 12, flexWrap: "wrap" }}>
+              {post.date && (
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--fg-3)" }}>
+                  {formatDate(post.date)}
+                </div>
+              )}
+              {post.readingTime && (
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--fg-3)" }}>
+                  · {post.readingTime}
+                </div>
+              )}
+            </div>
             <h1
               style={{
                 fontFamily: "var(--font-display)",
@@ -396,6 +396,7 @@ export default function BlogPostPage({ params }) {
               <MDXRemote source={post.content} components={mdxComponents} />
             </div>
             <Signature />
+            <ShareButtons slug={post.slug} title={post.title} />
             <RelatedPosts posts={related} />
           </article>
           <SectionDivider />
