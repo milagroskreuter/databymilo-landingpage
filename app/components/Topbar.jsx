@@ -73,6 +73,7 @@ export default function Topbar() {
           </div>
         </div>
         <nav>
+          <a href="/portfolio">Portfolio</a>
           <a href="#sobre">Sobre</a>
           <a href="#recursos">Recursos</a>
           <a href="#newsletter">Newsletter</a>
