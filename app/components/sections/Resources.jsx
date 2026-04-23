@@ -14,7 +14,7 @@ const resources = [
   },
   {
     type: "Cheatsheet · PDF",
-    pages: "3 páginas",
+    pages: "10 páginas",
     title: "SQL desde cero",
     desc: "SELECT, WHERE, JOIN — las queries que te sacan del ochenta por ciento de los apuros.",
     color: "#fbe7a8",
