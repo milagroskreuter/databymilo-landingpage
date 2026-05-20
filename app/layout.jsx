@@ -1,7 +1,6 @@
 import localFont from "next/font/local";
 import { Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import Script from "next/script";
 import Topbar from "./components/Topbar";
 import ScrollProgress from "./components/ScrollProgress";
 import CursorSparkles from "./components/CursorSparkles";
@@ -117,6 +116,19 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es" className={`${playfair.variable} ${montserrat.variable} ${caveat.variable}`}>
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8FD6CSP2G" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-G8FD6CSP2G');
+            `,
+          }}
+        />
+      </head>
       <body data-paper="aged" data-density="balanced" data-mood="day">
         <JsonLd />
         <WelcomeConfetti />
@@ -127,18 +139,6 @@ export default function RootLayout({ children }) {
         <Topbar />
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
         <Analytics />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-G8FD6CSP2G"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-G8FD6CSP2G');
-          `}
-        </Script>
       </body>
     </html>
   );
