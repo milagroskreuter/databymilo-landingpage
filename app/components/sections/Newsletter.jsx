@@ -7,6 +7,7 @@ import TypeEyebrow from "../primitives/TypeEyebrow";
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
 export default function Newsletter() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [shake, setShake] = useState(false);
@@ -158,7 +159,7 @@ export default function Newsletter() {
                     const res = await fetch("/api/subscribe", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ email: trimmed }),
+                      body: JSON.stringify({ email: trimmed, name: name.trim() }),
                     });
                     if (!res.ok) throw new Error();
                     burst({ currentTarget: submitTarget });
@@ -170,6 +171,40 @@ export default function Newsletter() {
                   }
                 }}
               >
+                <label
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    fontSize: 10,
+                    letterSpacing: ".18em",
+                    textTransform: "uppercase",
+                    color: "var(--vino)",
+                  }}
+                >
+                  ¿Cómo te llaman?
+                  <span style={{ fontWeight: 400, opacity: 0.6, marginLeft: 6 }}>opcional</span>
+                </label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  type="text"
+                  placeholder="Ana, Lu, Mili..."
+                  autoComplete="given-name"
+                  style={{
+                    width: "100%",
+                    border: "none",
+                    borderBottom: "1.5px dashed rgba(139,26,74,.4)",
+                    background: "transparent",
+                    padding: "10px 0",
+                    fontFamily: "var(--font-display)",
+                    fontStyle: "italic",
+                    fontSize: 20,
+                    color: "var(--ink)",
+                    marginTop: 8,
+                    marginBottom: 22,
+                    outline: "none",
+                  }}
+                />
                 <label
                   style={{
                     fontFamily: "var(--font-body)",

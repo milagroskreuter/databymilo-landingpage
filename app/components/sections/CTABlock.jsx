@@ -7,6 +7,7 @@ import { socials } from "../../lib/socials";
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
 export default function CTABlock() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ export default function CTABlock() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmed }),
+        body: JSON.stringify({ email: trimmed, name: name.trim() }),
       });
       if (!res.ok) throw new Error();
       setSent(true);
@@ -109,6 +110,25 @@ export default function CTABlock() {
                 onSubmit={onSubmit}
                 style={{ display: "flex", flexWrap: "wrap", gap: 10, maxWidth: 460 }}
               >
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  type="text"
+                  placeholder="¿Cómo te llaman? (opcional)"
+                  autoComplete="given-name"
+                  style={{
+                    flex: "1 0 100%",
+                    border: "none",
+                    background: "var(--cream)",
+                    padding: "12px 16px",
+                    borderRadius: 10,
+                    fontFamily: "var(--font-display)",
+                    fontStyle: "italic",
+                    fontSize: 17,
+                    color: "var(--ink)",
+                    outline: "none",
+                  }}
+                />
                 <input
                   value={email}
                   onChange={(e) => {

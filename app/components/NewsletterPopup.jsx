@@ -5,6 +5,7 @@ const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
 export default function NewsletterPopup() {
   const [visible, setVisible] = useState(false);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,7 @@ export default function NewsletterPopup() {
 
   useEffect(() => {
     if (localStorage.getItem("popup_seen")) return;
-    const id = setTimeout(() => setVisible(true), 10000);
+    const id = setTimeout(() => setVisible(true), 2000);
     return () => clearTimeout(id);
   }, []);
 
@@ -45,7 +46,7 @@ export default function NewsletterPopup() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmed }),
+        body: JSON.stringify({ email: trimmed, name: name.trim() }),
       });
       if (!res.ok) throw new Error();
       setSent(true);
@@ -130,6 +131,30 @@ export default function NewsletterPopup() {
             </p>
 
             <form noValidate onSubmit={submit}>
+              <label style={{
+                fontFamily: "var(--font-body)", fontWeight: 700,
+                fontSize: 10, letterSpacing: ".18em", textTransform: "uppercase",
+                color: "var(--vino)",
+              }}>
+                ¿Cómo te llaman?
+                <span style={{ fontWeight: 400, opacity: 0.6, marginLeft: 6 }}>opcional</span>
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ana, Lu, Mili..."
+                autoComplete="given-name"
+                style={{
+                  width: "100%", border: "none",
+                  borderBottom: "1.5px dashed rgba(139,26,74,.4)",
+                  background: "transparent", padding: "10px 0",
+                  fontFamily: "var(--font-display)", fontStyle: "italic",
+                  fontSize: 18, color: "var(--ink)",
+                  marginTop: 8, marginBottom: 22, outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
               <label style={{
                 fontFamily: "var(--font-body)", fontWeight: 700,
                 fontSize: 10, letterSpacing: ".18em", textTransform: "uppercase",
