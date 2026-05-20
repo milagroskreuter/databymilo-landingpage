@@ -127,9 +127,7 @@ export default function RootLayout({ children }) {
         <Topbar />
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
         <Analytics />
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-        )}
+        <GoogleAnalytics gaId="G-G8FD6CSP2G" />
       </body>
     </html>
   );
