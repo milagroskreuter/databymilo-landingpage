@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 import { Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import Topbar from "./components/Topbar";
 import ScrollProgress from "./components/ScrollProgress";
 import CursorSparkles from "./components/CursorSparkles";
@@ -127,7 +127,18 @@ export default function RootLayout({ children }) {
         <Topbar />
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
         <Analytics />
-        <GoogleAnalytics gaId="G-G8FD6CSP2G" />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-G8FD6CSP2G"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-G8FD6CSP2G');
+          `}
+        </Script>
       </body>
     </html>
   );
