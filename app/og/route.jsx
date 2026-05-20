@@ -1,21 +1,17 @@
 import { ImageResponse } from "next/og";
-import { getResourceBySlug, getAvailableResources } from "../../lib/resources";
 
-export const alt = "Data by Milo";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const runtime = "edge";
 
-export function generateStaticParams() {
-  return getAvailableResources().map((r) => ({ slug: r.slug }));
-}
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const title = searchParams.get("title") ?? "Data by Milo";
+  const type = searchParams.get("type") ?? "";
 
-export default function OgImage({ params }) {
-  const resource = getResourceBySlug(params.slug);
-  const title = resource?.title ?? "La biblioteca";
-  const type = resource?.type ?? "Recurso";
-  const desc = resource?.desc ?? "Cheatsheets y guías de datos en español.";
+  const eyebrow = type
+    ? `DATA BY MILO · ${type.toUpperCase()}`
+    : "DATA BY MILO";
 
-  const fontSize = title.length > 40 ? 62 : 72;
+  const fontSize = title.length > 60 ? 48 : title.length > 40 ? 60 : 72;
 
   return new ImageResponse(
     (
@@ -33,7 +29,6 @@ export default function OgImage({ params }) {
           position: "relative",
         }}
       >
-        {/* Radial gradient accent */}
         <div
           style={{
             position: "absolute",
@@ -42,8 +37,6 @@ export default function OgImage({ params }) {
               "radial-gradient(ellipse at 80% 20%, rgba(212,68,122,0.35) 0%, transparent 55%)",
           }}
         />
-
-        {/* Eyebrow: resource type */}
         <div
           style={{
             fontSize: 18,
@@ -55,10 +48,8 @@ export default function OgImage({ params }) {
             fontWeight: 700,
           }}
         >
-          DATA BY MILO · {type.toUpperCase()}
+          {eyebrow}
         </div>
-
-        {/* Resource title */}
         <div
           style={{
             fontSize: fontSize,
@@ -72,24 +63,18 @@ export default function OgImage({ params }) {
         >
           {title}
         </div>
-
-        {/* Description */}
         <div
           style={{
-            fontSize: 24,
+            fontSize: 22,
             color: "#fdf5ec",
-            opacity: 0.8,
-            fontStyle: "normal",
-            maxWidth: 680,
+            opacity: 0.75,
+            maxWidth: 640,
             lineHeight: 1.5,
             fontFamily: "sans-serif",
-            fontWeight: 400,
           }}
         >
-          {desc}
+          Análisis de datos en español, sin tecnicismos.
         </div>
-
-        {/* URL badge */}
         <div
           style={{
             position: "absolute",
@@ -106,6 +91,6 @@ export default function OgImage({ params }) {
         </div>
       </div>
     ),
-    { ...size }
+    { width: 1200, height: 630 }
   );
 }

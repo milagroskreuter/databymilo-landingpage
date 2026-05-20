@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
       url: `https://databymilo.me/recursos/${resource.slug}`,
       images: [
         {
-          url: `/recursos/${resource.slug}/opengraph-image`,
+          url: `/og?title=${encodeURIComponent(resource.title)}&type=recurso`,
           width: 1200,
           height: 630,
           alt: `${resource.title} | Data by Milo`,
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }) {
     },
     twitter: {
       card: "summary_large_image",
-      images: [`/recursos/${resource.slug}/opengraph-image`],
+      images: [`/og?title=${encodeURIComponent(resource.title)}&type=recurso`],
     },
   };
 }

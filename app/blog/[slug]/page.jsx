@@ -28,7 +28,7 @@ export async function generateMetadata({ params }) {
       tags: post.tags,
       images: [
         {
-          url: `/blog/${post.slug}/opengraph-image`,
+          url: `/og?title=${encodeURIComponent(post.title)}&type=blog`,
           width: 1200,
           height: 630,
           alt: `${post.title} | Data by Milo`,
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }) {
     },
     twitter: {
       card: "summary_large_image",
-      images: [`/blog/${post.slug}/opengraph-image`],
+      images: [`/og?title=${encodeURIComponent(post.title)}&type=blog`],
     },
   };
 }
