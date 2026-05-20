@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import { Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Topbar from "./components/Topbar";
 import ScrollProgress from "./components/ScrollProgress";
 import CursorSparkles from "./components/CursorSparkles";
@@ -126,6 +127,9 @@ export default function RootLayout({ children }) {
         <Topbar />
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
         <Analytics />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </body>
     </html>
   );
