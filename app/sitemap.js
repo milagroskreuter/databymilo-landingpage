@@ -1,4 +1,5 @@
 import { getAllPosts } from "./lib/blog";
+import { getAvailableResources } from "./lib/resources";
 
 const base = "https://databymilo.me";
 
@@ -19,5 +20,12 @@ export default function sitemap() {
     lastModified: post.date ? new Date(post.date) : now,
   }));
 
-  return [...staticRoutes, ...postRoutes];
+  const resourceRoutes = getAvailableResources().map((resource) => ({
+    url: `${base}/recursos/${resource.slug}`,
+    priority: 0.8,
+    changeFrequency: "monthly",
+    lastModified: now,
+  }));
+
+  return [...staticRoutes, ...postRoutes, ...resourceRoutes];
 }
