@@ -1,0 +1,84 @@
+---
+title: "El SQL lo arreglás en 10 minutos"
+date: "2026-05-20"
+excerpt: "Lo que aprendí cuando entendí que el problema nunca fue el SQL. O: por qué las conversaciones que no tuviste te cuestan más que cualquier bug."
+tags: ["reflexiones", "datos", "carrera"]
+---
+
+Estábamos repasando un proyecto que se había vuelto un dolor de cabeza. No me acuerdo qué le estaba contando puntualmente (algo de un dashboard que el área de operaciones decía que estaba "roto"), y en medio de mi explicación, mi supervisor me cortó con una frase que me sigue dando vueltas en la cabeza varios días después:
+
+*"Los problemas casi nunca son técnicos. Son humanos."*
+
+Lo dijo medio al pasar, como quien suelta una verdad que ya tiene gastada de tanto comprobarla. Y yo me quedé callada un segundo, porque sentí ese clic medio incómodo de cuando alguien te nombra una cosa que sabías sin saber. Una de esas cosas que estaba ahí, esperando que vos la dijeras en voz alta para volverse evidente.
+
+Cuanto más lo pienso, más sentido tiene. Y más entiendo por qué nadie te lo explica al principio.
+
+## La promesa del bootcamp
+
+Cuando entrás a un mundo técnico (IT, datos, cualquier rincón de tecnología), el bootcamp, el curso, la carrera, todo te promete que el trabajo va a ser lo técnico. Vas a aprender SQL. Vas a hacer dashboards. Vas a escribir Python. Vas a entender modelos, métricas, ETLs, querys que te resuelven la vida. Te enamorás un poco de la idea de que vas a tener un superpoder específico, medible, demostrable. Algo que la gente no técnica no puede hacer y por lo tanto va a tener que respetar.
+
+Y después arrancás. Y te das cuenta, de a poco, casi sin darte cuenta, de que el SQL es la parte fácil.
+
+Lo digo en serio. La parte que parecía más imposible cuando arrancabas, la parte que te hizo googlear "soy tonta para programar?" un millón de veces, la parte que te tenía despierta a las dos de la mañana arreglando un join, esa parte después se vuelve casi automática. La pelea diaria, la verdadera, no está en el código. Está en otro lado.
+
+## La traducción simultánea que nadie te enseña
+
+**Cuántas veces dijiste "el dashboard está roto" cuando en realidad nadie te dijo qué tenía que mostrar.**
+
+Te tiraron el pedido por Slack en una línea. Vos le pusiste tu mejor interpretación. Lo armaste con cariño, elegiste paleta, ordenaste KPIs, sumaste filtros. Lo presentaste. Y a la primera reunión te dijeron "no, esto no es lo que quería". Y te volviste a tu compu pensando que el problema era una métrica mal calculada, una visualización mal elegida, un filtro mal puesto. Y no. El problema fue que arrancaste a construir antes de hacer la pregunta incómoda: "¿esto lo vas a usar para qué?".
+
+**Cuántas veces "el pipeline falló" fue en realidad alguien upstream cambió algo y no avisó.**
+
+Una columna que se renombró. Un campo que pasó de string a fecha. Un sistema que migraron y nadie se acordó de que vos consumías esa tabla. El error técnico en tus logs es real, sí. Pero el problema real pasó dos semanas antes, en una reunión a la que vos no fuiste, donde alguien dijo "vamos a actualizar X" y nadie levantó la mano para preguntar quién dependía de eso.
+
+**Cuántas veces "el reporte no sirve" fue nunca preguntamos para qué lo querían.**
+
+Lo armaste limpio, prolijo, con métricas correctas, con una storyline. Y se quedó muerto en una carpeta de Drive porque resulta que la persona que lo pidió lo necesitaba para una decisión que ya tomó la semana pasada. O para una junta que era ese mismo día. O lo necesitaba para defender un presupuesto, y vos le diste el número crudo cuando lo que necesitaba era contexto, comparación, una recomendación.
+
+El SQL lo arreglás en 10 minutos. La conversación que no tuviste te cuesta tres semanas de retrabajo.
+
+Esa es la matemática que nadie te enseña en el bootcamp. Y es la matemática más cara del trabajo.
+
+## El olfato
+
+Con el tiempo aprendés a oler los problemas humanos disfrazados de problemas técnicos. Hay señales: cuando el mismo "fix" vuelve cada dos semanas con otra cara. Cuando el feedback que recibís es vago ("está como medio así, no termina de cerrarme") y nadie es capaz de decirte qué cambiarías concretamente. Cuando alguien te pide algo "para mañana" y no te puede explicar para qué. Cuando dos áreas te piden lo mismo pero con números distintos y cada una insiste que la suya es la verdadera. Cuando todo el mundo dice que un proceso está "automatizado" pero hay tres personas mandándose mails con planillas adjuntas.
+
+Ese es el olor. No huele a bug. Huele a conversación pendiente.
+
+Y es medio paradójico, porque entrás a IT pensando que el trabajo es la parte técnica, y terminás dándote cuenta de que la parte técnica es la más fácil. Lo difícil es alinear expectativas antes de empezar a tipear. Es hacer las preguntas incómodas en el momento incómodo, no después. Es traducir entre el área de negocio que te pide "una vista global" y los datos crudos que tenés que conectar para llegar a algo medianamente parecido a eso. Es entender que cuando te dicen "rápido" tal vez no significa "hoy a la tarde", significa "estoy desesperado y nadie me está dando una respuesta clara". Es saber que detrás de cada pedido confuso hay un humano confundido que también está bajo presión.
+
+## La habilidad invisible
+
+Lo más raro es que traducir (esa habilidad de entender lo que la otra persona NO te está diciendo, hacer las preguntas que destraban un proyecto, devolver una respuesta en su idioma y no en el tuyo) no aparece en ningún curso. No hay un "Curso de Traducción Negocio-Datos para Dummies". Lo aprendés a los golpes. Lo aprendés cada vez que entregás algo que no era lo que pedían y te toca volver a empezar. Lo aprendés cuando una decisión grande se toma con un dato que vos generaste y por primera vez entendés que el número que mostraste podía haber sido tres números distintos según cómo lo cruzaras, y eso lo tendrías que haber discutido antes, no después.
+
+También lo aprendés mirando a la gente que ya lo sabe. Porque hay una diferencia enorme entre la persona técnica que se queda esperando que le pasen un brief perfecto, y la persona técnica que entra a una reunión con cinco preguntas escritas en una libreta porque ya sabe que los humanos no piden lo que quieren: piden lo que creen que quieren, y eso casi nunca es lo mismo.
+
+## Por qué nos cuesta aceptarlo
+
+Y creo que parte de por qué a muchas nos cuesta aceptar esto es por puro orgullo. Porque te formaste para ser técnica. Estudiaste, peleaste el síndrome del impostor, escribiste mil queries, te hiciste lugar en un mundo donde nadie te lo estaba reservando. Vos quisiste ser la chica de los datos. Y de repente alguien te dice que el 70% de tu trabajo va a ser conversaciones, política de oficina, traducción, reuniones donde tenés que repetir cosas obvias hasta que calen. Cuesta. Cuesta porque no es lo que firmaste.
+
+Pero también cuesta porque es más vulnerable. Trabajar en silencio con un editor de código abierto se siente seguro. Mandar un Slack que dice "antes de arrancar, ¿me podés explicar qué decisión vas a tomar con esto?" se siente exponerte. Te abre a que te digan que estás haciendo demasiadas preguntas, que estás siendo lenta, que para qué hacés tanta vuelta. Y a veces te lo dicen. Te ponen cara. Te hacen sentir que estás complicando algo simple.
+
+Pero la otra opción es entregar tres semanas después algo que no servía. Y eso, además de doler, te vuelve a costar la conversación que no quisiste tener al principio. Solo que ahora la tenés con más miedo, más cansancio, y un proyecto fallido encima.
+
+A la larga, hacer las preguntas a tiempo es siempre el camino más corto. Aunque al principio se sienta el más largo.
+
+## Tener a alguien que te lo recuerde
+
+También ayuda mucho (y esto no es un detalle menor) tener un supervisor que tenga esto claro y te lo recuerde. Tener a alguien que en vez de decirte "arreglá el dashboard" te diga "frená un segundo, ¿estás segura de que ese es el problema?". Que te pregunte si hablaste con la persona que lo pidió antes de meter mano en el código. Que te muestre, con paciencia, que esa conversación incómoda que estás postergando vale más que cualquier cosa que puedas escribir esa tarde.
+
+No todos lo tienen. Mucha gente aprende esto sola, a los cachetazos, después de años de retrabajo. Y cuando lo tenés temprano, te conviene aprovecharlo: anotar lo que dice, observar cómo maneja las reuniones difíciles, prestarle atención a las preguntas que hace que vos no te animaste a hacer. Y eventualmente convertirte en esa persona para alguien más.
+
+## Lo que todavía me cuesta
+
+Lo que todavía me cuesta entender bien (y por eso supongo que esto se va a quedar dando vueltas un rato más) es que la idea de que "los problemas son humanos" no es solo una observación. Es una invitación. Te está diciendo dónde poner la atención. Te está diciendo que la próxima vez que algo "no funcione", la primera pregunta no es *¿qué falla en mi código?*, es *¿qué conversación me faltó?*.
+
+Te está diciendo que ser buena en datos no es saberse todas las funciones de Excel ni tener cinco certificaciones. Es saber qué pregunta hacerle a la tabla. Y antes de eso, qué pregunta hacerle a la persona que te pidió la tabla.
+
+El código casi siempre se puede arreglar.
+
+La conversación que no tuviste, casi nunca.
+
+Y por eso, aunque me gane la vida escribiendo SQL, el músculo que más quiero entrenar este año no es técnico.
+
+Es el de hacer las preguntas incómodas. A tiempo. Antes de abrir el editor.
