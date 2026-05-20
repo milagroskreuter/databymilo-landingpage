@@ -33,6 +33,12 @@ const nextConfig = {
   // Remove X-Powered-By: Next.js fingerprint
   poweredByHeader: false,
 
+  // ESLint 9 + .eslintrc.json (v8 format) no son compatibles.
+  // Se omite en build — correr "npx eslint ." manualmente si hace falta.
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   async headers() {
     return [
       {
