@@ -4,14 +4,14 @@ const CSP = [
   "default-src 'self'",
   // Next.js hydration + our JSON-LD inline script require 'unsafe-inline'.
   // Replace with nonce-based CSP if stricter policy is needed in the future.
-  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data: https:",
   "font-src 'self'",
-  "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+  "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com",
   "media-src 'none'",
   "object-src 'none'",
-  "frame-src 'none'",
+  "frame-src 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -38,6 +38,13 @@ const nextConfig = {
       {
         source: "/(.*)",
         headers: securityHeaders,
+      },
+      {
+        // PDFs must be embeddable in our own preview modal — remove the framing block
+        source: "/:path*.pdf",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+        ],
       },
     ];
   },
