@@ -6,12 +6,12 @@ import SectionDivider from "../components/SectionDivider";
 export const metadata = {
   title: "Sobre Milo",
   description:
-    "La historia detrás de Data by Milo: de no entender nada en mi primer trabajo de analista a escribir todo lo que aprendí en español, sin jerga.",
+    "Trabajo en data dentro de una de las corpos tech más grandes de LATAM y cuento lo que veo desde adentro. Sin filtro corporativo, sin filtro motivacional. Eso es Data by Milo.",
   alternates: { canonical: "https://databymilo.me/sobre" },
   openGraph: {
     title: "Sobre Milo | Data by Milo",
     description:
-      "La historia detrás de Data by Milo: análisis de datos en español, sin tecnicismos.",
+      "Trabajo en data dentro de una de las corpos tech más grandes de LATAM y cuento lo que veo desde adentro. Sin filtro corporativo, sin filtro motivacional.",
     url: "https://databymilo.me/sobre",
   },
 };

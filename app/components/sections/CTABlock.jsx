@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FiAtSign } from "react-icons/fi";
 import Reveal from "../primitives/Reveal";
 import { socials } from "../../lib/socials";
 
@@ -254,6 +255,68 @@ export default function CTABlock() {
                   </a>
                 );
               })}
+              {/* Colaboraciones & propuestas */}
+              <a
+                href="mailto:databymilo@gmail.com"
+                aria-label="Colaboraciones & propuestas: databymilo@gmail.com"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  background: "rgba(253,245,236,.08)",
+                  padding: "12px 16px",
+                  borderRadius: 10,
+                  textDecoration: "none",
+                  border: "1px solid rgba(253,245,236,.14)",
+                  transition: "background 180ms",
+                  marginTop: 4,
+                }}
+              >
+                <div
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 999,
+                    background: "#2a1520",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "white",
+                    flexShrink: 0,
+                  }}
+                >
+                  <FiAtSign size={16} aria-hidden="true" />
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontWeight: 700,
+                      fontSize: 10,
+                      letterSpacing: ".14em",
+                      textTransform: "uppercase",
+                      color: "var(--cream)",
+                      opacity: 0.7,
+                    }}
+                  >
+                    Colaboraciones & propuestas
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontStyle: "italic",
+                      fontWeight: 700,
+                      fontSize: 15,
+                      color: "var(--cream)",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    databymilo@gmail.com
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
         </div>

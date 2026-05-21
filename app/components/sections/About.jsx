@@ -1,42 +1,41 @@
 import Reveal from "../primitives/Reveal";
 import Hi from "../primitives/Hi";
 import TypeEyebrow from "../primitives/TypeEyebrow";
-import MarginNote from "../primitives/MarginNote";
 
 export default function About() {
   const values = [
     {
       n: "01",
-      t: "En español real",
-      b: "Nada de traducciones literales. Hablamos como hablás vos: con vos, con che, con memes.",
+      t: "Desde adentro, no desde el escritorio del coach",
+      b: "Lo que cuento lo estoy viviendo. No lo adapto de un artículo ni lo pienso desde afuera.",
     },
     {
       n: "02",
-      t: "Sin condescendencia",
-      b: "No te trato de tonta. Explico las cosas desde adentro, no desde arriba.",
+      t: "Hablo como hablaría con una amiga",
+      b: "Sin frases de coach, sin palabras que suenan bien pero no dicen nada. Si tengo una opinión, la tengo y la digo.",
     },
     {
       n: "03",
-      t: "Para usar, no para guardar",
-      b: "Cada recurso está hecho para abrirlo mientras trabajás. No para que quede archivado en una carpeta de descargas.",
+      t: "Sin filtro corporativo ni motivacional",
+      b: "Ni la versión idealizada del trabajo en tech ni el burnout como badge. Lo que pasa, cómo pasa, sin moraleja al final.",
     },
   ];
 
   const workflow = [
     {
       n: "01",
-      t: "Primero entender, después explicar",
-      b: "No publico sobre algo que apenas uso. Cada cheatsheet salió de una tarea real donde me hacía falta.",
+      t: "Cuento lo que vi, no lo que leí",
+      b: "Lo que escribo acá lo estoy observando o viviendo en primera mano. No adapto artículos ni resumo lo que ya está en todos lados.",
     },
     {
       n: "02",
-      t: "Ejemplos antes que teoría",
-      b: "La fórmula importa menos que cuándo usarla. Siempre arranco con un caso concreto y después voy a lo abstracto.",
+      t: "Observación, no consejo",
+      b: "Cuento lo que pasa, no lo que deberías hacer. El POV está, pero no disfrazado de consejo motivacional.",
     },
     {
       n: "03",
-      t: "Lo corto antes que lo completo",
-      b: "Prefiero decir tres cosas bien que diez a medias. Si algo no cabe en dos páginas, probablemente no lo entendí bien.",
+      t: "Honesto, aunque canse",
+      b: "Si algo en la corpo me parece absurdo, lo digo. Sin suavizarlo para que baje mejor.",
     },
   ];
 
@@ -47,6 +46,8 @@ export default function About() {
     "BigQuery",
     "Python",
     "Pandas",
+    "Power BI",
+    "Tableau",
     "Looker Studio",
     "Notion",
     "Figma",
@@ -79,8 +80,6 @@ export default function About() {
       >
         <Reveal delay={100}>
           <div style={{ position: "relative" }}>
-            <MarginNote top={80}>← esto me cambió todo</MarginNote>
-            <MarginNote top={220}>ojo acá ✦</MarginNote>
             <div className="card" style={{ padding: 40 }}>
               <p
                 style={{
@@ -91,7 +90,7 @@ export default function About() {
                   margin: "0 0 18px",
                 }}
               >
-                En 2021 entré a mi primer trabajo de analista y <Hi color="#fadbe8">no entendía nada</Hi>. Todos hablaban en siglas (SQL, KPI, ETL) y yo asentía como si supiera.
+                Trabajo en una de las corporaciones tech más grandes de LATAM. Lo que escribo acá lo estoy viendo en tiempo real: las reuniones que no hacen falta, los proyectos de IA que nadie sabe bien para qué sirven, la diferencia entre cómo se presenta trabajar en tech y <Hi color="#fadbe8">cómo se vive</Hi>.
               </p>
               <p
                 style={{
@@ -102,7 +101,7 @@ export default function About() {
                   margin: "0 0 18px",
                 }}
               >
-                Los tutoriales asumían cosas que nadie me había enseñado. Los bootcamps costaban lo que tres alquileres. Los foros en inglés daban miedo.
+                No soy docente, no soy gurú. Soy alguien que está ahí y tiene ganas de contarlo sin filtro corporativo ni filtro motivacional.
               </p>
               <p
                 style={{
@@ -114,7 +113,7 @@ export default function About() {
                   margin: 0,
                 }}
               >
-                Así que empecé a escribir lo que iba aprendiendo, en español, como si le explicara a una amiga. Eso es Data by Milo.
+                Así que abrí este cuaderno y empecé a escribir lo que veo. Eso es Data by Milo.
               </p>
               <div
                 style={{
@@ -191,7 +190,7 @@ export default function About() {
             Cómo <em>trabajo</em>.
           </h2>
           <p className="section-sub">
-            Tres cosas que trato de cumplir en cada recurso.
+            Tres cosas que trato de cumplir en cada cosa que escribo.
           </p>
           <div
             style={{

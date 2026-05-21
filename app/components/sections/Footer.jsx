@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { FiAtSign } from "react-icons/fi";
 import { socials, email } from "../../lib/socials";
 
 const biblioteca = [
@@ -57,12 +58,12 @@ export default function Footer() {
                 lineHeight: 1.65,
               }}
             >
-              Educación de datos para mujeres en LATAM hispanohablante. Desde 2021.
+              Tech, data e IA contado desde adentro de la corpo. Para mujeres en LATAM, desde 2021.
             </p>
           </div>
           <div>
             <div className="eyebrow-j" style={{ color: "var(--rosa-200)" }}>
-              El cuaderno
+              Este cuaderno
             </div>
             {biblioteca.map((item) => (
               <Link
@@ -113,6 +114,47 @@ export default function Footer() {
                 </a>
               );
             })}
+            <a
+              href="mailto:databymilo@gmail.com"
+              aria-label="Colaboraciones & propuestas: databymilo@gmail.com"
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 10,
+                marginTop: 20,
+                paddingTop: 16,
+                borderTop: "1px dashed rgba(253,245,236,.2)",
+                color: "var(--cream)",
+                textDecoration: "none",
+                transition: "opacity 180ms",
+              }}
+            >
+              <FiAtSign size={16} aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }} />
+              <div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    fontSize: 10,
+                    letterSpacing: ".14em",
+                    textTransform: "uppercase",
+                    opacity: 0.7,
+                    marginBottom: 3,
+                  }}
+                >
+                  Colaboraciones & propuestas
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    opacity: 0.88,
+                  }}
+                >
+                  databymilo@gmail.com
+                </div>
+              </div>
+            </a>
           </div>
         </div>
         <div
@@ -136,7 +178,7 @@ export default function Footer() {
               color: "var(--rosa-200)",
             }}
           >
-            data, pero cutie.
+            tech, pero cutie.
           </div>
         </div>
       </div>

@@ -4,19 +4,19 @@ import TypeEyebrow from "../primitives/TypeEyebrow";
 export default function Highlights() {
   const items = [
     {
-      tag: "Cheatsheets",
-      title: "PDFs descargables",
-      body: "Excel, SQL, Python en una sola hoja, para imprimir y pegar al lado del monitor.",
+      tag: "Vida en la corpo",
+      title: "Desde adentro, sin editar",
+      body: "Anécdotas, reuniones que podrían haber sido un mail, dinámicas internas. La diferencia entre cómo se vende trabajar en tech y cómo se vive.",
     },
     {
-      tag: "Plantillas",
-      title: "Templates que uso yo",
-      body: "Dashboards, trackers, calculadoras. Todas con instrucciones de por qué hacen lo que hacen.",
+      tag: "Reflexión generacional",
+      title: "Cosas que no se dicen en LinkedIn",
+      body: "La presión de definir carrera ahora. Ver amigos que se van afuera. Qué significa tener un buen trabajo hoy.",
     },
     {
-      tag: "Guías",
-      title: "Paso a paso sin atajos",
-      body: "Explicaciones largas cuando hace falta. Si me llevó años entender algo, no te lo resumo en un reel.",
+      tag: "Explicativo accesible",
+      title: "Cuando vale la pena explicar",
+      body: "SQL, BI, Python, IA: conceptos explicados como a una amiga en un café, no como en un tutorial de YouTube.",
     },
   ];
 
@@ -33,7 +33,7 @@ export default function Highlights() {
           Lo que vive <em>en este cuaderno</em>.
         </h2>
         <p className="section-sub">
-          Cuatro formatos, todos en español, todos pensados para las que están empezando.
+          Cuatro líneas de contenido. Todas sobre tech, data e IA. Todas en español latinoamericano.
         </p>
       </Reveal>
 

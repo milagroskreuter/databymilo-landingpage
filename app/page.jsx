@@ -36,9 +36,9 @@ function AboutTeaser() {
             color: "var(--ink)",
           }}
         >
-          En 2021 entré a mi primer trabajo de analista y no entendía nada. Todos hablaban
-          en siglas (SQL, KPI, ETL) y yo asentía como si supiera. Así empecé a escribir
-          lo que iba aprendiendo, en español, como si le explicara a una amiga.
+          Trabajo en una de las corporaciones tech más grandes de LATAM. Lo que escribo acá
+          lo estoy viendo en tiempo real. No soy docente, no soy gurú. Soy alguien que está
+          ahí y tiene ganas de contarlo sin filtro corporativo ni filtro motivacional.
         </p>
         <Link href="/sobre" className="btn btn-ghost">
           Leer la historia completa →
@@ -61,7 +61,7 @@ function ResourcesTeaser() {
         <h2 className="section-title">
           La <em>biblioteca</em>.
         </h2>
-        <p className="section-sub">Cheatsheets, plantillas y guías, todo en español, todo para descargar.</p>
+        <p className="section-sub">SQL, BI, Python, IA: conceptos explicados como a una amiga en un café. Todo en español, todo para descargar.</p>
       </Reveal>
       <div
         style={{
@@ -169,7 +169,7 @@ function BlogTeaser() {
         <h2 className="section-title">
           Historias largas <em>en el blog</em>.
         </h2>
-        <p className="section-sub">Explicaciones que no entran en un reel. Casos reales, errores que cometí y data traducida.</p>
+        <p className="section-sub">Cuando algo no entra en un post. Sobre la corpo, la IA en las empresas y la carrera en tech.</p>
       </Reveal>
       {latestPosts.length > 0 && (
         <div

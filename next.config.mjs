@@ -11,7 +11,7 @@ const CSP = [
   "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com",
   "media-src 'none'",
   "object-src 'none'",
-  "frame-src 'self'",
+  "frame-src 'self' https://www.googletagmanager.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

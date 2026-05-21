@@ -96,7 +96,7 @@ export default function Topbar() {
                 marginTop: 2,
               }}
             >
-              data, pero cutie.
+              tech, pero cutie.
             </div>
           </div>
         </Link>

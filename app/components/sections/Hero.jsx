@@ -3,12 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
-const FULL_TEXT = "sin llorar";
+const FULL_TEXT = "sin filtro";
 
 const SUBTEXTS = [
-  "Data by Milo es el cuaderno donde junto cheatsheets, plantillas y guías para mujeres que están aprendiendo análisis de datos en español, sin tecnicismos y sin condescendencia.",
-  "Si alguna vez asentiste en una reunión sin entender nada, este cuaderno es para vos. Todo en español, desde cero, sin hacerte sentir tonta.",
-  "Cheatsheets, plantillas y guías para las que quieren entender los datos, sin que les expliquen como si recién arrancaran.",
+  "Soy Milo. Trabajo en data dentro de una corpo tech grande y escribo sobre lo que veo ahí adentro. Sin la versión aspiracional ni la versión amargada.",
+  "Si el contenido de tech te agota porque siempre es demasiado técnico o demasiado motivacional, acá es distinto. Cuento desde adentro, para las que están ahí o están mirando desde afuera.",
+  "Tech, data e IA contado desde adentro. No desde el escritorio del coach.",
 ];
 
 export default function Hero() {
@@ -81,7 +81,7 @@ export default function Hero() {
             willChange: "transform",
           }}
         >
-          aprende de datos, <br />
+          la corpo no te lo cuenta, <br />
           <em style={{ fontStyle: "italic", color: "var(--vino)" }}>
             {typed}
             {!typingDone && (
@@ -91,7 +91,7 @@ export default function Hero() {
             )}
           </em>
           <br />
-          en el intento.
+          pero yo sí.
         </h1>
 
         <p
@@ -111,8 +111,8 @@ export default function Hero() {
         </p>
 
         <div style={{ display: "flex", gap: 14, marginTop: 44, flexWrap: "wrap" }}>
-          <Link href="/recursos" className="btn btn-primary">
-            Ver recursos →
+          <Link href="/blog" className="btn btn-primary">
+            Leer el blog →
           </Link>
           <Link href="/sobre" className="btn btn-ghost">
             Sobre Milo

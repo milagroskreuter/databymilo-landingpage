@@ -1,4 +1,4 @@
-const words = ["DATA", "PERO CUTIE", "SQL", "EXCEL", "PYTHON", "PANDAS", "EN ESPAÑOL", "DESDE 2021"];
+const words = ["TECH", "PERO CUTIE", "DATA", "IA", "SIN FILTRO", "LATAM", "EN ESPAÑOL", "DESDE 2021"];
 
 function Track() {
   return (

@@ -99,7 +99,7 @@ export default function Newsletter() {
                 maxWidth: 420,
               }}
             >
-              Cada domingo: un recurso nuevo, una historia de la semana y data que podés aplicar ese mismo día.
+              Cada domingo: algo de la semana en la corpo, lo que está pasando con la IA en las empresas y una reflexión que no entró en ningún post.
             </p>
           </div>
 
@@ -224,7 +224,7 @@ export default function Newsletter() {
                     if (error) setError("");
                   }}
                   type="email"
-                  placeholder="vale@datos.com"
+                  placeholder="caro@trabajo.com"
                   style={{
                     width: "100%",
                     border: "none",

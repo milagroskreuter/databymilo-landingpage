@@ -53,20 +53,20 @@ const caveat = Caveat({
 export const metadata = {
   metadataBase: new URL("https://databymilo.me"),
   title: {
-    default: "Data by Milo · Análisis de datos en español, sin tecnicismos",
+    default: "Data by Milo · Tech, data e IA contado desde adentro",
     template: "%s | Data by Milo",
   },
   description:
-    "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Aprendé Excel, SQL y Python, sin jerga y sin condescendencia.",
+    "Tech, data e IA contado desde adentro de una corpo grande. Vida en la corpo, IA aplicada y reflexiones de carrera, para mujeres latinoamericanas que trabajan o quieren trabajar en tech.",
   keywords: [
-    "análisis de datos en español",
-    "aprender Excel",
-    "SQL para principiantes",
-    "Python pandas tutorial",
-    "cheatsheet datos",
-    "recursos datos LATAM",
+    "vida en la corpo tech",
+    "trabajar en data LATAM",
+    "IA en empresas",
+    "carrera en tech latam",
     "data analytics español",
-    "aprender datos sin bootcamp",
+    "trabajo en tech mujer",
+    "reflexion carrera tech",
+    "data by milo",
   ],
   authors: [{ name: "Milo", url: "https://databymilo.me" }],
   creator: "Milo",
@@ -75,9 +75,9 @@ export const metadata = {
     locale: "es_AR",
     url: "https://databymilo.me",
     siteName: "Data by Milo",
-    title: "Data by Milo · Análisis de datos en español, sin tecnicismos",
+    title: "Data by Milo · Tech, data e IA contado desde adentro",
     description:
-      "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Excel, SQL, Python.",
+      "Tech, data e IA contado desde adentro de una corpo grande. Para mujeres latinoamericanas que trabajan o quieren trabajar en tech.",
     images: [
       {
         url: "/opengraph-image",
@@ -89,9 +89,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Data by Milo · Análisis de datos en español",
+    title: "Data by Milo · Tech, data e IA contado desde adentro",
     description:
-      "Cheatsheets, plantillas y guías de análisis de datos en español para mujeres en LATAM. Excel, SQL, Python.",
+      "Tech, data e IA contado desde adentro de una corpo grande. Para mujeres latinoamericanas que trabajan o quieren trabajar en tech.",
     creator: "@databymilo",
     images: ["/opengraph-image"],
   },
@@ -117,19 +117,30 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es" className={`${playfair.variable} ${montserrat.variable} ${caveat.variable}`}>
       <head>
+        {/* Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TJFMZ3JG');`,
+          }}
+        />
+        {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8FD6CSP2G" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-G8FD6CSP2G');
-            `,
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-G8FD6CSP2G');`,
           }}
         />
       </head>
       <body data-paper="aged" data-density="balanced" data-mood="day">
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-TJFMZ3JG"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <JsonLd />
         <WelcomeConfetti />
         <NewsletterPopup />
