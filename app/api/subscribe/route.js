@@ -284,22 +284,34 @@ export async function POST(request) {
 
   const in3Days = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
 
-  // Welcome email — immediate
-  resend.emails.send({
-    from: "Milo · Data by Milo <hola@databymilo.me>",
-    to: email,
-    subject: "Bienvenida a la carta del domingo ✦",
-    html: welcomeHtml(firstName, email),
-  }).catch((err) => console.error("Welcome email error:", err));
+  // Await both sends — Vercel kills pending async work once the response is returned
+  const [welcome, followUp] = await Promise.allSettled([
+    resend.emails.send({
+      from: "Milo · Data by Milo <hola@databymilo.me>",
+      to: email,
+      subject: "Bienvenida a la carta del domingo ✦",
+      html: welcomeHtml(firstName, email),
+    }),
+    resend.emails.send({
+      from: "Milo · Data by Milo <hola@databymilo.me>",
+      to: email,
+      subject: "la pregunta que cambió cómo hago todo análisis",
+      html: followUpHtml(firstName, email),
+      scheduledAt: in3Days,
+    }),
+  ]);
 
-  // Follow-up email — scheduled 3 days later
-  resend.emails.send({
-    from: "Milo · Data by Milo <hola@databymilo.me>",
-    to: email,
-    subject: "la pregunta que cambió cómo hago todo análisis",
-    html: followUpHtml(firstName, email),
-    scheduledAt: in3Days,
-  }).catch((err) => console.error("Follow-up email error:", err));
+  if (welcome.status === "rejected") {
+    console.error("Welcome email error:", welcome.reason);
+  } else if (welcome.value?.error) {
+    console.error("Welcome email Resend error:", welcome.value.error);
+  }
+
+  if (followUp.status === "rejected") {
+    console.error("Follow-up email error:", followUp.reason);
+  } else if (followUp.value?.error) {
+    console.error("Follow-up email Resend error:", followUp.value.error);
+  }
 
   return Response.json(
     { ok: true },
