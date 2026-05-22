@@ -140,7 +140,7 @@ function welcomeHtml(firstName, email) {
 }
 
 function followUpHtml(firstName, email) {
-  const greeting = firstName ? `hola, ${firstName}` : "hola";
+  const greeting = firstName ? `${firstName}` : "hola";
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -159,7 +159,7 @@ function followUpHtml(firstName, email) {
             Data by Milo
           </div>
           <div style="font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:15px;color:rgba(253,245,236,.7);letter-spacing:.06em;">
-            un tip que nadie te enseña
+            antes del primer domingo
           </div>
         </td></tr>
 
@@ -167,19 +167,16 @@ function followUpHtml(firstName, email) {
         <tr><td style="background:#fffcf6;border:1px solid rgba(139,26,74,.1);border-top:none;padding:40px 40px 32px;">
 
           <!-- Greeting -->
-          <p style="font-family:Georgia,serif;font-style:italic;font-size:19px;color:#1a0a10;margin:0 0 6px;line-height:1.4;">
-            ${greeting}, soy yo otra vez 🩷
-          </p>
-          <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#a07080;margin:0 0 28px;line-height:1.5;">
-            3 días desde que te sumaste.
+          <p style="font-family:Georgia,serif;font-style:italic;font-size:19px;color:#1a0a10;margin:0 0 24px;line-height:1.4;">
+            ${greeting},
           </p>
 
           <p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.75;margin:0 0 16px;">
-            Ojalá hayas abierto algún recurso, o el mail anterior. Pero si no, tampoco pasa nada — este tip te sirve igual y solo.
+            antes de que llegue el primer domingo quería mandarte una sola cosa.
           </p>
 
           <p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.75;margin:0 0 28px;">
-            Te quería pasar <strong>una sola cosa</strong> que aprendí tarde y que cambió cómo hago todo:
+            Una que aprendí tarde y que ojalá alguien me hubiera dicho antes de que yo me perdiera horas mirando columnas sin saber qué estaba buscando.
           </p>
 
           <!-- THE TIP — highlighted box -->
@@ -219,7 +216,7 @@ function followUpHtml(firstName, email) {
           </p>
 
           <!-- 70/30 callout -->
-          <table cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 28px;">
+          <table cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 32px;">
             <tr><td style="background:#8b1a4a;border-radius:12px;padding:28px 32px;text-align:center;">
               <p style="font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:32px;color:#fdf5ec;margin:0 0 6px;line-height:1.1;">
                 La pregunta es el 70%.
@@ -234,31 +231,27 @@ function followUpHtml(firstName, email) {
             </td></tr>
           </table>
 
-          <!-- Challenge -->
-          <table cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 32px;">
-            <tr><td style="background:#fdf5ec;border:1px dashed rgba(139,26,74,.3);border-radius:10px;padding:20px 24px;">
-              <p style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#d4447a;margin:0 0 10px;">
-                probá esta semana
-              </p>
-              <p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.7;margin:0;">
-                Antes de abrir cualquier archivo → post-it con la pregunta. Recién después abrís.
-              </p>
+          <!-- CTA -->
+          <p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.75;margin:0 0 8px;">
+            Si esto te hizo click, hay más en el recurso que armé para arrancar bien.
+          </p>
+          <p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.75;margin:0 0 28px;">
+            No es un curso. Son las cosas concretas que me hubiera gustado tener desde el principio.
+          </p>
+
+          <table cellpadding="0" cellspacing="0" style="margin:0 0 40px;">
+            <tr><td style="background:#8b1a4a;border-radius:999px;padding:14px 32px;">
+              <a href="https://databymilo.me/recursos" style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:14px;color:#fdf5ec;text-decoration:none;letter-spacing:.04em;">
+                Ir al recurso &rarr;
+              </a>
             </td></tr>
           </table>
 
           <!-- Signature -->
           <hr style="border:none;border-top:1px dashed rgba(139,26,74,.2);margin:0 0 24px;" />
 
-          <!-- PS notes -->
-          <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#3d1a2a;line-height:1.75;margin:0 0 12px;">
-            <strong>PD:</strong> Contame en respuesta qué pregunta escribiste. Me re importa leerlas y respondo todas <span style="color:#d4447a;">(todavía me cabe — somos pocas por ahora 🩷)</span>
-          </p>
-          <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#3d1a2a;line-height:1.75;margin:0 0 28px;">
-            <strong>PD2:</strong> Si el PDF te quedó pendiente, no te culpes — abrilo el domingo, café mediante. Está pensado justo para ese momento.
-          </p>
-
           <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#a07080;margin:0 0 4px;">
-            nos hablamos en unos días.
+            nos hablamos el domingo.
           </p>
           <p style="font-family:Georgia,serif;font-style:italic;font-size:36px;color:#8b1a4a;margin:0 0 4px;line-height:1;">
             milo
