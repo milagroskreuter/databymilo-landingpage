@@ -22,14 +22,15 @@
     body { margin: 0 !important; padding: 0 !important; background-color: #e8d8c2; }
     a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; }
     @media only screen and (max-width: 620px) {
-      .card-wrap { width: 100% !important; }
+      .outer-pad { padding: 0 !important; }
+      .card-wrap { width: 100% !important; border-radius: 0 !important; }
       .body-pad { padding: 28px 24px !important; }
-      .header-pad { padding: 32px 28px 24px !important; }
-      .footer-pad { padding: 32px 28px 24px !important; }
+      .header-pad { padding: 32px 24px 24px !important; }
+      .footer-pad { padding: 32px 24px 24px !important; }
       .quote-block { padding: 16px 18px !important; }
       .question-block { padding: 22px 20px !important; }
       .sign-pad { padding: 0 24px 32px !important; }
-      .hero-title { font-size: 32px !important; }
+      .hero-title { font-size: 30px !important; }
       .social-table td { padding: 0 6px !important; }
       .icon-circle { width: 40px !important; height: 40px !important; }
     }
@@ -45,11 +46,11 @@
   <!-- Outer table -->
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#e8d8c2;">
     <tr>
-      <td align="center" style="padding:32px 16px;">
+      <td align="center" class="outer-pad" style="padding:32px 16px;">
 
         <!--[if (gte mso 9)|(IE)]><table width="600" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
         <!-- Card wrapper -->
-        <table role="presentation" class="card-wrap" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;width:100%;background-color:#fdf5ec;border-radius:16px;">
+        <table role="presentation" class="card-wrap" cellpadding="0" cellspacing="0" border="0" align="center" width="100%" style="max-width:600px;width:100%;margin:0 auto;background-color:#fdf5ec;border-radius:16px;">
 
           <!-- ══════════════ HEADER ══════════════ -->
           <tr>
