@@ -38,39 +38,77 @@ function welcomeHtml(firstName, email) {
         <!-- Body -->
         <tr><td style="background:#fffcf6;border:1px solid rgba(139,26,74,.1);border-top:none;padding:40px 40px 32px;">
 
-          <p style="font-family:Georgia,serif;font-style:italic;font-size:20px;color:#1a0a10;margin:0 0 20px;line-height:1.45;">
+          <p style="font-family:Georgia,serif;font-style:italic;font-size:20px;color:#1a0a10;margin:0 0 12px;line-height:1.45;">
             ${greeting} ✦
           </p>
 
+          <p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.7;margin:0 0 20px;">
+            ¡Gracias por sumarte! Me alegra mucho tenerte acá.
+          </p>
+
           <p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.7;margin:0 0 16px;">
-            Ya estás adentro. Cada domingo a las 9 AM te llega un mail con:
+            Los domingos a las 9 te escribo algo así:
           </p>
 
           <table cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
             <tr>
               <td style="color:#d4447a;font-size:14px;padding-right:10px;vertical-align:top;padding-top:3px;">✦</td>
-              <td style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.65;padding-bottom:8px;">Un recurso nuevo o una herramienta que uso.</td>
+              <td style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.65;padding-bottom:8px;">Algo de la semana en la corpo. Lo que pasó de verdad, no la versión para LinkedIn.</td>
             </tr>
             <tr>
               <td style="color:#d4447a;font-size:14px;padding-right:10px;vertical-align:top;padding-top:3px;">✦</td>
-              <td style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.65;padding-bottom:8px;">Una historia corta de la semana — lo que salió bien, lo que no.</td>
+              <td style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.65;padding-bottom:8px;">Lo que está pasando con la IA en las empresas, sin el hype.</td>
             </tr>
             <tr>
               <td style="color:#d4447a;font-size:14px;padding-right:10px;vertical-align:top;padding-top:3px;">✦</td>
-              <td style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.65;">Data que podés aplicar ese mismo día, sin bootcamp previo.</td>
+              <td style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.65;">Una reflexión que no entró en ningún post.</td>
             </tr>
           </table>
 
-          <p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.7;margin:0 0 32px;">
-            Mientras tanto, la biblioteca de recursos está disponible para que te lleves lo que necesitás.
+          <p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.7;margin:0 0 20px;">
+            Mientras tanto, podés arrancar por acá:
           </p>
 
-          <!-- CTA -->
-          <table cellpadding="0" cellspacing="0" style="margin:0 0 36px;">
-            <tr><td style="background:#8b1a4a;border-radius:999px;padding:13px 28px;">
-              <a href="https://databymilo.me/recursos" style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:14px;color:#fdf5ec;text-decoration:none;letter-spacing:.04em;">
-                Ver los recursos →
-              </a>
+          <!-- CTA buttons -->
+          <table cellpadding="0" cellspacing="0" style="margin:0 0 40px;">
+            <tr>
+              <td style="padding-right:12px;">
+                <table cellpadding="0" cellspacing="0">
+                  <tr><td style="background:#8b1a4a;border-radius:999px;padding:13px 28px;">
+                    <a href="https://databymilo.me/blog" style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:14px;color:#fdf5ec;text-decoration:none;letter-spacing:.04em;">
+                      Leer el blog &rarr;
+                    </a>
+                  </td></tr>
+                </table>
+              </td>
+              <td>
+                <table cellpadding="0" cellspacing="0">
+                  <tr><td style="background:#fdf5ec;border:1.5px solid #8b1a4a;border-radius:999px;padding:13px 28px;">
+                    <a href="https://databymilo.me/recursos" style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:14px;color:#8b1a4a;text-decoration:none;letter-spacing:.04em;">
+                      Ver los recursos &rarr;
+                    </a>
+                  </td></tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Redes sociales -->
+          <table cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
+            <tr><td style="padding-bottom:10px;">
+              <span style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07080;">Instagram</span>
+              &nbsp;&nbsp;
+              <a href="https://www.instagram.com/databymilo" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:#8b1a4a;text-decoration:none;">@databymilo</a>
+            </td></tr>
+            <tr><td style="padding-bottom:10px;">
+              <span style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07080;">Pinterest</span>
+              &nbsp;&nbsp;
+              <a href="https://ar.pinterest.com/databymilo/" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:#8b1a4a;text-decoration:none;">@databymilo</a>
+            </td></tr>
+            <tr><td>
+              <span style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07080;">LinkedIn</span>
+              &nbsp;&nbsp;
+              <a href="https://www.linkedin.com/in/milagroskreuter/" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:#8b1a4a;text-decoration:none;">milagros kreuter</a>
             </td></tr>
           </table>
 
