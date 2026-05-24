@@ -7,6 +7,12 @@
       "runtimeArgs": ["run", "dev"],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "Email Preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "email-templates", "-p", "3001", "--no-clipboard"],
+      "port": 3001
     }
   ]
 }
