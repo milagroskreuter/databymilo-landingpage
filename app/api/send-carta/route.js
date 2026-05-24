@@ -24,7 +24,7 @@ export async function POST(req) {
 
   // 1. Create the broadcast
   const { data: broadcast, error: bError } = await resend.broadcasts.create({
-    audience_id: AUDIENCE_ID,
+    audienceId: AUDIENCE_ID,
     from: "Milo · Data by Milo <hola@databymilo.me>",
     name: "La carta del Domingo — 25 may 2026",
     subject: "mis dashboards, un agente de IA, y la pregunta que no me deja dormir",
