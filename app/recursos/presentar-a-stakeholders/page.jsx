@@ -307,6 +307,10 @@ function ForYouSection() {
             </ul>
           </div>
         </div>
+        <MiniCTA
+          headline="¿Te reconociste? Tenés todo lo que necesitás para empezar."
+          note="USD 15 · Precio de lanzamiento · Descarga inmediata"
+        />
       </div>
     </section>
   );
@@ -355,6 +359,10 @@ function LearnSection() {
             </div>
           ))}
         </div>
+        <MiniCTA
+          headline="Todo esto en un PDF que podés leer en una tarde y usar el resto de tu carrera."
+          note="USD 15 · Un solo pago · Sin suscripción"
+        />
       </div>
     </section>
   );
@@ -426,6 +434,11 @@ function ContentsSection() {
             </div>
           ))}
         </div>
+        <MiniCTA
+          accent
+          headline="Ya viste lo que hay adentro. ¿Empezás antes de tu próxima presentación?"
+          note="USD 15 · Precio de lanzamiento. No sé hasta cuándo va a estar así."
+        />
       </div>
     </section>
   );
@@ -585,6 +598,10 @@ function FAQSection() {
         <div style={{ marginTop: 48 }}>
           <FAQAccordion />
         </div>
+        <MiniCTA
+          headline="¿Se fueron las dudas? Si comprás y no es lo que esperabas, te devuelvo el 100%."
+          note="Garantía de 7 días sin preguntas · Descarga inmediata"
+        />
       </div>
     </section>
   );
@@ -646,6 +663,44 @@ function FinalCTASection() {
 /* ─────────────────────────────────────────
    HELPERS
 ───────────────────────────────────────── */
+function MiniCTA({ headline, note, accent }) {
+  return (
+    <div style={{
+      textAlign: "center",
+      padding: "40px 24px",
+      marginTop: 48,
+      background: accent ? "var(--rosa-50)" : "transparent",
+      borderRadius: accent ? 14 : 0,
+      borderTop: !accent ? "1px solid rgba(139,26,74,.1)" : "none",
+    }}>
+      {headline && (
+        <p style={{
+          fontFamily: D, fontStyle: "italic",
+          fontSize: "clamp(16px, 2vw, 20px)",
+          color: "var(--ink)", margin: "0 auto 24px",
+          lineHeight: 1.4, maxWidth: 520,
+        }}>
+          {headline}
+        </p>
+      )}
+      <a
+        href={PAYMENT_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-primary"
+        style={{ fontSize: 15, padding: "14px 36px", fontWeight: 800, letterSpacing: ".03em" }}
+      >
+        ¡QUIERO MI GUÍA!
+      </a>
+      {note && (
+        <p style={{ fontFamily: B, fontSize: 12, color: "var(--fg-3)", margin: "12px 0 0", lineHeight: 1.5 }}>
+          {note}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function SectionHeader({ eyebrow, title }) {
   return (
     <div>
