@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Reveal from "../primitives/Reveal";
 import TypeEyebrow from "../primitives/TypeEyebrow";
-import { resources } from "../../lib/resources";
+import { resources, paidResources } from "../../lib/resources";
 
 
 export default function Resources() {
@@ -30,7 +30,7 @@ export default function Resources() {
             <h2 className="section-title">
               La <em>biblioteca</em>.
             </h2>
-            <p className="section-sub">Seis descargas para empezar. Sin mail, sin pop-up, sin letra chica.</p>
+            <p className="section-sub">Tres descargas para empezar. Sin mail, sin pop-up, sin letra chica.</p>
           </div>
           <span className="stamp">guardá esto</span>
         </div>
@@ -51,7 +51,169 @@ export default function Resources() {
         ))}
       </div>
 
+      <PaidSection products={paidResources} />
+
     </section>
+  );
+}
+
+function PaidSection({ products }) {
+  return (
+    <div style={{ marginTop: 80 }}>
+      <div style={{
+        display: "flex", alignItems: "center", gap: 20, marginBottom: 40,
+      }}>
+        <div style={{ flex: 1, height: 1, background: "rgba(139,26,74,.2)" }} />
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+          <span className="eyebrow-j" style={{ letterSpacing: ".22em" }}>✦ Destacados</span>
+          <span style={{
+            fontFamily: "var(--font-display)", fontStyle: "italic",
+            fontSize: 13, color: "var(--fg-3)",
+          }}>recursos de pago</span>
+        </div>
+        <div style={{ flex: 1, height: 1, background: "rgba(139,26,74,.2)" }} />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        {products.map((p, i) => (
+          <Reveal key={i} delay={80}>
+            <PaidResourceCard {...p} />
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, badge, bullets }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: "#fffcf6",
+        borderRadius: 12,
+        border: "1px solid rgba(139,26,74,.12)",
+        boxShadow: hovered ? "0 24px 56px rgba(139,26,74,.18)" : "0 8px 32px rgba(139,26,74,.1)",
+        overflow: "hidden",
+        transition: "box-shadow 300ms ease",
+        borderTop: "4px solid var(--vino)",
+      }}
+    >
+      <div style={{
+        padding: "32px 36px 36px",
+        display: "grid",
+        gridTemplateColumns: "1fr auto",
+        gap: 40,
+        alignItems: "start",
+      }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20, alignItems: "center" }}>
+            <span style={{
+              fontFamily: "var(--font-body)", fontWeight: 800, fontSize: 10,
+              letterSpacing: ".18em", textTransform: "uppercase",
+              background: "var(--vino)", color: "#fff",
+              padding: "5px 12px", borderRadius: 999,
+            }}>
+              ✦ {badge}
+            </span>
+            <span style={{
+              fontFamily: "var(--font-body)", fontWeight: 700, fontSize: 10,
+              letterSpacing: ".14em", textTransform: "uppercase",
+              color: "var(--vino)", background: "var(--rosa-50)",
+              padding: "5px 12px", borderRadius: 999,
+              border: "1px solid rgba(139,26,74,.15)",
+            }}>
+              {type} · {pages}
+            </span>
+          </div>
+
+          <h3 style={{
+            fontFamily: "var(--font-display)", fontWeight: 700,
+            fontSize: "clamp(20px, 2.5vw, 28px)", lineHeight: 1.2,
+            color: "var(--ink)", margin: "0 0 14px",
+          }}>
+            {title}
+          </h3>
+
+          <p style={{
+            fontFamily: "var(--font-body)", fontSize: 15, lineHeight: 1.7,
+            color: "var(--fg-2)", margin: "0 0 24px", maxWidth: 600,
+          }}>
+            {desc}
+          </p>
+
+          <ul style={{ listStyle: "none", padding: 0, margin: "0 0 28px", display: "flex", flexDirection: "column", gap: 8 }}>
+            {bullets.map((b, i) => (
+              <li key={i} style={{
+                fontFamily: "var(--font-body)", fontSize: 14, color: "var(--fg-2)",
+                display: "flex", alignItems: "flex-start", gap: 10,
+              }}>
+                <span style={{ color: "var(--vino)", fontWeight: 800, flexShrink: 0, marginTop: 1 }}>✓</span>
+                {b}
+              </li>
+            ))}
+          </ul>
+
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
+            <Link
+              href={`/recursos/${slug}`}
+              style={{
+                fontFamily: "var(--font-body)", fontWeight: 700, fontSize: 14,
+                padding: "13px 28px", borderRadius: 999,
+                background: hovered ? "var(--vino)" : "var(--rosa)",
+                color: "#fff",
+                transition: "background 220ms",
+                textDecoration: "none", display: "inline-block",
+                boxShadow: "0 6px 16px rgba(139,26,74,.28)",
+                letterSpacing: ".02em",
+              }}
+            >
+              ¡QUIERO MI GUÍA!
+            </Link>
+            <span style={{
+              fontFamily: "var(--font-body)", fontSize: 12, color: "var(--fg-3)",
+              letterSpacing: ".02em",
+            }}>
+              Descarga inmediata · Garantía 7 días sin preguntas
+            </span>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, paddingTop: 4 }}>
+          <div style={{
+            background: "var(--vino)", borderRadius: 10, padding: "28px 24px",
+            width: 140, aspectRatio: "0.707",
+            display: "flex", flexDirection: "column", justifyContent: "space-between",
+            boxShadow: "8px 8px 0 var(--rosa-200), 4px 4px 0 var(--rosa-300)",
+            flexShrink: 0,
+          }}>
+            <div>
+              <div style={{
+                fontFamily: "var(--font-body)", fontSize: 7, letterSpacing: ".2em",
+                color: "rgba(255,255,255,.6)", textTransform: "uppercase", marginBottom: 12,
+              }}>
+                Data by Milo
+              </div>
+              <div style={{
+                fontFamily: "var(--font-display)", fontStyle: "italic",
+                fontSize: 11, color: "#fff", lineHeight: 1.45,
+              }}>
+                Cómo presentar data a stakeholders no técnicos
+              </div>
+            </div>
+            <div style={{
+              fontFamily: "var(--font-body)", fontSize: 8,
+              color: "rgba(255,255,255,.5)", letterSpacing: ".1em", textTransform: "uppercase",
+            }}>
+              Guía · 35 págs
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
   );
 }
 

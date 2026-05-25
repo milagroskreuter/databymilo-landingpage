@@ -59,26 +59,27 @@ export const resources = [
     note:
       "Empecé a armarlo cuando me di cuenta de que el glosario que buscaba no existía en español. Tardé meses. Valió la pena.",
   },
+];
+
+export const paidResources = [
   {
-    type: "Cheatsheet · PDF",
-    pages: "2 páginas",
-    title: "Excel para las que odian Excel",
-    desc: "Las veinte fórmulas que uso todos los días, con ejemplos reales.",
-    color: "var(--rosa-50)",
-  },
-  {
-    type: "Cheatsheet · PDF",
-    pages: "4 páginas",
-    title: "Python para análisis",
-    desc: "Pandas sin morir en el intento. El pack que me hubiera gustado tener en el bootcamp.",
-    color: "var(--lavender)",
-  },
-  {
-    type: "Plantilla · XLSX",
-    pages: "Excel · Sheets",
-    title: "Dashboard de métricas personales",
-    desc: "Mi tracker mensual (ingresos, gastos, hábitos) con fórmulas explicadas.",
-    color: "#fdf0f6",
+    type: "Guía · PDF",
+    pages: "35 páginas",
+    title: "Cómo presentar data a stakeholders no técnicos sin morir en el intento",
+    desc: "El sistema concreto para que tu próximo readout sea entendido a la primera, accionado por tu equipo y recordado después de la reunión. Para mujeres en tech y data cansadas de armar análisis que después nadie usa.",
+    price: "USD 15",
+    priceNote: "Precio de lanzamiento",
+    color: "#fadbe8",
+    slug: "presentar-a-stakeholders",
+    paymentUrl: "https://pay.hotmart.com/V105982887R",
+    badge: "Nueva guía",
+    bullets: [
+      "Las 3 preguntas que cambian todo antes de abrir PowerPoint",
+      "La estructura BLUF que usan McKinsey y los mejores PMs",
+      "8 comparaciones antes/después de slides reales",
+      "4 prompts de IA listos para copiar y usar",
+      "Checklist imprimible de 10 puntos para cada presentación",
+    ],
   },
 ];
 
