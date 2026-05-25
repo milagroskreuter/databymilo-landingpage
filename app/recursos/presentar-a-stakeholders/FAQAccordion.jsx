@@ -51,6 +51,7 @@ export default function FAQAccordion() {
           style={{ borderBottom: "1px solid rgba(139,26,74,.12)" }}
         >
           <button
+            className="faq-q-btn"
             onClick={() => setOpen(open === i ? null : i)}
             style={{
               width: "100%",
@@ -82,7 +83,7 @@ export default function FAQAccordion() {
               +
             </span>
           </button>
-          <div style={{
+          <div className="faq-a-wrap" style={{
             maxHeight: open === i ? 400 : 0,
             overflow: "hidden",
             transition: "max-height 280ms ease",
