@@ -4,7 +4,7 @@ import CTABlock from "../../components/sections/CTABlock";
 import Footer from "../../components/sections/Footer";
 import SectionDivider from "../../components/SectionDivider";
 import TypeEyebrow from "../../components/primitives/TypeEyebrow";
-import { getResourceBySlug, getAvailableResources } from "../../lib/resources";
+import { getResourceBySlug, getAvailableResources, paidResources } from "../../lib/resources";
 import DownloadButton from "../../components/DownloadButton";
 
 export async function generateStaticParams() {
@@ -39,87 +39,109 @@ export async function generateMetadata({ params }) {
 }
 
 function OtherResources({ currentSlug }) {
-  const others = getAvailableResources().filter((r) => r.slug !== currentSlug);
-  if (others.length === 0) return null;
+  const freeOthers = getAvailableResources().filter((r) => r.slug !== currentSlug);
+  const paidOthers = paidResources.filter((r) => r.slug !== currentSlug);
+  if (freeOthers.length === 0 && paidOthers.length === 0) return null;
+
   return (
     <aside style={{ marginTop: 72 }}>
       <div className="eyebrow-j" style={{ color: "var(--vino)", marginBottom: 18 }}>
         Otros recursos
       </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          gap: 18,
-        }}
-      >
-        {others.map((r) => (
+      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        {paidOthers.map((r) => (
           <Link key={r.slug} href={`/recursos/${r.slug}`} style={{ textDecoration: "none" }}>
-            <article
-              style={{
-                background: r.color || "var(--cream)",
-                borderRadius: 12,
-                padding: "22px 20px",
-                border: "1px solid rgba(139,26,74,.12)",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 700,
-                  fontSize: 10,
-                  letterSpacing: ".14em",
-                  textTransform: "uppercase",
-                  color: "var(--vino)",
-                  opacity: 0.7,
-                }}
-              >
-                {r.type} · {r.pages}
+            <article style={{
+              background: "#fffcf6",
+              borderRadius: 12,
+              padding: "22px 20px",
+              border: "1px solid rgba(139,26,74,.12)",
+              borderTop: "3px solid var(--vino)",
+              display: "flex", flexDirection: "column", gap: 8,
+            }}>
+              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                <span style={{
+                  fontFamily: "var(--font-body)", fontWeight: 800, fontSize: 9,
+                  letterSpacing: ".18em", textTransform: "uppercase",
+                  background: "var(--vino)", color: "#fff",
+                  padding: "3px 10px", borderRadius: 999,
+                }}>✦ Destacado</span>
+                <span style={{
+                  fontFamily: "var(--font-body)", fontWeight: 700, fontSize: 10,
+                  letterSpacing: ".14em", textTransform: "uppercase",
+                  color: "var(--vino)", opacity: 0.7,
+                }}>
+                  {r.type} · {r.pages}
+                </span>
               </div>
-              <h3
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontStyle: "italic",
-                  fontWeight: 700,
-                  fontSize: 20,
-                  color: "var(--ink)",
-                  margin: 0,
-                  lineHeight: 1.25,
-                }}
-              >
+              <h3 style={{
+                fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+                fontSize: 20, color: "var(--ink)", margin: 0, lineHeight: 1.25,
+              }}>
                 {r.title}
               </h3>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color: "var(--fg-2)",
-                  margin: 0,
-                  lineHeight: 1.5,
-                }}
-              >
+              <p style={{
+                fontFamily: "var(--font-body)", fontSize: 13, color: "var(--fg-2)",
+                margin: 0, lineHeight: 1.5,
+              }}>
                 {r.desc}
               </p>
-              <span
-                style={{
-                  marginTop: "auto",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 700,
-                  fontSize: 11,
-                  letterSpacing: ".06em",
-                  color: "var(--vino)",
-                  textTransform: "uppercase",
-                }}
-              >
-                Ver recurso →
+              <span style={{
+                marginTop: "auto", fontFamily: "var(--font-body)", fontWeight: 700,
+                fontSize: 11, letterSpacing: ".06em", color: "var(--vino)",
+                textTransform: "uppercase",
+              }}>
+                Ver guía →
               </span>
             </article>
           </Link>
         ))}
+
+        {freeOthers.length > 0 && (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 14,
+          }}>
+            {freeOthers.map((r) => (
+              <Link key={r.slug} href={`/recursos/${r.slug}`} style={{ textDecoration: "none" }}>
+                <article style={{
+                  background: r.color || "var(--cream)",
+                  borderRadius: 12, padding: "22px 20px",
+                  border: "1px solid rgba(139,26,74,.12)",
+                  height: "100%", display: "flex", flexDirection: "column", gap: 8,
+                }}>
+                  <div style={{
+                    fontFamily: "var(--font-body)", fontWeight: 700, fontSize: 10,
+                    letterSpacing: ".14em", textTransform: "uppercase",
+                    color: "var(--vino)", opacity: 0.7,
+                  }}>
+                    {r.type} · {r.pages}
+                  </div>
+                  <h3 style={{
+                    fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+                    fontSize: 20, color: "var(--ink)", margin: 0, lineHeight: 1.25,
+                  }}>
+                    {r.title}
+                  </h3>
+                  <p style={{
+                    fontFamily: "var(--font-body)", fontSize: 13, color: "var(--fg-2)",
+                    margin: 0, lineHeight: 1.5,
+                  }}>
+                    {r.desc}
+                  </p>
+                  <span style={{
+                    marginTop: "auto", fontFamily: "var(--font-body)", fontWeight: 700,
+                    fontSize: 11, letterSpacing: ".06em", color: "var(--vino)",
+                    textTransform: "uppercase",
+                  }}>
+                    Ver recurso →
+                  </span>
+                </article>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </aside>
   );

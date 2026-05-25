@@ -181,36 +181,17 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, paddingTop: 4 }}>
-          <div style={{
-            background: "var(--vino)", borderRadius: 10, padding: "28px 24px",
-            width: 140, aspectRatio: "0.707",
-            display: "flex", flexDirection: "column", justifyContent: "space-between",
-            boxShadow: "8px 8px 0 var(--rosa-200), 4px 4px 0 var(--rosa-300)",
-            flexShrink: 0,
-          }}>
-            <div>
-              <div style={{
-                fontFamily: "var(--font-body)", fontSize: 7, letterSpacing: ".2em",
-                color: "rgba(255,255,255,.6)", textTransform: "uppercase", marginBottom: 12,
-              }}>
-                Data by Milo
-              </div>
-              <div style={{
-                fontFamily: "var(--font-display)", fontStyle: "italic",
-                fontSize: 11, color: "#fff", lineHeight: 1.45,
-              }}>
-                Cómo presentar data a stakeholders no técnicos
-              </div>
-            </div>
-            <div style={{
-              fontFamily: "var(--font-body)", fontSize: 8,
-              color: "rgba(255,255,255,.5)", letterSpacing: ".1em", textTransform: "uppercase",
-            }}>
-              Guía · 35 págs
-            </div>
-          </div>
-
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <img
+            src="/mockup-guia.png"
+            alt="Mockup de la guía en laptop y tablet"
+            style={{
+              width: 220,
+              borderRadius: 12,
+              boxShadow: "0 12px 32px rgba(139,26,74,.22)",
+              display: "block",
+            }}
+          />
         </div>
       </div>
     </div>

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import FAQAccordion from "./FAQAccordion";
+import CTABlock from "../../components/sections/CTABlock";
 import Footer from "../../components/sections/Footer";
+import { resources } from "../../lib/resources";
 
 export const metadata = {
   title: "Cómo presentar data a stakeholders no técnicos | Data by Milo",
@@ -33,9 +35,72 @@ export default function Page() {
         <PricingSection />
         <FAQSection />
         <FinalCTASection />
+        <FreeResourcesSection />
       </main>
+      <div className="journal">
+        <CTABlock />
+      </div>
       <Footer />
     </>
+  );
+}
+
+function FreeResourcesSection() {
+  return (
+    <section style={{ padding: "80px 0", background: "#fffcf6" }}>
+      <div className="journal">
+        <span className="eyebrow-j" style={{ display: "block", marginBottom: 12 }}>También gratis</span>
+        <h2 style={{
+          fontFamily: D, fontWeight: 700,
+          fontSize: "clamp(24px, 3vw, 36px)",
+          lineHeight: 1.1, color: "var(--ink)", margin: "0 0 40px",
+        }}>
+          Más recursos <em>para llevarte.</em>
+        </h2>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 16,
+        }}>
+          {resources.map((r) => (
+            <Link key={r.slug} href={`/recursos/${r.slug}`} style={{ textDecoration: "none" }}>
+              <article style={{
+                background: r.color || "var(--cream)",
+                borderRadius: 12, padding: "22px 20px",
+                border: "1px solid rgba(139,26,74,.12)",
+                height: "100%", display: "flex", flexDirection: "column", gap: 8,
+              }}>
+                <div style={{
+                  fontFamily: B, fontWeight: 700, fontSize: 10,
+                  letterSpacing: ".14em", textTransform: "uppercase",
+                  color: "var(--vino)", opacity: 0.7,
+                }}>
+                  {r.type} · {r.pages}
+                </div>
+                <h3 style={{
+                  fontFamily: D, fontStyle: "italic", fontWeight: 700,
+                  fontSize: 20, color: "var(--ink)", margin: 0, lineHeight: 1.25,
+                }}>
+                  {r.title}
+                </h3>
+                <p style={{
+                  fontFamily: B, fontSize: 13, color: "var(--fg-2)",
+                  margin: 0, lineHeight: 1.5, flex: 1,
+                }}>
+                  {r.desc}
+                </p>
+                <span style={{
+                  fontFamily: B, fontWeight: 700, fontSize: 11,
+                  letterSpacing: ".06em", color: "var(--vino)", textTransform: "uppercase",
+                }}>
+                  Descargar gratis →
+                </span>
+              </article>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

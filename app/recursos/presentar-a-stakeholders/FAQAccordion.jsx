@@ -11,16 +11,12 @@ const FAQS = [
     a: "No. La guía es sobre comunicación, no sobre herramientas. Los principios aplican igual si usás Excel, Looker, Tableau, Power BI, Sheets o Python con matplotlib.",
   },
   {
-    q: "¿Sirve si trabajo en LATAM o solo si trabajo en empresas gringas?",
-    a: "Sirve más en LATAM, porque está escrito desde adentro de una corpo tech latina. Los ejemplos y la voz están pensados para nuestro contexto, no traducidos del inglés.",
-  },
-  {
     q: "¿En qué formato lo recibo?",
-    a: "PDF descargable. Lo abrís en cualquier dispositivo (compu, tablet, celular). No necesitás cuenta de nada para acceder al contenido después del pago.",
+    a: "PDF descargable. Lo abrís en cualquier dispositivo (compu, tablet, celular).",
   },
   {
     q: "¿Puedo imprimirlo?",
-    a: "Sí. Las páginas pensadas para imprimir (workbook, checklist, cheat sheet) están diseñadas para que se vean bien en A4 o carta.",
+    a: "Sí. Las páginas pensadas para imprimir (workbook, checklist, cheat sheet) están diseñadas para que se vean bien en A4.",
   },
   {
     q: "¿Cómo me llega después de pagar?",
