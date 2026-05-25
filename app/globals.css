@@ -789,3 +789,86 @@ button { font-family: inherit; }
   .journal { padding: 0 14px; }
   h1.display { font-size: clamp(36px, 10vw, 56px) !important; }
 }
+
+/* ---------- Recursos · Paid card ---------- */
+@media (max-width: 720px) {
+  .paid-card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    padding: 26px 22px !important;
+  }
+  .paid-card-img-wrap { order: -1; }
+  .paid-card-img { width: 180px !important; }
+}
+
+/* ---------- Stakeholders landing ---------- */
+@media (max-width: 860px) {
+  .stake-hero-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+  .stake-hero-img { max-width: 320px !important; margin: 0 auto; }
+  .stake-for-grid { grid-template-columns: 1fr !important; }
+  .stake-contents-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .stake-about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    text-align: center;
+  }
+  .stake-about-photo {
+    width: 160px !important; height: 160px !important;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .stake-section { padding: 64px 0 !important; }
+  .stake-section-top0 { padding: 0 0 64px !important; }
+  .stake-hero { padding: 16px 0 56px !important; }
+  .stake-hero-img { max-width: 260px !important; }
+
+  /* "Esto es para vos" / "no es para vos" cards */
+  .stake-for-grid > div { padding: 24px 22px !important; }
+  .stake-for-grid h3 { font-size: 19px !important; margin-bottom: 18px !important; }
+
+  /* Índice */
+  .stake-contents-grid > div { padding: 14px 0 !important; gap: 12px !important; }
+  .stake-contents-grid > div > span:first-child {
+    font-size: 26px !important; width: 36px !important;
+  }
+  .stake-contents-grid > div > span:last-child { font-size: 18px !important; }
+
+  /* About */
+  .stake-about-photo { width: 140px !important; height: 140px !important; }
+
+  /* Pricing card — tighten side padding on inner blocks (not the absolute badge) */
+  .stake-pricing-card > div:not([style*="absolute"]) {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  .stake-pricing-card > div:nth-of-type(2) {
+    padding-top: 32px !important;
+    padding-bottom: 24px !important;
+  }
+  .stake-pricing-card > div:nth-of-type(2) > div:first-child { font-size: 48px !important; }
+
+  /* Pricing badge — move out of corner so it doesn't overlap price */
+  .stake-pricing-card > div[style*="absolute"] {
+    position: static !important;
+    display: inline-block;
+    margin: 16px 0 0 16px;
+  }
+
+  /* Mini CTA */
+  .stake-mini-cta { padding: 28px 16px !important; margin-top: 32px !important; }
+
+  /* FAQ */
+  .faq-q-btn { font-size: 14px !important; padding: 16px 0 !important; gap: 12px !important; }
+  .faq-a-wrap p { font-size: 13.5px !important; padding-right: 0 !important; }
+}
+
+/* ---------- Resource ribbon on free cards ---------- */
+@media (max-width: 600px) {
+  .resource-ribbon {
+    top: 14px !important; right: -34px !important;
+    width: 120px !important; font-size: 7px !important;
+    padding: 6px 0 !important;
+  }
+}

@@ -89,6 +89,7 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
 
   return (
     <div
+      className="paid-card"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -101,7 +102,7 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
         borderTop: "4px solid var(--vino)",
       }}
     >
-      <div style={{
+      <div className="paid-card-grid" style={{
         padding: "32px 36px 36px",
         display: "grid",
         gridTemplateColumns: "1fr auto",
@@ -181,8 +182,9 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <div className="paid-card-img-wrap" style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <img
+            className="paid-card-img"
             src="/mockup-guia.png"
             alt="Mockup de la guía en laptop y tablet"
             style={{
@@ -234,7 +236,7 @@ function ResourceCard({ type, pages, title, desc, color, index, href, slug }) {
       }}
     >
       {href && (
-        <div style={{
+        <div className="resource-ribbon" style={{
           position: "absolute", top: 22, right: -30, width: 130,
           background: "#8b1a4a", color: "#fff", fontSize: 8,
           fontFamily: "var(--font-body)", fontWeight: 800,
