@@ -547,7 +547,7 @@ function PricingSection() {
               boxShadow: "0 3px 10px rgba(139,26,74,.32)",
               whiteSpace: "nowrap", pointerEvents: "none",
             }}>
-              ✦ Descarga inmediata
+              ✦ Pago en tu moneda local
             </div>
             <div style={{ padding: "40px 40px 32px", textAlign: "center" }}>
               <div style={{ fontFamily: D, fontWeight: 800, fontSize: 60, color: "var(--vino)", lineHeight: 1 }}>
