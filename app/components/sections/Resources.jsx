@@ -66,10 +66,6 @@ function PaidSection({ products }) {
         <div style={{ flex: 1, height: 1, background: "rgba(139,26,74,.2)" }} />
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
           <span className="eyebrow-j" style={{ letterSpacing: ".22em" }}>✦ Destacados</span>
-          <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic",
-            fontSize: 13, color: "var(--fg-3)",
-          }}>recursos de pago</span>
         </div>
         <div style={{ flex: 1, height: 1, background: "rgba(139,26,74,.2)" }} />
       </div>
