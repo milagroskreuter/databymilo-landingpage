@@ -92,7 +92,7 @@ function FreeResourcesSection() {
                   fontFamily: B, fontWeight: 700, fontSize: 11,
                   letterSpacing: ".06em", color: "var(--vino)", textTransform: "uppercase",
                 }}>
-                  Descargar gratis →
+                  Ver recursos →
                 </span>
               </article>
             </Link>

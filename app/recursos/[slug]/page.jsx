@@ -91,7 +91,7 @@ function OtherResources({ currentSlug }) {
                 fontSize: 11, letterSpacing: ".06em", color: "var(--vino)",
                 textTransform: "uppercase",
               }}>
-                Ver guía →
+                Ver recursos →
               </span>
             </article>
           </Link>
@@ -135,7 +135,7 @@ function OtherResources({ currentSlug }) {
                     fontSize: 11, letterSpacing: ".06em", color: "var(--vino)",
                     textTransform: "uppercase",
                   }}>
-                    Ver recurso →
+                    Ver recursos →
                   </span>
                 </article>
               </Link>
