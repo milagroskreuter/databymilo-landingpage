@@ -387,9 +387,8 @@ function AboutSection() {
             flexShrink: 0,
             background: "var(--rosa-100)",
           }}>
-            {/* Guardá la foto en /public/milo-foto.jpg */}
             <img
-              src="/milo-foto.jpg"
+              src="/milo-foto.png"
               alt="Milo, Data Analyst"
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
             />
