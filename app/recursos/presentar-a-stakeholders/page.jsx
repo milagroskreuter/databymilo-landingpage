@@ -49,7 +49,6 @@ function FreeResourcesSection() {
   return (
     <section style={{ padding: "80px 0", background: "#fffcf6" }}>
       <div className="journal">
-        <span className="eyebrow-j" style={{ display: "block", marginBottom: 12 }}>También gratis</span>
         <h2 style={{
           fontFamily: D, fontWeight: 700,
           fontSize: "clamp(24px, 3vw, 36px)",
