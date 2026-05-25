@@ -64,7 +64,7 @@ export default function BlogIndexPage({ searchParams }) {
               <div className="pagenum">pág. 50</div>
             </div>
             <h1 className="section-title">
-              Historias <em>largas</em>.
+              edición <em>corpo</em>.
             </h1>
             <p className="section-sub">
               Lo que no entra en un reel: casos reales, errores y data traducida al español.
