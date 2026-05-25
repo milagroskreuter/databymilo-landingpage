@@ -117,6 +117,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es" className={`${playfair.variable} ${montserrat.variable} ${caveat.variable}`}>
       <head>
+        <meta name="p:domain_verify" content="dfb4609894b5df079f60c537eed79c92"/>
         {/* Google Tag Manager */}
         <script
           dangerouslySetInnerHTML={{
