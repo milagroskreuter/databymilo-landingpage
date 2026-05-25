@@ -539,16 +539,15 @@ function PricingSection() {
             position: "relative",
           }}>
             <div style={{
-              position: "absolute", top: 24, right: -36, width: 150,
+              position: "absolute", top: 18, right: 18,
               background: "var(--rosa)", color: "#fff",
               fontFamily: B, fontWeight: 800, fontSize: 9,
-              letterSpacing: ".18em", textTransform: "uppercase",
-              textAlign: "center", padding: "8px 0",
-              transform: "rotate(45deg)",
-              boxShadow: "0 2px 8px rgba(139,26,74,.35)",
-              pointerEvents: "none",
+              letterSpacing: ".16em", textTransform: "uppercase",
+              padding: "5px 13px", borderRadius: 999,
+              boxShadow: "0 3px 10px rgba(139,26,74,.32)",
+              whiteSpace: "nowrap", pointerEvents: "none",
             }}>
-              DESCARGA INMEDIATA
+              ✦ Descarga inmediata
             </div>
             <div style={{ padding: "40px 40px 32px", textAlign: "center" }}>
               <div style={{ fontFamily: D, fontWeight: 800, fontSize: 60, color: "var(--vino)", lineHeight: 1 }}>
