@@ -127,7 +127,8 @@ export default function BlogIndexPage({ searchParams }) {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 480px), 1fr))",
+                  maxWidth: 1040,
                   gap: 24,
                   marginTop: 48,
                 }}
