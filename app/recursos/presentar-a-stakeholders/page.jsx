@@ -47,7 +47,7 @@ export default function Page() {
 
 function FreeResourcesSection() {
   return (
-    <section style={{ padding: "80px 0", background: "#fffcf6" }}>
+    <section className="stake-section" style={{ padding: "80px 0", background: "#fffcf6" }}>
       <div className="journal">
         <h2 style={{
           fontFamily: D, fontWeight: 700,
@@ -108,7 +108,7 @@ function FreeResourcesSection() {
 ───────────────────────────────────────── */
 function HeroSection() {
   return (
-    <section style={{
+    <section className="stake-hero" style={{
       background: "linear-gradient(160deg, var(--cream-50) 0%, var(--rosa-50) 100%)",
       borderBottom: "1px solid rgba(139,26,74,.1)",
       padding: "20px 0 80px",
@@ -125,7 +125,7 @@ function HeroSection() {
           </Link>
         </div>
 
-        <div style={{
+        <div className="stake-hero-grid" style={{
           display: "grid",
           gridTemplateColumns: "1fr auto",
           gap: "48px 64px",
@@ -190,7 +190,7 @@ function HeroSection() {
           </div>
 
           {/* Mockup image — guardá el archivo en /public/mockup-guia.png */}
-          <div style={{ flexShrink: 0, maxWidth: 420 }}>
+          <div className="stake-hero-img" style={{ flexShrink: 0, maxWidth: 420 }}>
             <img
               src="/mockup-guia.png"
               alt="Vista previa de la guía en laptop y tablet"
@@ -208,7 +208,7 @@ function HeroSection() {
 ───────────────────────────────────────── */
 function ProblemSection() {
   return (
-    <section style={{ padding: "100px 0" }}>
+    <section className="stake-section" style={{ padding: "100px 0" }}>
       <div className="journal">
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
           <h2 style={{
@@ -270,9 +270,9 @@ function ForYouSection() {
   ];
 
   return (
-    <section style={{ padding: "0 0 100px" }}>
+    <section className="stake-section stake-section-top0" style={{ padding: "0 0 100px" }}>
       <div className="journal">
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+        <div className="stake-for-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
           <div style={{
             background: "#f0f9f0", border: "1px solid rgba(34,100,34,.15)",
             borderRadius: 12, padding: "32px",
@@ -330,7 +330,7 @@ const learnCards = [
 
 function LearnSection() {
   return (
-    <section style={{ padding: "0 0 100px" }}>
+    <section className="stake-section stake-section-top0" style={{ padding: "0 0 100px" }}>
       <div className="journal">
         <SectionHeader eyebrow="Lo concreto que te llevás" title={<>Lo concreto <em>que te llevás</em></>} />
         <div style={{
@@ -386,10 +386,10 @@ const chapters = [
 
 function ContentsSection() {
   return (
-    <section style={{ padding: "0 0 100px" }}>
+    <section className="stake-section stake-section-top0" style={{ padding: "0 0 100px" }}>
       <div className="journal">
         <SectionHeader eyebrow="El índice completo" title={<>El índice <em>completo</em></>} />
-        <div style={{
+        <div className="stake-contents-grid" style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
           gap: "0 48px",
@@ -449,15 +449,15 @@ function ContentsSection() {
 ───────────────────────────────────────── */
 function AboutSection() {
   return (
-    <section style={{ padding: "100px 0", background: "var(--cream-100)" }}>
+    <section className="stake-section" style={{ padding: "100px 0", background: "var(--cream-100)" }}>
       <div className="journal">
-        <div style={{
+        <div className="stake-about-grid" style={{
           display: "grid",
           gridTemplateColumns: "auto 1fr",
           gap: "40px 64px",
           alignItems: "start",
         }}>
-          <div style={{
+          <div className="stake-about-photo" style={{
             width: 200, height: 200, borderRadius: 16,
             overflow: "hidden",
             border: "3px solid var(--rosa-200)",
@@ -526,11 +526,11 @@ const includes = [
 
 function PricingSection() {
   return (
-    <section style={{ padding: "100px 0" }}>
+    <section className="stake-section" style={{ padding: "100px 0" }}>
       <div className="journal">
         <SectionHeader eyebrow="Una sola compra" title={<>Una sola compra. <em>Sin suscripción.</em></>} />
         <div style={{ maxWidth: 480, margin: "48px auto 0" }}>
-          <div style={{
+          <div className="stake-pricing-card" style={{
             background: "#fffcf6",
             border: "1px solid rgba(139,26,74,.12)",
             borderRadius: 16, overflow: "hidden",
@@ -604,7 +604,7 @@ function PricingSection() {
 ───────────────────────────────────────── */
 function FAQSection() {
   return (
-    <section style={{ padding: "0 0 100px" }}>
+    <section className="stake-section stake-section-top0" style={{ padding: "0 0 100px" }}>
       <div className="journal">
         <SectionHeader eyebrow="Preguntas frecuentes" title={<>Preguntas <em>frecuentes</em></>} />
         <div style={{ marginTop: 48 }}>
@@ -624,7 +624,7 @@ function FAQSection() {
 ───────────────────────────────────────── */
 function FinalCTASection() {
   return (
-    <section style={{ background: "var(--vino)", padding: "100px 0" }}>
+    <section className="stake-section" style={{ background: "var(--vino)", padding: "100px 0" }}>
       <div className="journal" style={{ textAlign: "center" }}>
         <span style={{
           fontFamily: B, fontWeight: 800, fontSize: 10, letterSpacing: ".22em",
@@ -677,7 +677,7 @@ function FinalCTASection() {
 ───────────────────────────────────────── */
 function MiniCTA({ headline, note, accent }) {
   return (
-    <div style={{
+    <div className="stake-mini-cta" style={{
       textAlign: "center",
       padding: "40px 24px",
       marginTop: 48,
