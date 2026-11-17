@@ -6,7 +6,7 @@ import Link from "next/link";
 const FULL_TEXT = "sin filtro";
 
 const SUBTEXTS = [
-  "Soy Milo. Trabajo en data dentro de una corpo tech grande y escribo sobre lo que veo ahí adentro. Sin la versión aspiracional ni la versión amargada.",
+  "Soy Milo. Trabajo en data para una fintech gringa, desde este lado del mapa. El cuaderno nació adentro de una corpo tech latina, y de ahí sale casi todo lo que cuento. Sin filtro corporativo ni filtro motivacional.",
   "Si el contenido de tech te agota porque siempre es demasiado técnico o demasiado motivacional, acá es distinto. Cuento desde adentro, para las que están ahí o están mirando desde afuera.",
   "Tech, data e IA contado desde adentro. No desde el escritorio del coach.",
 ];

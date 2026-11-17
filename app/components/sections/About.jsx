@@ -90,7 +90,7 @@ export default function About() {
                   margin: "0 0 18px",
                 }}
               >
-                Trabajo en una de las corporaciones tech más grandes de LATAM. Lo que escribo acá lo estoy viendo en tiempo real: las reuniones que no hacen falta, los proyectos de IA que nadie sabe bien para qué sirven, la diferencia entre cómo se presenta trabajar en tech y <Hi color="#fadbe8">cómo se vive</Hi>.
+                Hoy trabajo en data para una fintech del exterior, desde Buenos Aires. Antes pasé por una de las corpos tech más grandes de LATAM — el cuaderno nació ahí, y de ahí sale casi todo lo que cuento. Las reuniones que no hacen falta, los proyectos de IA que nadie sabe bien para qué sirven, la diferencia entre cómo se presenta trabajar en tech y <Hi color="#fadbe8">cómo se vive</Hi>.
               </p>
               <p
                 style={{
