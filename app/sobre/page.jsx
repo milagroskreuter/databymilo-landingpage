@@ -6,12 +6,12 @@ import SectionDivider from "../components/SectionDivider";
 export const metadata = {
   title: "Sobre Milo",
   description:
-    "Trabajo en data dentro de una de las corpos tech más grandes de LATAM y cuento lo que veo desde adentro. Sin filtro corporativo, sin filtro motivacional. Eso es Data by Milo.",
+    "Trabajo en data para una fintech del exterior, antes pasé por una de las corpos tech más grandes de LATAM. Cuento lo que veo desde adentro. Sin filtro corporativo, sin filtro motivacional. Eso es Data by Milo.",
   alternates: { canonical: "https://databymilo.me/sobre" },
   openGraph: {
     title: "Sobre Milo | Data by Milo",
     description:
-      "Trabajo en data dentro de una de las corpos tech más grandes de LATAM y cuento lo que veo desde adentro. Sin filtro corporativo, sin filtro motivacional.",
+      "Trabajo en data para una fintech del exterior, antes pasé por una de las corpos tech más grandes de LATAM. Cuento lo que veo desde adentro, sin filtro corporativo ni motivacional.",
     url: "https://databymilo.me/sobre",
   },
 };

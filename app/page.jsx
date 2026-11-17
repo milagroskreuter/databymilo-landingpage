@@ -36,9 +36,10 @@ function AboutTeaser() {
             color: "var(--ink)",
           }}
         >
-          Trabajo en una de las corporaciones tech más grandes de LATAM. Lo que escribo acá
-          lo estoy viendo en tiempo real. No soy docente, no soy gurú. Soy alguien que está
-          ahí y tiene ganas de contarlo sin filtro corporativo ni filtro motivacional.
+          Hoy trabajo en data para una fintech del exterior, desde Buenos Aires. Antes pasé
+          por una de las corpos tech más grandes de LATAM — el cuaderno nació ahí. No soy
+          docente, no soy gurú. Soy alguien que está acá y tiene ganas de contarlo sin filtro
+          corporativo ni filtro motivacional.
         </p>
         <Link href="/sobre" className="btn btn-ghost">
           Leer la historia completa →
@@ -61,7 +62,7 @@ function ResourcesTeaser() {
         <h2 className="section-title">
           La <em>biblioteca</em>.
         </h2>
-        <p className="section-sub">SQL, BI, Python, IA: conceptos explicados como a una amiga en un café. Todo en español, todo para descargar.</p>
+        <p className="section-sub">Tres descargas para empezar. Sin mail, sin pop-up, sin letra chica.</p>
       </Reveal>
       <div
         style={{
