@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import { Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import Topbar from "./components/Topbar";
+import NewsletterBar from "./components/NewsletterBar";
 import ScrollProgress from "./components/ScrollProgress";
 import CursorSparkles from "./components/CursorSparkles";
 import JsonLd from "./components/JsonLd";
@@ -148,6 +149,7 @@ export default function RootLayout({ children }) {
         <ScrollProgress />
         <CursorSparkles />
         <div className="paper-bg" style={{ position: "fixed", inset: 0, zIndex: 0 }} />
+        <NewsletterBar />
         <Topbar />
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
         <Analytics />

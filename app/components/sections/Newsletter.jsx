@@ -99,7 +99,7 @@ export default function Newsletter() {
                 maxWidth: 420,
               }}
             >
-              Cada domingo: algo de la semana en la corpo, lo que está pasando con la IA en las empresas y una reflexión que no entró en ningún post.
+              Historias de la corpo que no entran en Instagram, un recurso recién salido, y data lista para usar. 5 minutos de lectura. Promesa.
             </p>
           </div>
 
