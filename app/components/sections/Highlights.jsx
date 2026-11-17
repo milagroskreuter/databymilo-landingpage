@@ -18,6 +18,11 @@ export default function Highlights() {
       title: "Cuando vale la pena explicar",
       body: "SQL, BI, Python, IA: conceptos explicados como a una amiga en un café, no como en un tutorial de YouTube.",
     },
+    {
+      tag: "Herramientas & data",
+      title: "Lo que tengo abierto en la compu",
+      body: "Lo que uso todos los días, lo que probé y descarté, y lo que vale la pena aprender antes de tu próxima entrevista.",
+    },
   ];
 
   return (
@@ -33,7 +38,7 @@ export default function Highlights() {
           Lo que vive <em>en este cuaderno</em>.
         </h2>
         <p className="section-sub">
-          Cuatro líneas de contenido. Todas sobre tech, data e IA. Todas en español latinoamericano.
+          Cuatro líneas de contenido. Todas sobre tech, data e IA. Todas en español latinoamericano. Todas desde adentro.
         </p>
       </Reveal>
 

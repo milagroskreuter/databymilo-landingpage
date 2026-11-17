@@ -91,7 +91,7 @@ export default function CTABlock() {
                 maxWidth: 420,
               }}
             >
-              Recursos, historias y data lista para usar. Sin spam.
+              Historias de la corpo que no entran en Instagram, un recurso recién salido, y data lista para usar. 5 min de lectura. Promesa.
             </p>
 
             {sent ? (
@@ -176,6 +176,26 @@ export default function CTABlock() {
                   </div>
                 )}
               </form>
+            )}
+            {!sent && (
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 14,
+                  marginTop: 18,
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  letterSpacing: ".08em",
+                  textTransform: "uppercase",
+                  color: "var(--rosa-200)",
+                  fontWeight: 600,
+                }}
+              >
+                <span>✦ 5 min de lectura</span>
+                <span>✦ cero tracking</span>
+                <span>✦ te vas cuando quieras</span>
+              </div>
             )}
           </div>
 

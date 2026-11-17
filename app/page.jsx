@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Hero from "./components/sections/Hero";
 import Highlights from "./components/sections/Highlights";
+import Newsletter from "./components/sections/Newsletter";
 import CTABlock from "./components/sections/CTABlock";
 import Footer from "./components/sections/Footer";
 import Marquee from "./components/Marquee";
@@ -283,6 +284,8 @@ export default function Page() {
           <Highlights />
           <SectionDivider />
           <ResourcesTeaser />
+          <SectionDivider />
+          <Newsletter />
           <SectionDivider />
           <BlogTeaser />
           <SectionDivider />
