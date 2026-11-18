@@ -158,8 +158,8 @@ function ResourcesTeaser() {
   );
 }
 
-function BlogTeaser() {
-  const latestPosts = getAllPosts().slice(0, 2);
+async function BlogTeaser() {
+  const latestPosts = (await getAllPosts()).slice(0, 2);
   return (
     <section className="section">
       <div className="section-head">

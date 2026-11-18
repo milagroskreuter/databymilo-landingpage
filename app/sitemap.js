@@ -3,7 +3,7 @@ import { getAvailableResources } from "./lib/resources";
 
 const base = "https://databymilo.me";
 
-export default function sitemap() {
+export default async function sitemap() {
   const now = new Date();
   const staticRoutes = [
     { url: base, priority: 1, changeFrequency: "weekly" },
@@ -13,7 +13,7 @@ export default function sitemap() {
     { url: `${base}/portfolio`, priority: 0.5, changeFrequency: "monthly" },
   ].map((r) => ({ ...r, lastModified: now }));
 
-  const postRoutes = getAllPosts().map((post) => ({
+  const postRoutes = (await getAllPosts()).map((post) => ({
     url: `${base}/blog/${post.slug}`,
     priority: 0.7,
     changeFrequency: "monthly",
