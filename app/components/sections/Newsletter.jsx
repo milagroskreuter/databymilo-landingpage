@@ -38,17 +38,20 @@ export default function Newsletter() {
   };
 
   return (
-    <section id="newsletter" className="section" style={{ background: "var(--rosa-50)", borderRadius: 20, padding: "56px 48px" }}>
+    <section id="newsletter" className="section">
       <div className="pag-label">pág. 28 · newsletter</div>
 
       <Reveal>
         <div className="carta-block">
-          {/* Left: text + form */}
+          {/* Left: text + form — sobre fondo vino, texto cream */}
           <div>
+            <div className="eyebrow-j" style={{ color: "rgba(253,245,236,.65)", marginBottom: 16 }}>
+              pág. 28 · newsletter
+            </div>
             <h2
               className="display italic"
               style={{
-                color: "var(--ink)",
+                color: "var(--cream)",
                 fontSize: "clamp(36px, 4.4vw, 56px)",
                 margin: "0 0 20px",
                 lineHeight: 1.05,
@@ -60,13 +63,13 @@ export default function Newsletter() {
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: 16,
-                color: "var(--fg-2)",
+                color: "rgba(253,245,236,.82)",
                 lineHeight: 1.6,
                 margin: "0 0 32px",
                 maxWidth: 420,
               }}
             >
-              <strong>Todos los domingos.</strong> Historias de la corpo que no entran en Instagram, un recurso recién salido, y data lista para usar. 5 minutos de lectura. Promesa.
+              <strong style={{ color: "var(--cream)" }}>Todos los domingos.</strong> Historias de la corpo que no entran en Instagram, un recurso recién salido, y data lista para usar. 5 minutos de lectura. Promesa.
             </p>
 
             {sent ? (
@@ -75,7 +78,7 @@ export default function Newsletter() {
                   fontFamily: "var(--font-display)",
                   fontStyle: "italic",
                   fontSize: 24,
-                  color: "var(--vino)",
+                  color: "var(--butter)",
                   lineHeight: 1.3,
                 }}
               >
@@ -126,7 +129,7 @@ export default function Newsletter() {
                       fontFamily: "var(--font-display)",
                       fontStyle: "italic",
                       fontSize: 13,
-                      color: "var(--rosa)",
+                      color: "var(--rosa-200)",
                       marginTop: 8,
                       lineHeight: 1.4,
                     }}
@@ -138,7 +141,7 @@ export default function Newsletter() {
                   style={{
                     fontFamily: "var(--font-body)",
                     fontSize: 11,
-                    color: "var(--fg-3)",
+                    color: "rgba(253,245,236,.5)",
                     marginTop: 12,
                     letterSpacing: "0.04em",
                   }}

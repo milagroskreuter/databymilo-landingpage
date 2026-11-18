@@ -1383,7 +1383,7 @@ button { font-family: inherit; }
 }
 
 /* ---------- Lineas section overrides ---------- */
-.lineas-section { border-block: 1px solid var(--border-subtle); }
+.lineas-section { background: var(--cream-50); border-block: 1px solid var(--border-subtle); }
 .linea-num {
   font-family: var(--font-display);
   font-style: italic;
