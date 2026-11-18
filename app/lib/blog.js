@@ -29,10 +29,12 @@ function withEntrada(posts) {
 
 export async function getAllPosts() {
   const supabase = getClient();
+  const now = new Date().toISOString();
+  // Show: explicitly published OR scheduled posts whose publish_at has passed
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("id, slug, title, date, excerpt, tags, cover_image, content, published")
-    .eq("published", true)
+    .select("id, slug, title, date, excerpt, tags, cover_image, content, published, publish_at")
+    .or(`published.eq.true,and(published.eq.false,publish_at.lte.${now})`)
     .order("date", { ascending: true });
 
   if (error || !data) return [];

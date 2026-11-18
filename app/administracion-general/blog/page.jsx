@@ -1,11 +1,13 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useToast } from "../AdminToast";
 
 export default function BlogAdminPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState(null);
+  const toast = useToast();
 
   async function load() {
     setLoading(true);
@@ -20,10 +22,10 @@ export default function BlogAdminPage() {
     if (!confirm(`¿Eliminar "${title}"? Esta acción no se puede deshacer.`)) return;
     const res = await fetch(`/api/admin/blog/${slug}`, { method: "DELETE" });
     if (res.ok) {
-      setMsg({ type: "success", text: `"${title}" eliminado` });
+      toast({ type: "success", text: `"${title}" eliminada ✓` });
       load();
     } else {
-      setMsg({ type: "error", text: "Error al eliminar" });
+      toast({ type: "error", text: "Error al eliminar" });
     }
   }
 
@@ -39,8 +41,6 @@ export default function BlogAdminPage() {
       </div>
 
       <div className="adm-content">
-        {msg && <div className={`adm-alert adm-alert-${msg.type}`}>{msg.text}</div>}
-
         <div className="adm-card" style={{ padding: 0, overflow: "hidden" }}>
           {loading ? (
             <div style={{ padding: 32, textAlign: "center", color: "var(--adm-text-muted)" }}>Cargando…</div>
@@ -54,6 +54,7 @@ export default function BlogAdminPage() {
               <thead>
                 <tr>
                   <th>Título</th>
+                  <th>Estado</th>
                   <th>Fecha</th>
                   <th>Tags</th>
                   <th></th>
@@ -66,7 +67,22 @@ export default function BlogAdminPage() {
                       <div style={{ fontWeight: 600 }}>{p.title}</div>
                       <div style={{ fontSize: 11, color: "var(--adm-text-muted)", marginTop: 2 }}>/{p.slug}</div>
                     </td>
-                    <td style={{ color: "var(--adm-text-muted)", whiteSpace: "nowrap" }}>
+                    <td>
+                      {p.publish_at && !p.published ? (
+                        <span style={{ display:"inline-flex", alignItems:"center", gap:4, background:"#ede9fe", color:"#7c3aed", borderRadius:20, padding:"3px 10px", fontSize:11, fontWeight:700 }}>
+                          ⏰ {new Date(p.publish_at).toLocaleDateString("es-AR",{day:"numeric",month:"short"})}
+                        </span>
+                      ) : p.published ? (
+                        <span style={{ display:"inline-flex", alignItems:"center", gap:4, background:"#d1fae5", color:"#065f46", borderRadius:20, padding:"3px 10px", fontSize:11, fontWeight:700 }}>
+                          ✓ Publicada
+                        </span>
+                      ) : (
+                        <span style={{ display:"inline-flex", alignItems:"center", gap:4, background:"var(--adm-tinted)", color:"var(--adm-fg-muted)", borderRadius:20, padding:"3px 10px", fontSize:11, fontWeight:700 }}>
+                          ✎ Borrador
+                        </span>
+                      )}
+                    </td>
+                    <td style={{ color: "var(--adm-fg-muted)", whiteSpace: "nowrap" }}>
                       {p.date || "—"}
                     </td>
                     <td>

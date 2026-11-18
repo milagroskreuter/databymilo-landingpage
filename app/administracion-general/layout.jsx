@@ -1,6 +1,7 @@
 ﻿"use client";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { AdminToastProvider } from "./AdminToast";
 import "./admin.css";
 
 const NAV = [
@@ -27,6 +28,7 @@ export default function AdminLayout({ children }) {
   if (pathname === "/administracion-general/login") return <>{children}</>;
 
   return (
+    <AdminToastProvider>
     <div className="adm-root">
       <aside className="adm-sidebar">
         <div className="adm-logo">
@@ -67,5 +69,6 @@ export default function AdminLayout({ children }) {
         {children}
       </main>
     </div>
+    </AdminToastProvider>
   );
 }

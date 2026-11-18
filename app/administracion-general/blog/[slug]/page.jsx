@@ -20,6 +20,7 @@ export default function EditBlogPost() {
           tags: p.tags || [],
           content: p.content || "",
           published: p.published ?? true,
+          publish_at: p.publish_at || null,
         });
       });
   }, [slug]);

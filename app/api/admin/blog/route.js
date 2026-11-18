@@ -19,7 +19,7 @@ export async function GET() {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("id, slug, title, date, excerpt, tags, cover_image, published, created_at, updated_at")
+      .select("id, slug, title, date, excerpt, tags, cover_image, published, publish_at, created_at, updated_at")
       .order("date", { ascending: false });
 
     if (error) return Response.json({ error: error.message }, { status: 500 });
@@ -32,24 +32,31 @@ export async function GET() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { title, date, excerpt, tags, cover_image, content, published } = body;
+    const { title, date, excerpt, tags, cover_image, content, published, publish_at } = body;
 
     if (!title) return Response.json({ error: "Falta el título" }, { status: 400 });
 
     const slug = slugify(title);
     const supabase = getSupabaseAdmin();
 
+    // If scheduling, use publish_at date as the display date
+    const isScheduled = publish_at && new Date(publish_at) > new Date();
+    const resolvedDate = isScheduled
+      ? new Date(publish_at).toISOString().slice(0, 10)
+      : (date || new Date().toISOString().slice(0, 10));
+
     const { data, error } = await supabase
       .from("blog_posts")
       .insert({
         slug,
         title,
-        date: date || new Date().toISOString().slice(0, 10),
+        date: resolvedDate,
         excerpt: excerpt || "",
         tags: tags || [],
         cover_image: cover_image || "",
         content: content || "",
-        published: published !== false,
+        published: isScheduled ? false : (published !== false),
+        publish_at: publish_at || null,
       })
       .select()
       .single();

@@ -21,19 +21,25 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     const body = await request.json();
-    const { title, date, excerpt, tags, cover_image, content, published } = body;
+    const { title, date, excerpt, tags, cover_image, content, published, publish_at } = body;
+
+    const isScheduled = publish_at && new Date(publish_at) > new Date();
+    const resolvedDate = isScheduled
+      ? new Date(publish_at).toISOString().slice(0, 10)
+      : date;
 
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("blog_posts")
       .update({
         title,
-        date,
+        date: resolvedDate,
         excerpt,
         tags,
         cover_image,
         content,
-        published,
+        published: isScheduled ? false : published,
+        publish_at: publish_at || null,
         updated_at: new Date().toISOString(),
       })
       .eq("slug", params.slug)
