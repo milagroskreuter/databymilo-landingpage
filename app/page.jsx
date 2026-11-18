@@ -28,7 +28,7 @@ function AboutTeaser() {
             Hoy trabajo en data para una fintech del exterior, desde Buenos Aires. Antes pasé
             por una de las corpos tech más grandes de LATAM — el cuaderno nació ahí. No soy
             docente, no soy gurú. Soy alguien que está acá y tiene ganas de contarlo sin filtro
-            corporativo ni filtro motivacional.
+            corporativo ni motivacional.
           </p>
           <Link href="/sobre" className="link-arrow">
             Leer la historia completa →
@@ -68,25 +68,28 @@ const lineas = [
 
 function LineasSection() {
   return (
-    <section className="section lineas-section">
-      <div className="pag-label">pág. 12 · las cuatro líneas</div>
-      <Reveal>
-        <h2 className="section-title">
-          Lo que vive en <em>este cuaderno</em>.
-        </h2>
-        <p className="section-intro">Todo lo que cuento acá cae en alguna de estas cuatro.</p>
-      </Reveal>
-      <div className="lineas-grid">
-        {lineas.map((l, i) => (
-          <Reveal key={i} delay={i * 60}>
-            <div className="linea">
-              <div className="linea-num">{l.num}</div>
-              <div className="linea-eyebrow">{l.eyebrow}</div>
-              <h4>{l.title}</h4>
-              <p>{l.desc}</p>
-            </div>
-          </Reveal>
-        ))}
+    /* full-bleed: fuera del journal wrapper */
+    <section className="lineas-section" style={{ padding: "80px 0" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 40px" }}>
+        <div className="pag-label">pág. 12 · las cuatro líneas</div>
+        <Reveal>
+          <h2 className="section-title">
+            Lo que vive en <em>este cuaderno</em>.
+          </h2>
+          <p className="section-intro">Todo lo que cuento acá cae en alguna de estas cuatro.</p>
+        </Reveal>
+        <div className="lineas-grid">
+          {lineas.map((l, i) => (
+            <Reveal key={i} delay={i * 60}>
+              <div className="linea">
+                <div className="linea-num">{l.num}</div>
+                <div className="linea-eyebrow">{l.eyebrow}</div>
+                <h4>{l.title}</h4>
+                <p>{l.desc}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -101,11 +104,9 @@ async function ResourcesTeaser() {
       <div className="pag-label">pág. 20 · la biblioteca</div>
       <Reveal>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
-          <div>
-            <h2 className="section-title" style={{ marginBottom: 0 }}>
-              La <em>biblioteca</em>.
-            </h2>
-          </div>
+          <h2 className="section-title" style={{ marginBottom: 0 }}>
+            La <em>biblioteca</em>.
+          </h2>
           <div className="guarda-stamp">★ GUARDA ESTO</div>
         </div>
         <p className="section-intro" style={{ marginTop: 20 }}>
@@ -136,28 +137,33 @@ async function ResourcesTeaser() {
         ))}
       </div>
 
+      {/* Destacados — recurso pago destacado */}
       <div className="destacados">
         <div className="destacados-header">
-          <div className="destacados-eyebrow">también tengo esto para vos</div>
-          <div className="destacados-label">★ NUEVO</div>
+          <div className="destacados-eyebrow">✦ Destacados ✦</div>
+          <div className="destacados-label">NUEVA GUÍA</div>
         </div>
         <div className="destacado-card">
           <div className="destacado-visual">
-            <div className="destacado-type">Mini-curso · Gratis</div>
-            <div className="destacado-vtitle">Data para <em>no-técnicas</em>.</div>
+            <div className="destacado-type">Guía · PDF · 35 páginas</div>
+            <div className="destacado-vtitle">
+              Presentar data<br />sin <em>morir</em>.
+            </div>
             <div className="destacado-vbottom">
-              <span>5 módulos</span>
-              <span>30 min</span>
+              <span>Nº 04</span>
+              <span>USD 15</span>
             </div>
           </div>
           <div className="destacado-body">
-            <div className="destacado-meta">Mini-curso gratuito</div>
-            <h3 className="destacado-title">Entendé los datos que ya tenés.</h3>
-            <p className="destacado-desc">
-              Para analistas, PMs y toda persona en tech que trabaja con datos pero no tiene formación técnica. Sin código. Sin Excel avanzado. Solo lógica y contexto.
+            <div className="destacado-meta">★ Nueva guía</div>
+            <h3 className="destacado-title">
+              Cómo presentar data a stakeholders no técnicos sin morir en el intento.
+            </h3>
+            <p className="destacado-desc" style={{ color: "var(--rosa)" }}>
+              El sistema concreto para que tu próximo readout sea entendido a la primera, accionado por tu equipo y recordado después de la reunión.
             </p>
             <Link href="/recursos" className="destacado-cta">
-              Empezar gratis →
+              Ver la guía →
             </Link>
           </div>
         </div>
@@ -183,7 +189,7 @@ async function BlogTeaser() {
       {latestPosts.length > 0 && (
         <Reveal delay={80}>
           <div className="blog-list">
-            {latestPosts.map((post, i) => (
+            {latestPosts.map((post) => (
               <Link key={post.slug} href={`/blog/${post.slug}`} className="blog-entry">
                 <div className="blog-entry-meta">
                   <span className="num">Nº {post.entradaStr}</span>
@@ -218,14 +224,16 @@ export default function Page() {
   return (
     <>
       <main>
-        <div className="journal">
-          <Hero />
-        </div>
+        {/* Hero: full-bleed (fuera del journal) */}
+        <Hero />
         <Marquee />
         <div className="journal">
           <AboutTeaser />
           <SectionDivider />
-          <LineasSection />
+        </div>
+        {/* LineasSection: full-bleed (fuera del journal) */}
+        <LineasSection />
+        <div className="journal">
           <SectionDivider />
           <ResourcesTeaser />
           <SectionDivider />

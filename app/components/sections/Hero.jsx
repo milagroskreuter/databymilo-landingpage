@@ -69,10 +69,9 @@ export default function Hero() {
         paddingBottom: 80,
         borderTop: "none",
         background: "radial-gradient(ellipse at 30% 60%, #fadbe8 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, #e8d9f0 0%, transparent 50%), var(--cream)",
-        borderRadius: 20,
-        marginTop: 8,
       }}
     >
+      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 40px" }}>
       <div className="hero-grid">
         {/* Left: headline + CTAs */}
         <div>
@@ -182,6 +181,7 @@ export default function Hero() {
             </>
           )}
         </div>
+      </div>
       </div>
     </section>
   );
