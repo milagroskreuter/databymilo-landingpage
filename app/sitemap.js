@@ -20,7 +20,7 @@ export default async function sitemap() {
     lastModified: post.date ? new Date(post.date) : now,
   }));
 
-  const resourceRoutes = getAvailableResources().map((resource) => ({
+  const resourceRoutes = (await getAvailableResources()).map((resource) => ({
     url: `${base}/recursos/${resource.slug}`,
     priority: 0.8,
     changeFrequency: "monthly",

@@ -17,9 +17,9 @@ export const metadata = {
   },
 };
 
-export default function RecursosPage() {
-  const resources = getResources();
-  const paidResources = getPaidResources();
+export default async function RecursosPage() {
+  const resources = await getResources();
+  const paidResources = await getPaidResources();
   return (
     <>
       <main>

@@ -50,8 +50,8 @@ function AboutTeaser() {
   );
 }
 
-function ResourcesTeaser() {
-  const featured = getResources().filter((r) => r.slug).slice(0, 3);
+async function ResourcesTeaser() {
+  const featured = (await getResources()).filter((r) => r.slug).slice(0, 3);
   return (
     <section className="section">
       <div className="section-head">

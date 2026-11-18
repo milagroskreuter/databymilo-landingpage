@@ -3,7 +3,6 @@ import FAQAccordion from "./FAQAccordion";
 import CTABlock from "../../components/sections/CTABlock";
 import Footer from "../../components/sections/Footer";
 import { getResources } from "../../lib/resources";
-const resources = getResources();
 
 export const metadata = {
   title: "Cómo presentar data a stakeholders no técnicos | Data by Milo",
@@ -23,7 +22,8 @@ const D = "var(--font-display)";
 const B = "var(--font-body)";
 const A = "var(--font-accent)";
 
-export default function Page() {
+export default async function Page() {
+  const resources = await getResources();
   return (
     <>
       <main style={{ background: "var(--cream)" }}>

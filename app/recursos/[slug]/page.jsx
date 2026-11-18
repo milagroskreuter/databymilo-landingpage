@@ -8,11 +8,11 @@ import { getResourceBySlug, getAvailableResources, getPaidResources } from "../.
 import DownloadButton from "../../components/DownloadButton";
 
 export async function generateStaticParams() {
-  return getAvailableResources().map((r) => ({ slug: r.slug }));
+  return (await getAvailableResources()).map((r) => ({ slug: r.slug }));
 }
 
 export async function generateMetadata({ params }) {
-  const resource = getResourceBySlug(params.slug);
+  const resource = await getResourceBySlug(params.slug);
   if (!resource) return {};
   return {
     title: resource.title,
@@ -38,9 +38,9 @@ export async function generateMetadata({ params }) {
   };
 }
 
-function OtherResources({ currentSlug }) {
-  const freeOthers = getAvailableResources().filter((r) => r.slug !== currentSlug);
-  const paidOthers = getPaidResources().filter((r) => r.slug !== currentSlug);
+async function OtherResources({ currentSlug }) {
+  const freeOthers = (await getAvailableResources()).filter((r) => r.slug !== currentSlug);
+  const paidOthers = (await getPaidResources()).filter((r) => r.slug !== currentSlug);
   if (freeOthers.length === 0 && paidOthers.length === 0) return null;
 
   return (
@@ -193,8 +193,8 @@ function ResourceJsonLd({ resource }) {
   );
 }
 
-export default function ResourcePage({ params }) {
-  const resource = getResourceBySlug(params.slug);
+export default async function ResourcePage({ params }) {
+  const resource = await getResourceBySlug(params.slug);
   if (!resource) notFound();
 
   return (

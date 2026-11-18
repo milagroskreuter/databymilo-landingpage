@@ -1,37 +1,63 @@
-import fs from "fs";
-import path from "path";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-const FILE = path.join(process.cwd(), "content", "resources.json");
-
-function readData() {
-  try { return JSON.parse(fs.readFileSync(FILE, "utf8")); }
-  catch { return { free: [], paid: [] }; }
-}
-
-function writeData(data) {
-  fs.writeFileSync(FILE, JSON.stringify(data, null, 2), "utf8");
-}
-
 export async function GET() {
-  const data = readData();
-  return Response.json({ ...data, total: data.free.length + data.paid.length });
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("resources")
+      .select("*")
+      .order("sort_order", { ascending: true });
+
+    if (error) return Response.json({ error: error.message }, { status: 500 });
+
+    const free = (data || []).filter((r) => !r.is_paid);
+    const paid = (data || []).filter((r) => r.is_paid);
+    return Response.json({ free, paid, total: data.length });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
+  }
 }
 
 export async function POST(request) {
-  const body = await request.json().catch(() => ({}));
-  const { slug, isPaid, ...rest } = body;
-  if (!slug || !rest.title) return Response.json({ error: "Faltan campos requeridos" }, { status: 400 });
+  try {
+    const body = await request.json().catch(() => ({}));
+    const { slug, isPaid, title, type, pages, desc, color, href, price, priceNote, paymentUrl, badge, forWho, note, bullets } = body;
 
-  const data = readData();
-  const list = isPaid ? data.paid : data.free;
+    if (!slug || !title) return Response.json({ error: "Faltan campos requeridos" }, { status: 400 });
 
-  if (list.find((r) => r.slug === slug)) {
-    return Response.json({ error: "Ya existe un recurso con ese slug" }, { status: 409 });
+    const supabase = getSupabaseAdmin();
+
+    // Get max sort_order
+    const { data: last } = await supabase.from("resources").select("sort_order").order("sort_order", { ascending: false }).limit(1).single();
+    const sortOrder = (last?.sort_order || 0) + 1;
+
+    const { data, error } = await supabase.from("resources").insert({
+      slug, title,
+      is_paid: !!isPaid,
+      type: type || "",
+      pages: pages || "",
+      description: desc || "",
+      color: color || "#fadbe8",
+      href: href || "",
+      price: price || "",
+      price_note: priceNote || "",
+      payment_url: paymentUrl || "",
+      badge: badge || "",
+      for_who: forWho || "",
+      note: note || "",
+      bullets: bullets || [],
+      sort_order: sortOrder,
+    }).select().single();
+
+    if (error) {
+      if (error.code === "23505") return Response.json({ error: "Ya existe un recurso con ese slug" }, { status: 409 });
+      return Response.json({ error: error.message }, { status: 500 });
+    }
+
+    return Response.json({ ok: true, slug: data.slug }, { status: 201 });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
   }
-
-  list.push({ slug, ...rest });
-  writeData(data);
-  return Response.json({ ok: true, slug });
 }
