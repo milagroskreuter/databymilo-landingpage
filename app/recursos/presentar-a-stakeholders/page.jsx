@@ -36,7 +36,7 @@ export default async function Page() {
         <PricingSection />
         <FAQSection />
         <FinalCTASection />
-        <FreeResourcesSection />
+        <FreeResourcesSection resources={resources} />
       </main>
       <div className="journal">
         <CTABlock />
@@ -46,7 +46,7 @@ export default async function Page() {
   );
 }
 
-function FreeResourcesSection() {
+function FreeResourcesSection({ resources }) {
   return (
     <section className="stake-section" style={{ padding: "80px 0", background: "#fffcf6" }}>
       <div className="journal">
