@@ -54,6 +54,9 @@ export default function NewsletterPage() {
   const [showAdd, setShowAdd] = useState(false);
   const [addForm, setAddForm] = useState({ email: "", firstName: "", lastName: "" });
   const [addLoading, setAddLoading] = useState(false);
+  const [editingTags, setEditingTags] = useState(null); // { email, tags: [], notes: "" }
+  const [tagsInput, setTagsInput] = useState("");
+  const [tagsSaving, setTagsSaving] = useState(false);
 
   async function loadContacts() {
     setLoading(true);
@@ -111,6 +114,31 @@ export default function NewsletterPage() {
       setMsg({ type: "error", text: d.error || "Error al agregar" });
     }
     setAddLoading(false);
+  }
+
+  function openTagEditor(contact) {
+    setEditingTags({ email: contact.email, tags: contact.tags || [], notes: contact.notes || "" });
+    setTagsInput("");
+  }
+
+  async function saveContactTags() {
+    if (!editingTags) return;
+    setTagsSaving(true);
+    const res = await fetch("/api/admin/newsletter/contacts", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: editingTags.email, updateTags: true, tags: editingTags.tags, notes: editingTags.notes }),
+    });
+    if (res.ok) { setMsg({ type: "success", text: "Etiquetas guardadas ✓" }); setEditingTags(null); loadContacts(); }
+    else setMsg({ type: "error", text: "Error al guardar" });
+    setTagsSaving(false);
+  }
+
+  function addTag(tag) {
+    const t = tag.trim().toLowerCase();
+    if (!t || editingTags.tags.includes(t)) return;
+    setEditingTags(e => ({ ...e, tags: [...e.tags, t] }));
+    setTagsInput("");
   }
 
   async function handleDeleteBroadcast(id, subject) {
@@ -268,40 +296,88 @@ export default function NewsletterPage() {
                   <tr>
                     <th>Email</th>
                     <th>Nombre</th>
+                    <th>Etiquetas</th>
                     <th>Estado</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.length === 0 ? (
-                    <tr><td colSpan={4} style={{ textAlign: "center", color: "var(--adm-fg-muted)", padding: 32 }}>No hay resultados</td></tr>
+                    <tr><td colSpan={5} style={{ textAlign: "center", color: "var(--adm-fg-muted)", padding: 32 }}>No hay resultados</td></tr>
                   ) : filtered.map((c) => (
-                    <tr key={c.id}>
-                      <td style={{ fontWeight: 500 }}>{c.email}</td>
-                      <td style={{ color: "var(--adm-fg-muted)" }}>{[c.first_name, c.last_name].filter(Boolean).join(" ") || "—"}</td>
-                      <td>
-                        <span className={`adm-badge ${c.unsubscribed ? "adm-badge-inactive" : "adm-badge-active"}`}>
-                          {c.unsubscribed ? "Desuscripta" : "Activa"}
-                        </span>
-                      </td>
-                      <td style={{ textAlign: "right" }}>
-                        <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
-                          <button
-                            className="adm-btn adm-btn-secondary adm-btn-sm"
-                            onClick={() => handleToggle(c)}
-                            title={c.unsubscribed ? "Reactivar" : "Desuscribir"}
-                          >
-                            {c.unsubscribed ? "Reactivar" : "Desuscribir"}
-                          </button>
-                          <button
-                            className="adm-btn adm-btn-danger adm-btn-sm"
-                            onClick={() => handleRemove(c.id, c.email)}
-                          >
-                            Eliminar
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                    <>
+                      <tr key={c.id}>
+                        <td style={{ fontWeight: 500 }}>{c.email}</td>
+                        <td style={{ color: "var(--adm-fg-muted)" }}>{[c.first_name, c.last_name].filter(Boolean).join(" ") || "—"}</td>
+                        <td>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+                            {(c.tags || []).map(t => (
+                              <span key={t} className="adm-badge adm-badge-primary" style={{ fontSize: 10 }}>{t}</span>
+                            ))}
+                            <button type="button" onClick={() => editingTags?.email === c.email ? setEditingTags(null) : openTagEditor(c)} style={{ fontSize: 10, background: "none", border: "1px dashed var(--adm-border)", borderRadius: 4, padding: "1px 6px", cursor: "pointer", color: "var(--adm-fg-muted)" }}>
+                              {editingTags?.email === c.email ? "✕" : "+ tag"}
+                            </button>
+                          </div>
+                        </td>
+                        <td>
+                          <span className={`adm-badge ${c.unsubscribed ? "adm-badge-inactive" : "adm-badge-active"}`}>
+                            {c.unsubscribed ? "Desuscripta" : "Activa"}
+                          </span>
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                          <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
+                            <button className="adm-btn adm-btn-secondary adm-btn-sm" onClick={() => handleToggle(c)}>
+                              {c.unsubscribed ? "Reactivar" : "Desuscribir"}
+                            </button>
+                            <button className="adm-btn adm-btn-danger adm-btn-sm" onClick={() => handleRemove(c.id, c.email)}>
+                              Eliminar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      {editingTags?.email === c.email && (
+                        <tr key={`${c.id}-tags`}>
+                          <td colSpan={5} style={{ background: "var(--adm-tinted)", padding: "12px 16px" }}>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                              <div>
+                                <div style={{ fontSize: 11, fontFamily: "var(--adm-font-body)", fontWeight: 700, marginBottom: 6 }}>Etiquetas</div>
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
+                                  {editingTags.tags.map(t => (
+                                    <span key={t} style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "var(--adm-primary)", color: "#fff", borderRadius: 20, padding: "2px 10px", fontSize: 11 }}>
+                                      {t}
+                                      <button type="button" onClick={() => setEditingTags(e => ({ ...e, tags: e.tags.filter(x => x !== t) }))} style={{ background: "none", border: "none", cursor: "pointer", color: "#fff", padding: 0, lineHeight: 1 }}>✕</button>
+                                    </span>
+                                  ))}
+                                  <input
+                                    className="adm-input"
+                                    value={tagsInput}
+                                    onChange={e => setTagsInput(e.target.value)}
+                                    onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addTag(tagsInput); } }}
+                                    placeholder="nueva etiqueta + Enter"
+                                    style={{ width: 180, marginBottom: 0, fontSize: 12, padding: "4px 8px" }}
+                                  />
+                                  {tagsInput && <button type="button" className="adm-btn adm-btn-sm adm-btn-secondary" onClick={() => addTag(tagsInput)}>Agregar</button>}
+                                </div>
+                              </div>
+                              <div>
+                                <div style={{ fontSize: 11, fontFamily: "var(--adm-font-body)", fontWeight: 700, marginBottom: 4 }}>Notas internas</div>
+                                <textarea
+                                  className="adm-textarea"
+                                  value={editingTags.notes}
+                                  onChange={e => setEditingTags(et => ({ ...et, notes: e.target.value }))}
+                                  placeholder="Notas sobre este contacto…"
+                                  style={{ minHeight: 60, fontSize: 12, resize: "vertical" }}
+                                />
+                              </div>
+                              <div style={{ display: "flex", gap: 8 }}>
+                                <button className="adm-btn adm-btn-sm adm-btn-primary" onClick={saveContactTags} disabled={tagsSaving}>{tagsSaving ? "Guardando…" : "Guardar"}</button>
+                                <button className="adm-btn adm-btn-sm adm-btn-secondary" onClick={() => setEditingTags(null)}>Cancelar</button>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
                   ))}
                 </tbody>
               </table>

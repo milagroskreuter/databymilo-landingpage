@@ -67,6 +67,10 @@ export default function ComposePage() {
   const [contactSearch, setContactSearch] = useState("");
   const [contacts, setContacts] = useState(null);
   const [selectedContacts, setSelectedContacts] = useState([]);
+  const [subjectB, setSubjectB] = useState("");
+  const [showAB, setShowAB] = useState(false);
+  const [tagFilter, setTagFilter] = useState("");
+  const [availableTags, setAvailableTags] = useState([]);
 
   const bodyRef = useRef(null);
   const draftTimer = useRef(null);
@@ -102,6 +106,18 @@ export default function ComposePage() {
         .catch(() => setContacts([]));
     }
   }, [sendMode]);
+
+  // Load available tags
+  useEffect(() => {
+    fetch("/api/admin/newsletter/contacts")
+      .then(r => r.json())
+      .then(d => {
+        const all = new Set();
+        (d.data || []).forEach(c => (c.tags || []).forEach(t => all.add(t)));
+        setAvailableTags([...all].sort());
+      })
+      .catch(() => {});
+  }, []);
 
   const filteredContacts = (contacts || []).filter(c =>
     !c.unsubscribed &&
@@ -143,6 +159,8 @@ export default function ComposePage() {
 
     const payload = { subject, body };
     if (sendAt) payload.sendAt = new Date(sendAt).toISOString();
+    if (showAB && subjectB.trim()) payload.subjectB = subjectB.trim();
+    if (tagFilter) payload.tagFilter = tagFilter;
     if (!isAll) {
       payload.to = recipients.map(c => ({ email: c.email, firstName: c.first_name || "", lastName: c.last_name || "" }));
     }
@@ -317,9 +335,14 @@ export default function ComposePage() {
                 <div className="adm-form-group">
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
                     <label className="adm-label" style={{ margin: 0 }}>Asunto</label>
-                    <span style={{ fontSize: 11, fontFamily: "var(--adm-font-body)", color: subjectLen > 60 ? "#b82020" : subjectLen > 40 ? "#c97a00" : "var(--adm-fg-muted)" }}>
-                      {subjectLen}/60 caracteres
-                    </span>
+                    <div style={{ display:"flex", gap:10, alignItems:"center" }}>
+                      <span style={{ fontSize: 11, fontFamily: "var(--adm-font-body)", color: subjectLen > 60 ? "#b82020" : subjectLen > 40 ? "#c97a00" : "var(--adm-fg-muted)" }}>
+                        {subjectLen}/60 caracteres
+                      </span>
+                      <button type="button" onClick={() => setShowAB(v => !v)} style={{ fontSize:10, fontFamily:"var(--adm-font-body)", background: showAB ? "var(--adm-primary)" : "none", color: showAB ? "#fff" : "var(--adm-primary)", border:"1px solid var(--adm-primary)", borderRadius:4, padding:"1px 8px", cursor:"pointer", fontWeight:700 }}>
+                        A/B
+                      </button>
+                    </div>
                   </div>
                   <input
                     className="adm-input"
@@ -328,7 +351,27 @@ export default function ComposePage() {
                     placeholder="la carta del domingo · 17 nov"
                     required
                   />
+                  {showAB && (
+                    <div style={{ marginTop:8 }}>
+                      <label className="adm-label" style={{ fontSize:11, marginBottom:4 }}>Asunto alternativo (versión B — se envía al 50% de la lista)</label>
+                      <input className="adm-input" value={subjectB} onChange={e => setSubjectB(e.target.value)} placeholder="otra variante del asunto…" />
+                    </div>
+                  )}
                 </div>
+
+                {/* Tag filter */}
+                {availableTags.length > 0 && (
+                  <div className="adm-form-group">
+                    <label className="adm-label">Enviar solo a segmento (opcional)</label>
+                    <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
+                      <button type="button" onClick={() => setTagFilter("")} className={`adm-btn adm-btn-sm ${!tagFilter ? "adm-btn-primary" : "adm-btn-secondary"}`}>Todas</button>
+                      {availableTags.map(t => (
+                        <button key={t} type="button" onClick={() => setTagFilter(t === tagFilter ? "" : t)} className={`adm-btn adm-btn-sm ${tagFilter === t ? "adm-btn-primary" : "adm-btn-secondary"}`}>{t}</button>
+                      ))}
+                    </div>
+                    {tagFilter && <div style={{ fontSize:11, color:"var(--adm-fg-muted)", marginTop:4 }}>Solo se enviará a contactos con la etiqueta "{tagFilter}"</div>}
+                  </div>
+                )}
 
                 {/* Toolbar de formato */}
                 <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 6, alignItems: "center" }}>

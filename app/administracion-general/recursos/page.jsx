@@ -54,6 +54,7 @@ export default function RecursosAdminPage() {
                   <th>Título</th>
                   <th>Tipo</th>
                   <th>Categoría</th>
+                  <th>⬇ Descargas</th>
                   <th></th>
                 </tr>
               </thead>
@@ -69,6 +70,9 @@ export default function RecursosAdminPage() {
                       <span className={`adm-badge ${r.isPaid ? "adm-badge-primary" : "adm-badge-active"}`}>
                         {r.isPaid ? "Pago" : "Gratuito"}
                       </span>
+                    </td>
+                    <td style={{ color: "var(--adm-fg-muted)", fontWeight: 600 }}>
+                      {r.download_count > 0 ? r.download_count.toLocaleString() : "—"}
                     </td>
                     <td style={{ textAlign: "right" }}>
                       <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>

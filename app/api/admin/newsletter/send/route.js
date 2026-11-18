@@ -71,12 +71,68 @@ function interpolate(text, contact) {
 }
 
 export async function POST(request) {
-  const { subject, body, sendAt, to } = await request.json().catch(() => ({}));
+  const { subject, subjectB, body, sendAt, to, tagFilter } = await request.json().catch(() => ({}));
   if (!subject || !body) {
     return Response.json({ error: "Faltan subject o body" }, { status: 400 });
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
+
+  // A/B testing: split audience and send two subjects
+  if (subjectB && !to) {
+    const { data: audienceData } = await resend.contacts.list({ audienceId: AUDIENCE_ID });
+    let contacts = (audienceData?.data ?? []).filter(c => !c.unsubscribed);
+
+    // Apply tag filter if requested
+    if (tagFilter) {
+      const { getSupabaseAdmin } = await import("@/lib/supabase");
+      const supabase = getSupabaseAdmin();
+      const { data: tags } = await supabase.from("contact_tags").select("email, tags").contains("tags", [tagFilter]);
+      const tagEmails = new Set((tags || []).map(t => t.email));
+      contacts = contacts.filter(c => tagEmails.has(c.email));
+    }
+
+    const half = Math.ceil(contacts.length / 2);
+    const groupA = contacts.slice(0, half);
+    const groupB = contacts.slice(half);
+
+    const sendGroup = async (group, subj) => {
+      return Promise.allSettled(group.map(c =>
+        resend.emails.send({
+          from: "Milo · Data by Milo <hola@databymilo.me>",
+          to: c.email, replyTo: "hola@databymilo.me",
+          subject: interpolate(subj, c),
+          html: buildHtml(interpolate(subj, c), interpolate(body, c)),
+          scheduledAt: sendAt || undefined,
+        })
+      ));
+    };
+
+    await Promise.all([sendGroup(groupA, subject), sendGroup(groupB, subjectB)]);
+    return Response.json({ ok: true, mode: "ab_test", groupA: groupA.length, groupB: groupB.length });
+  }
+
+  // Send to contacts with a specific tag
+  if (tagFilter && !to && !subjectB) {
+    const { getSupabaseAdmin } = await import("@/lib/supabase");
+    const supabase = getSupabaseAdmin();
+    const { data: tags } = await supabase.from("contact_tags").select("email").contains("tags", [tagFilter]);
+    const tagEmails = new Set((tags || []).map(t => t.email));
+
+    const { data: audienceData } = await resend.contacts.list({ audienceId: AUDIENCE_ID });
+    const filtered = (audienceData?.data ?? []).filter(c => !c.unsubscribed && tagEmails.has(c.email));
+
+    const results = await Promise.allSettled(filtered.map(c =>
+      resend.emails.send({
+        from: "Milo · Data by Milo <hola@databymilo.me>",
+        to: c.email, replyTo: "hola@databymilo.me",
+        subject: interpolate(subject, c),
+        html: buildHtml(interpolate(subject, c), interpolate(body, c)),
+        scheduledAt: sendAt || undefined,
+      })
+    ));
+    return Response.json({ ok: true, sent: filtered.length, mode: "tag_filter" });
+  }
 
   // Send to a specific email address (or list of addresses)
   if (to) {

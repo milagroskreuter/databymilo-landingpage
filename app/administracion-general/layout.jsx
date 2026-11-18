@@ -14,6 +14,7 @@ const NAV = [
   { href: "/administracion-general/recursos", label: "Recursos", icon: "⬡" },
   { section: "Analítica" },
   { href: "/administracion-general/stats", label: "Estadísticas", icon: "▲" },
+  { href: "/administracion-general/actividad", label: "Log de actividad", icon: "◎" },
 ];
 
 export default function AdminLayout({ children }) {

@@ -283,12 +283,19 @@ function Section({ title, children, style }) {
   );
 }
 
+function pct(n) {
+  if (n == null) return "—";
+  const v = typeof n === "number" && n <= 1 ? n * 100 : n;
+  return `${v.toFixed(1)}%`;
+}
+
 // ─── Page ────────────────────────────────────────────────────────────────────
 export default function StatsPage() {
   const [days, setDays] = useState(30);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [broadcasts, setBroadcasts] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -299,6 +306,13 @@ export default function StatsPage() {
       .catch(() => setError({ error: "Error de conexión" }))
       .finally(() => setLoading(false));
   }, [days]);
+
+  useEffect(() => {
+    fetch("/api/admin/newsletter/broadcasts")
+      .then(r => r.json())
+      .then(d => setBroadcasts(d?.data || []))
+      .catch(() => setBroadcasts([]));
+  }, []);
 
   const ov = data?.overview;
   const pages = data?.pages || [];
@@ -413,6 +427,60 @@ export default function StatsPage() {
                   : <DonutChart data={countries} colors={COUNTRY_COLORS} />}
               </Section>
             </div>
+
+            {/* Email analytics */}
+            {broadcasts && broadcasts.length > 0 && (() => {
+              const sent = broadcasts.filter(b => b.status === "sent");
+              const withMetrics = sent.filter(b => b.metrics);
+              const avgOpen = withMetrics.length > 0
+                ? withMetrics.reduce((s, b) => s + (b.metrics?.opens ?? 0), 0) / withMetrics.length
+                : null;
+              const avgClick = withMetrics.length > 0
+                ? withMetrics.reduce((s, b) => s + (b.metrics?.clicks ?? 0), 0) / withMetrics.length
+                : null;
+              return (
+                <div>
+                  <div className="adm-stats-grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", marginBottom: 16 }}>
+                    <KpiCard label="Emails enviados" value={sent.length} sub="broadcasts" icon="✉" />
+                    <KpiCard label="Apertura promedio" value={avgOpen != null ? pct(avgOpen) : "—"} sub="open rate" icon="📬" />
+                    <KpiCard label="Clicks promedio" value={avgClick != null ? pct(avgClick) : "—"} sub="click rate" icon="🖱" />
+                    <KpiCard label="Total borradores" value={broadcasts.filter(b => b.status === "draft").length} sub="pendientes" icon="✎" />
+                  </div>
+                  <Section title="Emails · últimos envíos">
+                    <table className="adm-table" style={{ margin: 0 }}>
+                      <thead>
+                        <tr>
+                          <th>Asunto</th>
+                          <th>Enviado</th>
+                          <th>Apertura</th>
+                          <th>Clicks</th>
+                          <th>Unsubs</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sent.slice(0, 10).map(b => {
+                          const m = b.metrics;
+                          const sentAt = b.sent_at || b.scheduled_at;
+                          return (
+                            <tr key={b.id}>
+                              <td style={{ fontWeight: 500, maxWidth: 260, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{b.subject || "—"}</td>
+                              <td style={{ color: "var(--adm-fg-muted)", fontSize: 12, whiteSpace: "nowrap" }}>
+                                {sentAt ? new Date(sentAt).toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" }) : "—"}
+                              </td>
+                              <td style={{ fontWeight: m?.opens != null ? 700 : 400, color: m?.opens != null ? "var(--adm-primary)" : "var(--adm-fg-muted)" }}>
+                                {m?.opens != null ? pct(m.opens) : "—"}
+                              </td>
+                              <td style={{ color: "var(--adm-fg-muted)" }}>{m?.clicks != null ? pct(m.clicks) : "—"}</td>
+                              <td style={{ color: "var(--adm-fg-muted)" }}>{m?.unsubscribes != null ? m.unsubscribes : "—"}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </Section>
+                </div>
+              );
+            })()}
 
             <div style={{
               padding: "10px 14px",

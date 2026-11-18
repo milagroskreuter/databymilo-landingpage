@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useToast } from "../AdminToast";
@@ -168,16 +168,43 @@ function StatusPicker({ mode, setMode, publishAt, setPublishAt }) {
   );
 }
 
+// ── SEO Checker ──────────────────────────────────────────────────────────────
+function SeoBar({ value, min, max, label }) {
+  const len = (value || "").length;
+  const ok = len >= min && len <= max;
+  const warn = len > 0 && (len < min * 0.6 || len > max * 1.2);
+  const color = len === 0 ? "var(--adm-border)" : ok ? "#1a7a4a" : warn ? "#c97a00" : "#b82020";
+  const pct = Math.min(100, Math.round((len / max) * 100));
+  return (
+    <div style={{ marginBottom: 6 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, fontFamily: "var(--adm-font-body)", color: "var(--adm-fg-muted)", marginBottom: 3 }}>
+        <span>{label}</span>
+        <span style={{ color }}>{len} / {min}–{max} caracteres {ok ? "✓" : len > 0 ? "·" : ""}</span>
+      </div>
+      <div style={{ height: 4, background: "var(--adm-border)", borderRadius: 2, overflow: "hidden" }}>
+        <div style={{ height: "100%", width: `${pct}%`, background: color, borderRadius: 2, transition: "width 300ms, background 300ms" }} />
+      </div>
+    </div>
+  );
+}
+
 // ── Main editor form ──────────────────────────────────────────────────────────
 export default function BlogEditorForm({ initial, submitLabel, onSubmit, slug, backHref }) {
   const router = useRouter();
   const toast = useToast();
   const contentRef = useRef(null);
+  const formRef = useRef(null);
+  const autoSaveTimer = useRef(null);
   const [preview, setPreview] = useState(false);
   const [allTags, setAllTags] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [autoSaved, setAutoSaved] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [showVersions, setShowVersions] = useState(false);
+  const [versions, setVersions] = useState(null);
+  const [versionsLoading, setVersionsLoading] = useState(false);
+  const [restoredBanner, setRestoredBanner] = useState(null);
 
-  // Determine initial mode from data
   function initMode(init) {
     if (!init) return "published";
     if (init.publish_at && new Date(init.publish_at) > new Date()) return "scheduled";
@@ -193,6 +220,7 @@ export default function BlogEditorForm({ initial, submitLabel, onSubmit, slug, b
     ...initial,
   });
 
+  // Load all tags
   useEffect(() => {
     fetch("/api/admin/blog").then(r=>r.json()).then(d => {
       const tags = new Set();
@@ -201,10 +229,91 @@ export default function BlogEditorForm({ initial, submitLabel, onSubmit, slug, b
     }).catch(()=>{});
   }, []);
 
+  // Restore autosave on new posts
+  useEffect(() => {
+    if (initial?.title || initial?.content) return;
+    const key = `blog_autosave_${slug || "new"}`;
+    try {
+      const saved = JSON.parse(localStorage.getItem(key) || "null");
+      if (saved?.form && (saved.form.title || saved.form.content)) {
+        setRestoredBanner({ savedAt: saved.savedAt, data: saved });
+      }
+    } catch {}
+  }, []);
+
+  // Autosave every 30s
+  useEffect(() => {
+    if (!form.title && !form.content) return;
+    setDirty(true);
+    clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(() => {
+      const key = `blog_autosave_${slug || "new"}`;
+      try {
+        localStorage.setItem(key, JSON.stringify({ form, mode, publishAt, savedAt: Date.now() }));
+        setAutoSaved(true);
+        setTimeout(() => setAutoSaved(false), 2000);
+      } catch {}
+    }, 30000);
+    return () => clearTimeout(autoSaveTimer.current);
+  }, [form, mode, publishAt]);
+
+  // Unsaved changes warning
+  useEffect(() => {
+    function warn(e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } }
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    function onKey(e) {
+      const mod = e.ctrlKey || e.metaKey;
+      if (mod && e.key === "s") {
+        e.preventDefault();
+        if (!loading && form.title.trim()) formRef.current?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+      }
+      if (mod && e.key === "p") { e.preventDefault(); setPreview(v => !v); }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [loading, form.title]);
+
   function update(key, val) { setForm(f => ({ ...f, [key]: val })); }
 
+  function applyRestore(data) {
+    setForm(f => ({ ...f, ...data.form }));
+    if (data.mode) setMode(data.mode);
+    if (data.publishAt) setPublishAt(data.publishAt);
+    setRestoredBanner(null);
+  }
+
+  async function loadVersions() {
+    if (!slug) return;
+    setVersionsLoading(true);
+    const res = await fetch(`/api/admin/blog/versions/${slug}`);
+    if (res.ok) { const d = await res.json(); setVersions(d.versions || []); }
+    setVersionsLoading(false);
+  }
+
+  async function handleRestore(versionId) {
+    if (!confirm("¿Restaurar esta versión? Los cambios sin guardar se perderán.")) return;
+    const res = await fetch(`/api/admin/blog/versions/${slug}`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ version_id: versionId }),
+    });
+    if (res.ok) {
+      const d = await res.json();
+      setForm(f => ({ ...f, title: d.post.title, content: d.post.content, excerpt: d.post.excerpt, tags: d.post.tags || [] }));
+      toast({ type: "success", text: "Versión restaurada ✓" });
+      setShowVersions(false);
+      setDirty(false);
+    } else {
+      toast({ type: "error", text: "Error al restaurar" });
+    }
+  }
+
   const toolbar = [
-    { label:"H2", title:"Título de sección", action:()=>insertLine(contentRef,"## ") },
+    { label:"H2", title:"Título de sección (Ctrl+Shift+H)", action:()=>insertLine(contentRef,"## ") },
     { label:"H3", title:"Subtítulo", action:()=>insertLine(contentRef,"### ") },
     { label:"B",  title:"Negrita",   action:()=>insertMarkdown(contentRef,"**","**","texto en negrita") },
     { label:"I",  title:"Cursiva",   action:()=>insertMarkdown(contentRef,"*","*","texto en cursiva") },
@@ -225,6 +334,9 @@ export default function BlogEditorForm({ initial, submitLabel, onSubmit, slug, b
         publish_at: mode === "scheduled" ? publishAt : null,
       };
       await onSubmit(payload);
+      // Clear autosave on success
+      try { localStorage.removeItem(`blog_autosave_${slug || "new"}`); } catch {}
+      setDirty(false);
       if (mode === "scheduled" && publishAt) {
         toast({ type:"success", text:`Programada para el ${new Date(publishAt).toLocaleString("es-AR",{dateStyle:"medium",timeStyle:"short"})} ⏰` });
       } else if (mode === "published") {
@@ -246,24 +358,75 @@ export default function BlogEditorForm({ initial, submitLabel, onSubmit, slug, b
       <div className="adm-header">
         <div>
           <h1>{submitLabel === "Guardar cambios" ? "Editar entrada" : "Nueva entrada"}</h1>
-          {slug && <div style={{ fontSize:12, color:"var(--adm-fg-muted)", marginTop:2 }}>/{slug}</div>}
+          <div style={{ display:"flex", gap:10, alignItems:"center", marginTop:2 }}>
+            {slug && <span style={{ fontSize:12, color:"var(--adm-fg-muted)" }}>/{slug}</span>}
+            {autoSaved && <span style={{ fontSize:11, color:"#1a7a4a", fontFamily:"var(--adm-font-body)" }}>Autosave ✓</span>}
+            {dirty && !autoSaved && <span style={{ fontSize:11, color:"var(--adm-fg-muted)", fontFamily:"var(--adm-font-body)" }}>Sin guardar</span>}
+          </div>
         </div>
         <div style={{ display:"flex", gap:8, alignItems:"center" }}>
-          {slug && <Link href={`/blog/${slug}`} target="_blank" className="adm-btn adm-btn-secondary adm-btn-sm">Ver publicada</Link>}
+          {slug && (
+            <button type="button" className="adm-btn adm-btn-secondary adm-btn-sm" onClick={() => { setShowVersions(v => !v); if (!versions) loadVersions(); }}>
+              🕐 Versiones
+            </button>
+          )}
+          {slug && <Link href={`/blog/${slug}`} target="_blank" className="adm-btn adm-btn-secondary adm-btn-sm">Ver</Link>}
           <Link href={backHref||"/administracion-general/blog"} className="adm-btn adm-btn-secondary adm-btn-sm">← Volver</Link>
         </div>
       </div>
 
       <div className="adm-content">
-        <form onSubmit={handleSave}>
+        {/* Restored autosave banner */}
+        {restoredBanner && (
+          <div style={{ padding:"12px 16px", background:"#fff8e1", border:"1px solid #f0d060", borderRadius:8, marginBottom:16, display:"flex", justifyContent:"space-between", alignItems:"center", fontFamily:"var(--adm-font-body)", fontSize:13 }}>
+            <span>💾 Hay un borrador guardado automáticamente del {new Date(restoredBanner.savedAt).toLocaleString("es-AR", { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" })}</span>
+            <div style={{ display:"flex", gap:8 }}>
+              <button type="button" className="adm-btn adm-btn-sm adm-btn-primary" onClick={() => applyRestore(restoredBanner)}>Usar borrador</button>
+              <button type="button" className="adm-btn adm-btn-sm adm-btn-secondary" onClick={() => { setRestoredBanner(null); try { localStorage.removeItem(`blog_autosave_${slug || "new"}`); } catch {} }}>Descartar</button>
+            </div>
+          </div>
+        )}
+
+        {/* Versions panel */}
+        {showVersions && (
+          <div style={{ padding:16, background:"var(--adm-tinted)", border:"1px solid var(--adm-border)", borderRadius:8, marginBottom:16 }}>
+            <div style={{ fontWeight:700, fontSize:13, fontFamily:"var(--adm-font-body)", marginBottom:12 }}>🕐 Historial de versiones</div>
+            {versionsLoading ? (
+              <div style={{ color:"var(--adm-fg-muted)", fontSize:12 }}>Cargando…</div>
+            ) : !versions || versions.length === 0 ? (
+              <div style={{ color:"var(--adm-fg-muted)", fontSize:12 }}>No hay versiones guardadas todavía. Se guardan automáticamente al publicar.</div>
+            ) : (
+              <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                {versions.map((v, i) => (
+                  <div key={v.id} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"8px 12px", background:"var(--adm-surface)", borderRadius:6, border:"1px solid var(--adm-border)" }}>
+                    <div>
+                      <span style={{ fontSize:12, fontFamily:"var(--adm-font-body)", fontWeight:600 }}>{v.title || "Sin título"}</span>
+                      <span style={{ fontSize:11, color:"var(--adm-fg-muted)", marginLeft:8 }}>{new Date(v.created_at).toLocaleString("es-AR", { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" })}</span>
+                      {i === 0 && <span style={{ fontSize:10, background:"var(--adm-primary)", color:"#fff", borderRadius:10, padding:"1px 7px", marginLeft:8 }}>más reciente</span>}
+                    </div>
+                    <button type="button" className="adm-btn adm-btn-sm adm-btn-secondary" onClick={() => handleRestore(v.id)}>Restaurar</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        <form ref={formRef} onSubmit={handleSave}>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
             <div className="adm-form-group" style={{ gridColumn:"1 / -1", marginBottom:0 }}>
-              <label className="adm-label">Título *</label>
+              <label className="adm-label">Título * <span style={{ fontSize:10, fontWeight:400, color:"var(--adm-fg-muted)" }}>Ctrl+S para guardar · Ctrl+P para preview</span></label>
               <input className="adm-input" style={{ fontSize:18, fontWeight:600 }} value={form.title} onChange={e=>update("title",e.target.value)} required placeholder="El título de tu entrada" />
+              <div style={{ marginTop:6 }}>
+                <SeoBar value={form.title} min={30} max={65} label="Título SEO" />
+              </div>
             </div>
             <div className="adm-form-group" style={{ marginBottom:0 }}>
               <label className="adm-label">Resumen</label>
               <textarea className="adm-textarea" style={{ minHeight:72, resize:"vertical" }} value={form.excerpt} onChange={e=>update("excerpt",e.target.value)} placeholder="Dos líneas que resumen el post" />
+              <div style={{ marginTop:6 }}>
+                <SeoBar value={form.excerpt} min={80} max={165} label="Meta descripción" />
+              </div>
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
               <div className="adm-form-group" style={{ marginBottom:0 }}>
