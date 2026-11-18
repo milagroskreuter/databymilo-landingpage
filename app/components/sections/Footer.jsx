@@ -25,7 +25,7 @@ export default function Footer() {
     >
       <div style={{ maxWidth: 1180, margin: "0 auto", position: "relative", zIndex: 2 }}>
         <div
-          className="grid-split"
+          className="grid-split footer-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "2fr 1fr 1fr",
@@ -36,6 +36,7 @@ export default function Footer() {
         >
           <div>
             <div
+              className="footer-brand"
               style={{
                 fontFamily: "var(--font-display)",
                 fontStyle: "italic",

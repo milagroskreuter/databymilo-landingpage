@@ -1,49 +1,64 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-const BLOG_DIR = path.join(process.cwd(), "content", "blog");
+export async function GET(request, { params }) {
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", params.slug)
+      .single();
 
-function findFile(slug) {
-  for (const ext of [".mdx", ".md"]) {
-    const p = path.join(BLOG_DIR, slug + ext);
-    if (fs.existsSync(p)) return p;
+    if (error || !data) return Response.json({ error: "No encontrado" }, { status: 404 });
+    return Response.json({ post: data });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
   }
-  return null;
-}
-
-export async function GET(_, { params }) {
-  const { slug } = params;
-  const filePath = findFile(slug);
-  if (!filePath) return Response.json({ error: "No encontrado" }, { status: 404 });
-
-  const raw = fs.readFileSync(filePath, "utf8");
-  const { data, content } = matter(raw);
-  return Response.json({ slug, ...data, content });
 }
 
 export async function PUT(request, { params }) {
-  const { slug } = params;
-  const filePath = findFile(slug);
-  if (!filePath) return Response.json({ error: "No encontrado" }, { status: 404 });
+  try {
+    const body = await request.json();
+    const { title, date, excerpt, tags, cover_image, content, published } = body;
 
-  const body = await request.json().catch(() => ({}));
-  const { title, date, excerpt, tags, coverImage, content } = body;
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .update({
+        title,
+        date,
+        excerpt,
+        tags,
+        cover_image,
+        content,
+        published,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("slug", params.slug)
+      .select()
+      .single();
 
-  const frontmatter = { title, date, excerpt, tags: tags || [], coverImage: coverImage || null };
-  const fileContent = matter.stringify(content || "", frontmatter);
-  fs.writeFileSync(filePath, fileContent, "utf8");
-
-  return Response.json({ ok: true });
+    if (error) return Response.json({ error: error.message }, { status: 500 });
+    if (!data) return Response.json({ error: "No encontrado" }, { status: 404 });
+    return Response.json({ post: data });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
+  }
 }
 
-export async function DELETE(_, { params }) {
-  const { slug } = params;
-  const filePath = findFile(slug);
-  if (!filePath) return Response.json({ error: "No encontrado" }, { status: 404 });
+export async function DELETE(request, { params }) {
+  try {
+    const supabase = getSupabaseAdmin();
+    const { error } = await supabase
+      .from("blog_posts")
+      .delete()
+      .eq("slug", params.slug);
 
-  fs.unlinkSync(filePath);
-  return Response.json({ ok: true });
+    if (error) return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ ok: true });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
+  }
 }

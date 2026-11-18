@@ -20,7 +20,7 @@ export default function Redes() {
       </Reveal>
 
       <Reveal delay={100}>
-        <div style={{ display: "flex", flexDirection: "row", gap: 14, marginTop: 64, flexWrap: "wrap" }}>
+        <div className="redes-links" style={{ display: "flex", flexDirection: "row", gap: 14, marginTop: 56, flexWrap: "wrap" }}>
           {socials.map((s) => {
             const Icon = s.Icon;
             return (
@@ -30,6 +30,7 @@ export default function Redes() {
                 target={s.external ? "_blank" : undefined}
                 rel={s.external ? "noopener noreferrer" : undefined}
                 aria-label={`${s.name}: ${s.handle}`}
+                className="redes-link-card"
                 style={{
                   display: "flex",
                   alignItems: "center",

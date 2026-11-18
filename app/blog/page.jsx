@@ -47,10 +47,10 @@ function TagChip({ label, href, active, count }) {
   );
 }
 
-export default function BlogIndexPage({ searchParams }) {
+export default async function BlogIndexPage({ searchParams }) {
   const activeTag = searchParams?.tag || null;
-  const allPosts = getAllPosts();
-  const allTags = getAllTags();
+  const allPosts = await getAllPosts();
+  const allTags = await getAllTags();
   const posts = activeTag ? allPosts.filter((p) => p.tags.includes(activeTag)) : allPosts;
 
   return (

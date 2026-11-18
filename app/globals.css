@@ -563,9 +563,19 @@ body[data-density="clean"] .sticker { display: none; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+.bar-mobile { display: none; }
+
 @media (max-width: 720px) {
   .newsletter-bar { font-size: 12px; padding: 8px 14px; }
   .newsletter-bar strong { font-size: 14px; }
+}
+
+@media (max-width: 600px) {
+  .bar-desktop { display: none; }
+  .bar-mobile { display: inline; }
+  .newsletter-bar { padding: 7px 12px; }
+  .newsletter-bar-inner { flex-wrap: nowrap; }
+  .newsletter-bar-text { flex-wrap: nowrap; gap: 4px; }
 }
 
 /* ---------- Nav ---------- */
@@ -796,43 +806,59 @@ button { font-family: inherit; }
 @media (max-width: 1200px) { .margin-note { display: none !important; } }
 
 @media (max-width: 860px) {
-  .grid-split { grid-template-columns: 1fr !important; }
+  .grid-split { grid-template-columns: 1fr !important; gap: 32px !important; }
   .hero-grid  { grid-template-columns: 1fr !important; }
 
-  .section { padding: 56px 0 28px; }
-  .section + .section { padding-top: 56px; }
-  .section-head { margin-bottom: 32px; }
+  .section { padding: 48px 0 24px; }
+  .section + .section { padding-top: 48px; }
+  .section-head { margin-bottom: 28px; }
 
   /* Newsletter card inner padding */
   .grid-split[style] > div:first-child { padding-bottom: 0 !important; }
+
+  /* Newsletter vino card — reduce inner padding when stacked */
+  .grid-split[style*="--vino"] {
+    padding: 48px 36px !important;
+  }
 }
 
 @media (max-width: 600px) {
-  .section { padding: 44px 0 20px; }
-  .section + .section { padding-top: 44px; }
+  .section { padding: 36px 0 16px; }
+  .section + .section { padding-top: 36px; }
+  .section-head { margin-bottom: 20px; }
 
-  /* Tighten newsletter vino card */
+  /* Tighten newsletter vino card further */
   .grid-split[style*="--vino"] {
-    padding: 36px 24px !important;
-    gap: 32px !important;
+    padding: 32px 20px !important;
+    gap: 28px !important;
     border-radius: 14px !important;
   }
 
   /* Hero headline */
-  h1.display { font-size: clamp(40px, 11vw, 64px) !important; }
+  h1.display { font-size: clamp(36px, 10vw, 58px) !important; }
+
+  /* Hero section padding */
+  .hero-section { padding-top: 32px !important; padding-bottom: 48px !important; }
+  .hero-eyebrow-bar { margin-bottom: 24px !important; }
+  .hero-subtext { font-size: 17px !important; margin-top: 20px !important; }
+  .hero-buttons { margin-top: 28px !important; }
 
   /* Topbar wordmark smaller */
   .topbar-inner { padding: 12px 16px !important; }
 
   /* Footer */
-  footer .grid-split { gap: 28px !important; }
+  footer .grid-split { gap: 24px !important; }
   footer .grid-split > div:first-child { padding-bottom: 0 !important; }
+  .footer-brand { font-size: 28px !important; }
 
   /* Section title */
-  .section-title { font-size: clamp(26px, 7vw, 38px) !important; }
+  .section-title { font-size: clamp(24px, 7.5vw, 36px) !important; }
+
+  /* Section sub */
+  .section-sub { font-size: 16px !important; }
 
   /* About card padding */
-  .card[style*="padding: 40"] { padding: 24px !important; }
+  .card[style*="padding: 40"] { padding: 22px !important; }
 
   /* Stamp */
   .stamp { display: none; }
@@ -840,16 +866,47 @@ button { font-family: inherit; }
   /* Resource card grid — 1 column */
   div[style*="minmax(320px"] { grid-template-columns: 1fr !important; }
 
-  /* Redes link pills smaller padding */
-  a[style*="padding: 20px 24px"] { padding: 16px 18px !important; }
+  /* Redes links margin */
+  .redes-links { margin-top: 36px !important; }
 
-  /* Highlight cards */
-  .card[style*="padding: 32"] { padding: 22px !important; }
+  /* Redes link card */
+  .redes-link-card { padding: 14px 18px !important; }
+
+  /* Highlight / content cards */
+  .card[style*="padding: 32"] { padding: 20px !important; }
+  .card[style*="padding: 28"] { padding: 18px !important; }
+
+  /* Newsletter inner form card padding */
+  .newsletter-form-card { padding: 24px 20px !important; }
+
+  /* Newsletter bar: hide pill on very small screens to prevent wrap */
+  .newsletter-bar-pill { display: none; }
+
+  /* Workflow/values cards gap */
+  .values-grid { gap: 12px !important; margin-top: 32px !important; }
+
+  /* About section internal margins */
+  .about-secondary { margin-top: 56px !important; }
 }
 
 @media (max-width: 400px) {
   .journal { padding: 0 14px; }
-  h1.display { font-size: clamp(36px, 10vw, 56px) !important; }
+  h1.display { font-size: clamp(32px, 9.5vw, 48px) !important; }
+  .topbar-inner { padding: 10px 14px !important; }
+}
+
+/* ---------- Footer grid ---------- */
+@media (max-width: 860px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 32px !important;
+  }
+  .footer-grid > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr !important; }
 }
 
 /* ---------- Recursos · Paid card ---------- */

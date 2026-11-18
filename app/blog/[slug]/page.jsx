@@ -9,11 +9,12 @@ import ShareButtons from "../../components/ShareButtons";
 import { getAllPosts, getPostBySlug, getRelatedPosts, formatDate } from "../../lib/blog";
 
 export async function generateStaticParams() {
-  return getAllPosts().map((p) => ({ slug: p.slug }));
+  const posts = await getAllPosts();
+  return posts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }) {
-  const post = getPostBySlug(params.slug);
+  const post = await getPostBySlug(params.slug);
   if (!post) return {};
   return {
     title: post.title,
@@ -318,10 +319,10 @@ function PostJsonLd({ post }) {
   );
 }
 
-export default function BlogPostPage({ params }) {
-  const post = getPostBySlug(params.slug);
+export default async function BlogPostPage({ params }) {
+  const post = await getPostBySlug(params.slug);
   if (!post) notFound();
-  const related = getRelatedPosts(post.slug, 3);
+  const related = await getRelatedPosts(post.slug, 3);
   const pagenum = String(post.entrada * 4).padStart(2, "0");
 
   return (

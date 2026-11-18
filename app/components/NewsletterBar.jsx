@@ -6,7 +6,9 @@ export default function NewsletterBar() {
       <div className="newsletter-bar-inner">
         <span className="newsletter-bar-pill">la carta</span>
         <span className="newsletter-bar-text">
-          Una carta los domingos — <strong>corta, útil, humana</strong>.{" "}
+          <span className="bar-desktop">Una carta los domingos — <strong>corta, útil, humana</strong>.</span>
+          <span className="bar-mobile">La carta del domingo.</span>
+          {" "}
           <Link href="/#newsletter" className="newsletter-bar-cta">
             Sumame →
           </Link>

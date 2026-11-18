@@ -41,9 +41,10 @@ export default function Hero() {
     return () => clearTimeout(id);
   }, []);
 
-  // Parallax (direct DOM, no re-renders)
+  // Parallax (direct DOM, no re-renders) — disabled on mobile to avoid jank
   useEffect(() => {
     const handler = () => {
+      if (window.innerWidth <= 860) return;
       const y = window.scrollY;
       if (headlineRef.current) headlineRef.current.style.transform = `translateY(${y * 0.13}px)`;
       if (subtextRef.current) subtextRef.current.style.transform = `translateY(${y * 0.06}px)`;
@@ -55,10 +56,11 @@ export default function Hero() {
 
   return (
     <section
-      className="section"
+      className="section hero-section"
       style={{ paddingTop: 72, paddingBottom: 80, borderTop: "none" }}
     >
       <div
+        className="hero-eyebrow-bar"
         style={{
           display: "flex",
           alignItems: "baseline",
@@ -77,11 +79,12 @@ export default function Hero() {
           style={{
             fontSize: "clamp(52px, 7vw, 92px)",
             margin: 0,
-            lineHeight: 1.02,
+            lineHeight: 1.05,
             willChange: "transform",
           }}
         >
-          la corpo no te lo cuenta, <br />
+          la corpo no te lo cuenta,{" "}
+          <br />
           <em style={{ fontStyle: "italic", color: "var(--vino)" }}>
             {typed}
             {!typingDone && (
@@ -96,6 +99,7 @@ export default function Hero() {
 
         <p
           ref={subtextRef}
+          className="hero-subtext"
           style={{
             fontFamily: "var(--font-display)",
             fontStyle: "italic",
@@ -110,7 +114,7 @@ export default function Hero() {
           {subtext}
         </p>
 
-        <div style={{ display: "flex", gap: 14, marginTop: 44, flexWrap: "wrap" }}>
+        <div className="hero-buttons" style={{ display: "flex", gap: 14, marginTop: 44, flexWrap: "wrap" }}>
           <Link href="/blog" className="btn btn-primary">
             Leer el blog →
           </Link>

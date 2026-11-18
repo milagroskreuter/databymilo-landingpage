@@ -104,6 +104,7 @@ export default function Newsletter() {
           </div>
 
           <div
+            className="newsletter-form-card"
             style={{
               background: "var(--cream)",
               borderRadius: 12,

@@ -74,7 +74,7 @@ export default function About() {
           display: "grid",
           gridTemplateColumns: "1.1fr 1fr",
           gap: 64,
-          marginTop: 72,
+          marginTop: 56,
           alignItems: "start",
         }}
       >
@@ -131,7 +131,7 @@ export default function About() {
         </Reveal>
 
         <Reveal delay={200}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div className="values-grid" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {values.map((v, i) => (
               <div key={i} className="card" style={{ display: "flex", gap: 20, padding: 28 }}>
                 <div
@@ -185,7 +185,7 @@ export default function About() {
       </div>
 
       <Reveal delay={80}>
-        <div style={{ marginTop: 96 }}>
+        <div className="about-secondary" style={{ marginTop: 80 }}>
           <h2 className="section-title">
             Cómo <em>trabajo</em>.
           </h2>
@@ -252,7 +252,7 @@ export default function About() {
       </Reveal>
 
       <Reveal delay={120}>
-        <div style={{ marginTop: 96 }}>
+        <div className="about-secondary" style={{ marginTop: 80 }}>
           <h2 className="section-title">
             Qué <em>uso</em>.
           </h2>

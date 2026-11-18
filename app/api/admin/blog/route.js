@@ -1,64 +1,68 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-const BLOG_DIR = path.join(process.cwd(), "content", "blog");
-
-function ensureDir() {
-  if (!fs.existsSync(BLOG_DIR)) fs.mkdirSync(BLOG_DIR, { recursive: true });
-}
-
-function slugify(title) {
-  return title
-    .toLowerCase()
+function slugify(text) {
+  return text
+    .toString()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
+    .toLowerCase()
     .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
-    .slice(0, 80);
+    .replace(/-+/g, "-");
 }
 
 export async function GET() {
-  ensureDir();
-  const files = fs.readdirSync(BLOG_DIR).filter((f) => /\.mdx?$/.test(f));
-  const posts = files.map((f) => {
-    const raw = fs.readFileSync(path.join(BLOG_DIR, f), "utf8");
-    const { data } = matter(raw);
-    return {
-      slug: f.replace(/\.mdx?$/, ""),
-      title: data.title || f,
-      date: data.date || null,
-      excerpt: data.excerpt || "",
-      tags: data.tags || [],
-      coverImage: data.coverImage || null,
-    };
-  }).sort((a, b) => {
-    if (!a.date) return 1;
-    if (!b.date) return -1;
-    return new Date(b.date) - new Date(a.date);
-  });
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("id, slug, title, date, excerpt, tags, cover_image, published, created_at, updated_at")
+      .order("date", { ascending: false });
 
-  return Response.json({ posts, total: posts.length });
+    if (error) return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ posts: data });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
+  }
 }
 
 export async function POST(request) {
-  ensureDir();
-  const { title, date, excerpt, tags, coverImage, content, slug: customSlug } = await request.json().catch(() => ({}));
-  if (!title) return Response.json({ error: "Falta título" }, { status: 400 });
+  try {
+    const body = await request.json();
+    const { title, date, excerpt, tags, cover_image, content, published } = body;
 
-  const slug = customSlug || slugify(title);
-  const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
+    if (!title) return Response.json({ error: "Falta el título" }, { status: 400 });
 
-  if (fs.existsSync(filePath)) {
-    return Response.json({ error: "Ya existe un post con ese slug" }, { status: 409 });
+    const slug = slugify(title);
+    const supabase = getSupabaseAdmin();
+
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .insert({
+        slug,
+        title,
+        date: date || new Date().toISOString().slice(0, 10),
+        excerpt: excerpt || "",
+        tags: tags || [],
+        cover_image: cover_image || "",
+        content: content || "",
+        published: published !== false,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === "23505") {
+        return Response.json({ error: "Ya existe un post con ese título (slug duplicado)" }, { status: 409 });
+      }
+      return Response.json({ error: error.message }, { status: 500 });
+    }
+
+    return Response.json({ post: data }, { status: 201 });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
   }
-
-  const frontmatter = { title, date: date || new Date().toISOString().split("T")[0], excerpt: excerpt || "", tags: tags || [], coverImage: coverImage || null };
-  const fileContent = matter.stringify(content || "", frontmatter);
-  fs.writeFileSync(filePath, fileContent, "utf8");
-
-  return Response.json({ ok: true, slug });
 }
