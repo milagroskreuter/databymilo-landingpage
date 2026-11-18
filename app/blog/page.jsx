@@ -5,6 +5,8 @@ import SectionDivider from "../components/SectionDivider";
 import TypeEyebrow from "../components/primitives/TypeEyebrow";
 import { getAllPosts, getAllTags, formatDate } from "../lib/blog";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Blog",
   description:

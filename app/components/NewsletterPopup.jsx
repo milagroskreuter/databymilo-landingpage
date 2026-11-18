@@ -13,13 +13,18 @@ export default function NewsletterPopup() {
   const [shake, setShake] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("popup_seen")) return;
+    try {
+      if (localStorage.getItem("popup_subscribed")) return;
+      const last = localStorage.getItem("popup_dismissed_at");
+      const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
+      if (last && Date.now() - Number(last) < THREE_DAYS) return;
+    } catch {}
     const id = setTimeout(() => setVisible(true), 2000);
     return () => clearTimeout(id);
   }, []);
 
   const dismiss = () => {
-    localStorage.setItem("popup_seen", "1");
+    try { localStorage.setItem("popup_dismissed_at", String(Date.now())); } catch {}
     setVisible(false);
   };
 
@@ -50,7 +55,7 @@ export default function NewsletterPopup() {
       });
       if (!res.ok) throw new Error();
       setSent(true);
-      localStorage.setItem("popup_seen", "1");
+      try { localStorage.setItem("popup_subscribed", "1"); } catch {}
       setTimeout(dismiss, 2200);
     } catch {
       triggerError("Ups, algo se enredó. Probá de nuevo.");

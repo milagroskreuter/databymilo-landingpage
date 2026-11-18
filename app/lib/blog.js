@@ -4,10 +4,12 @@ const HOME_ENTRADA = 1;
 
 function getClient() {
   const url = process.env.SUPABASE_URL;
-  // Use service key server-side (bypasses RLS); fall back to anon for reads
   const key = process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) throw new Error("Supabase env vars not set");
-  return createClient(url, key);
+  // Pass no-store so Next.js doesn't cache Supabase's internal fetch calls
+  return createClient(url, key, {
+    global: { fetch: (u, opts) => fetch(u, { ...opts, cache: "no-store" }) },
+  });
 }
 
 function calcReadingTime(content) {
