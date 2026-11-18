@@ -1,50 +1,40 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import Hero from "./components/sections/Hero";
 import Newsletter from "./components/sections/Newsletter";
 import Footer from "./components/sections/Footer";
 import Marquee from "./components/Marquee";
 import SectionDivider from "./components/SectionDivider";
 import Reveal from "./components/primitives/Reveal";
-import TypeEyebrow from "./components/primitives/TypeEyebrow";
 import { getResources } from "./lib/resources";
 import { getAllPosts } from "./lib/blog";
 
 function AboutTeaser() {
   return (
     <section className="section">
-      <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 01</TypeEyebrow>
-        <div className="rule"></div>
-        <div className="pagenum">pág. 04</div>
-      </div>
+      <div className="pag-label">pág. 04 · sobre</div>
       <Reveal>
         <h2 className="section-title">
           De no entender nada, <em>a escribirlo todo</em>.
         </h2>
-        <p className="section-sub">La historia corta de por qué existe este cuaderno.</p>
       </Reveal>
-      <Reveal delay={100}>
-        <p
-          style={{
-            fontFamily: "var(--font-display)",
-            fontStyle: "italic",
-            fontSize: "clamp(18px, 2vw, 22px)",
-            lineHeight: 1.6,
-            maxWidth: 680,
-            margin: "40px 0 28px",
-            color: "var(--ink)",
-          }}
-        >
-          Hoy trabajo en data para una fintech del exterior, desde Buenos Aires. Antes pasé
-          por una de las corpos tech más grandes de LATAM — el cuaderno nació ahí. No soy
-          docente, no soy gurú. Soy alguien que está acá y tiene ganas de contarlo sin filtro
-          corporativo ni filtro motivacional.
-        </p>
-        <Link href="/sobre" className="btn btn-ghost">
-          Leer la historia completa →
-        </Link>
-      </Reveal>
+      <div className="about-grid">
+        <Reveal>
+          <div className="about-quote">
+            "Soy alguien que está adentro y tiene ganas de <em>contarlo sin filtro</em>."
+          </div>
+        </Reveal>
+        <Reveal delay={80}>
+          <p className="about-body">
+            Hoy trabajo en data para una fintech del exterior, desde Buenos Aires. Antes pasé
+            por una de las corpos tech más grandes de LATAM — el cuaderno nació ahí. No soy
+            docente, no soy gurú. Soy alguien que está acá y tiene ganas de contarlo sin filtro
+            corporativo ni filtro motivacional.
+          </p>
+          <Link href="/sobre" className="link-arrow">
+            Leer la historia completa →
+          </Link>
+        </Reveal>
+      </div>
     </section>
   );
 }
@@ -52,52 +42,48 @@ function AboutTeaser() {
 const lineas = [
   {
     num: "01",
-    emoji: "🏢",
+    eyebrow: "Desde adentro, sin editar",
     title: "Vida en la corpo",
-    sub: "Todo lo que nadie te contó antes de entrar. Reuniones, política, crecimiento real.",
+    desc: "Anécdotas, reuniones que podrían haber sido un mail, dinámicas internas. La diferencia entre cómo se vende trabajar en tech y cómo se vive.",
   },
   {
     num: "02",
-    emoji: "🤖",
-    title: "IA aplicada",
-    sub: "No el hype. La IA que se usa de verdad adentro de empresas grandes, hoy.",
+    eyebrow: "Cosas que no se dicen en LinkedIn",
+    title: "Reflexión generacional",
+    desc: "La presión de definir carrera ahora. Ver amigos que se van afuera. Qué significa tener un buen trabajo hoy.",
   },
   {
     num: "03",
-    emoji: "📊",
-    title: "Data sin vueltas",
-    sub: "Recursos, guías y herramientas para trabajar con datos sin un PhD.",
+    eyebrow: "Cuando vale la pena explicar",
+    title: "Explicativo accesible",
+    desc: "SQL, BI, Python, IA: conceptos explicados como a una amiga en un café, no como en un tutorial de YouTube.",
   },
   {
     num: "04",
-    emoji: "🌎",
-    title: "Carrera en LATAM",
-    sub: "Crecer profesionalmente desde este lado del mapa. Sin romanticismos.",
+    eyebrow: "Para abrir el lunes",
+    title: "Herramientas & data",
+    desc: "Lo que tengo abierto en la compu, lo que probé y descarté, y lo que vale la pena aprender antes de tu próxima entrevista.",
   },
 ];
 
 function LineasSection() {
   return (
     <section className="section lineas-section">
-      <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 02</TypeEyebrow>
-        <div className="rule"></div>
-        <div className="pagenum">pág. 12</div>
-      </div>
+      <div className="pag-label">pág. 12 · las cuatro líneas</div>
       <Reveal>
         <h2 className="section-title">
-          Las cuatro <em>líneas</em>.
+          Lo que vive en <em>este cuaderno</em>.
         </h2>
-        <p className="section-sub">Todo lo que cuento en este cuaderno cae en alguna de estas cuatro.</p>
+        <p className="section-intro">Todo lo que cuento acá cae en alguna de estas cuatro.</p>
       </Reveal>
       <div className="lineas-grid">
         {lineas.map((l, i) => (
           <Reveal key={i} delay={i * 60}>
             <div className="linea">
               <div className="linea-num">{l.num}</div>
-              <div className="linea-emoji">{l.emoji}</div>
-              <div className="linea-title">{l.title}</div>
-              <div className="linea-sub">{l.sub}</div>
+              <div className="linea-eyebrow">{l.eyebrow}</div>
+              <h4>{l.title}</h4>
+              <p>{l.desc}</p>
             </div>
           </Reveal>
         ))}
@@ -109,210 +95,117 @@ function LineasSection() {
 async function ResourcesTeaser() {
   let featured = [];
   try { featured = (await getResources()).filter((r) => r.slug).slice(0, 3); } catch { return null; }
+  const nums = ["01", "02", "03"];
   return (
     <section className="section">
-      <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 03</TypeEyebrow>
-        <div className="rule"></div>
-        <div className="pagenum">pág. 20</div>
-      </div>
+      <div className="pag-label">pág. 20 · la biblioteca</div>
       <Reveal>
-        <h2 className="section-title">
-          La <em>biblioteca</em>.
-        </h2>
-        <p className="section-sub">Tres descargas para empezar. Sin mail, sin pop-up, sin letra chica.</p>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
+          <div>
+            <h2 className="section-title" style={{ marginBottom: 0 }}>
+              La <em>biblioteca</em>.
+            </h2>
+          </div>
+          <div className="guarda-stamp">★ GUARDA ESTO</div>
+        </div>
+        <p className="section-intro" style={{ marginTop: 20 }}>
+          Tres descargas para empezar. Sin mail, sin pop-up, sin letra chica.
+        </p>
       </Reveal>
       <div className="biblioteca-grid">
         {featured.map((r, i) => (
           <Reveal key={i} delay={i * 60}>
-            <Link
-              href={`/recursos/${r.slug}`}
-              style={{ textDecoration: "none", display: "block", height: "100%" }}
-            >
-              <div
-                style={{
-                  background: r.color,
-                  borderRadius: 14,
-                  padding: "28px 24px",
-                  border: "1px solid rgba(139,26,74,.1)",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  transition: "transform .15s ease, box-shadow .15s ease",
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 700,
-                    fontSize: 10,
-                    letterSpacing: ".14em",
-                    textTransform: "uppercase",
-                    color: "var(--vino)",
-                    opacity: 0.75,
-                    marginBottom: 10,
-                  }}
-                >
-                  {r.type} · {r.pages}
+            <Link href={`/recursos/${r.slug}`} style={{ textDecoration: "none", display: "block", height: "100%" }}>
+              <div className="recurso">
+                <div className="recurso-ribbon"><span>GRATIS</span></div>
+                <div className="recurso-header">
+                  <div className="recurso-num-badge">{nums[i]}</div>
+                  <div className="recurso-meta">
+                    <div className="recurso-type">{r.type || "Guía"}</div>
+                    <div className="recurso-pages">{r.pages || "PDF"}</div>
+                  </div>
                 </div>
-                <h3
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontStyle: "italic",
-                    fontWeight: 700,
-                    fontSize: 22,
-                    color: "var(--ink)",
-                    margin: "0 0 10px",
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {r.title}
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    lineHeight: 1.55,
-                    color: "var(--fg-2)",
-                    margin: "0 0 auto",
-                  }}
-                >
-                  {r.desc}
-                </p>
-                <span
-                  style={{
-                    marginTop: 16,
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 700,
-                    fontSize: 11,
-                    letterSpacing: ".06em",
-                    color: "var(--vino)",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Ver recurso →
-                </span>
+                <div className="recurso-body">
+                  <div className="recurso-title">{r.title}</div>
+                  <p className="recurso-desc">{r.desc}</p>
+                  <span className="recurso-cta">Ver recurso →</span>
+                </div>
               </div>
             </Link>
           </Reveal>
         ))}
       </div>
-      <Reveal delay={240}>
-        <div style={{ textAlign: "center", marginTop: 48 }}>
-          <Link href="/recursos" className="btn btn-primary">
-            Ver todos los recursos →
-          </Link>
+
+      <div className="destacados">
+        <div className="destacados-header">
+          <div className="destacados-eyebrow">también tengo esto para vos</div>
+          <div className="destacados-label">★ NUEVO</div>
         </div>
-      </Reveal>
+        <div className="destacado-card">
+          <div className="destacado-visual">
+            <div className="destacado-type">Mini-curso · Gratis</div>
+            <div className="destacado-vtitle">Data para <em>no-técnicas</em>.</div>
+            <div className="destacado-vbottom">
+              <span>5 módulos</span>
+              <span>30 min</span>
+            </div>
+          </div>
+          <div className="destacado-body">
+            <div className="destacado-meta">Mini-curso gratuito</div>
+            <h3 className="destacado-title">Entendé los datos que ya tenés.</h3>
+            <p className="destacado-desc">
+              Para analistas, PMs y toda persona en tech que trabaja con datos pero no tiene formación técnica. Sin código. Sin Excel avanzado. Solo lógica y contexto.
+            </p>
+            <Link href="/recursos" className="destacado-cta">
+              Empezar gratis →
+            </Link>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
 
 async function BlogTeaser() {
   let latestPosts = [];
-  try { latestPosts = (await getAllPosts()).slice(0, 2); } catch { return null; }
+  try { latestPosts = (await getAllPosts()).slice(0, 3); } catch { return null; }
   return (
     <section className="section">
-      <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 05</TypeEyebrow>
-        <div className="rule"></div>
-        <div className="pagenum">pág. 36</div>
-      </div>
+      <div className="pag-label">pág. 36 · el blog</div>
       <Reveal>
         <h2 className="section-title">
-          edición <em>corpo.</em>
+          Historias largas <em>en el blog</em>.
         </h2>
-        <p className="section-sub">Cuando algo no entra en un post. Sobre la corpo, la IA en las empresas y la carrera en tech.</p>
+        <p className="section-intro">
+          Cuando algo no entra en un post. Sobre la corpo, la IA en las empresas y la carrera en tech.
+        </p>
       </Reveal>
       {latestPosts.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-            marginTop: 48,
-          }}
-        >
-          {latestPosts.map((post, i) => (
-            <Reveal key={post.slug} delay={i * 80}>
-              <Link href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-                <article
-                  style={{
-                    background: "var(--cream)",
-                    borderRadius: 14,
-                    padding: "28px 32px",
-                    border: "1px solid rgba(139,26,74,.12)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 8,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontWeight: 700,
-                      fontSize: 10,
-                      letterSpacing: ".14em",
-                      textTransform: "uppercase",
-                      color: "var(--vino)",
-                      opacity: 0.7,
-                    }}
-                  >
-                    Entrada Nº {post.entradaStr}
-                    {post.date && (
-                      <span style={{ opacity: 0.6, fontWeight: 400, marginLeft: 10 }}>
-                        · {new Date(post.date).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}
-                      </span>
-                    )}
-                  </div>
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontStyle: "italic",
-                      fontWeight: 700,
-                      fontSize: "clamp(20px, 2.2vw, 26px)",
-                      color: "var(--ink)",
-                      margin: 0,
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {post.title}
-                  </h3>
-                  {post.excerpt && (
-                    <p
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 14,
-                        color: "var(--fg-2)",
-                        margin: 0,
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      {post.excerpt}
-                    </p>
+        <Reveal delay={80}>
+          <div className="blog-list">
+            {latestPosts.map((post, i) => (
+              <Link key={post.slug} href={`/blog/${post.slug}`} className="blog-entry">
+                <div className="blog-entry-meta">
+                  <span className="num">Nº {post.entradaStr}</span>
+                  {post.date && (
+                    <span>
+                      {new Date(post.date).toLocaleDateString("es-AR", { day: "numeric", month: "long" })}
+                    </span>
                   )}
-                  <span
-                    style={{
-                      marginTop: 4,
-                      fontFamily: "var(--font-body)",
-                      fontWeight: 700,
-                      fontSize: 11,
-                      letterSpacing: ".06em",
-                      color: "var(--vino)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Leer →
-                  </span>
-                </article>
+                </div>
+                <div>
+                  <h3>{post.title}</h3>
+                  {post.excerpt && <p>{post.excerpt}</p>}
+                </div>
+                <span className="blog-arrow">Leer →</span>
               </Link>
-            </Reveal>
-          ))}
-        </div>
+            ))}
+          </div>
+        </Reveal>
       )}
-      <Reveal delay={200}>
-        <div style={{ textAlign: "center", marginTop: 40 }}>
-          <Link href="/blog" className="btn btn-ghost">
+      <Reveal delay={180}>
+        <div style={{ marginTop: 40 }}>
+          <Link href="/blog" className="link-arrow">
             Ver todas las entradas →
           </Link>
         </div>

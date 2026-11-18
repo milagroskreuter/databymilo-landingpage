@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Reveal from "../primitives/Reveal";
-import TypeEyebrow from "../primitives/TypeEyebrow";
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
@@ -39,44 +38,35 @@ export default function Newsletter() {
   };
 
   return (
-    <section id="newsletter" className="section">
-      <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 04</TypeEyebrow>
-        <div className="rule"></div>
-        <div className="pagenum">pág. 32</div>
-      </div>
+    <section id="newsletter" className="section" style={{ background: "var(--rosa-50)", borderRadius: 20, padding: "56px 48px" }}>
+      <div className="pag-label">pág. 28 · newsletter</div>
 
       <Reveal>
         <div className="carta-block">
           {/* Left: text + form */}
           <div>
-            <div className="eyebrow-j" style={{ color: "rgba(253,245,236,.65)", marginBottom: 16 }}>
-              Un mail · Domingos · 9 AM
-            </div>
             <h2
               className="display italic"
               style={{
-                color: "var(--cream)",
+                color: "var(--ink)",
                 fontSize: "clamp(36px, 4.4vw, 56px)",
                 margin: "0 0 20px",
                 lineHeight: 1.05,
               }}
             >
-              La carta<br />del domingo.
+              La carta<br />del Domingo.
             </h2>
             <p
               style={{
-                fontFamily: "var(--font-display)",
-                fontStyle: "italic",
-                fontSize: 18,
-                color: "var(--cream)",
-                opacity: 0.88,
-                lineHeight: 1.55,
+                fontFamily: "var(--font-body)",
+                fontSize: 16,
+                color: "var(--fg-2)",
+                lineHeight: 1.6,
                 margin: "0 0 32px",
                 maxWidth: 420,
               }}
             >
-              Historias de la corpo que no entran en Instagram, un recurso recién salido, y data lista para usar. 5 minutos. Promesa.
+              <strong>Todos los domingos.</strong> Historias de la corpo que no entran en Instagram, un recurso recién salido, y data lista para usar. 5 minutos de lectura. Promesa.
             </p>
 
             {sent ? (
@@ -85,7 +75,7 @@ export default function Newsletter() {
                   fontFamily: "var(--font-display)",
                   fontStyle: "italic",
                   fontSize: 24,
-                  color: "var(--butter)",
+                  color: "var(--vino)",
                   lineHeight: 1.3,
                 }}
               >
@@ -127,7 +117,7 @@ export default function Newsletter() {
                     autoComplete="email"
                   />
                   <button type="submit" disabled={loading}>
-                    {loading ? "Enviando…" : "Sumame →"}
+                    {loading ? "Enviando…" : "sumame a la carta"}
                   </button>
                 </div>
                 {error && (
@@ -136,7 +126,7 @@ export default function Newsletter() {
                       fontFamily: "var(--font-display)",
                       fontStyle: "italic",
                       fontSize: 13,
-                      color: "var(--rosa-200)",
+                      color: "var(--rosa)",
                       marginTop: 8,
                       lineHeight: 1.4,
                     }}
@@ -148,11 +138,12 @@ export default function Newsletter() {
                   style={{
                     fontFamily: "var(--font-body)",
                     fontSize: 11,
-                    color: "rgba(253,245,236,.5)",
+                    color: "var(--fg-3)",
                     marginTop: 12,
+                    letterSpacing: "0.04em",
                   }}
                 >
-                  Sin spam · cancelá cuando quieras
+                  ✦ 5 min de lectura ✦ cero tracking ✦ te vas cuando quieras
                 </div>
               </form>
             )}
@@ -160,31 +151,21 @@ export default function Newsletter() {
 
           {/* Right: carta preview */}
           <div className="carta-preview">
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontWeight: 700,
-                fontSize: 9,
-                letterSpacing: ".18em",
-                textTransform: "uppercase",
-                color: "var(--vino)",
-                opacity: 0.6,
-                marginBottom: 14,
-              }}
-            >
-              Dom. 9 AM · carta nº 047
-            </div>
-            <div className="carta-preview-line">
-              Hola — esta semana pasó algo raro en la reunión de producto. Te cuento.
-            </div>
-            <div className="carta-preview-line">
-              El modelo de IA que todos están usando en mi equipo tiene un problema que nadie quiere admitir…
-            </div>
-            <div className="carta-preview-line">
-              Y el recurso de esta semana: la plantilla que uso para presentar métricas a mi jefa sin que se duerma.
-            </div>
-            <div className="carta-sig">— milo</div>
             <div className="carta-stamp">carta nº 047</div>
+            <div className="carta-preview-page">
+              <div className="carta-preview-top">
+                <span>Dom. 9 AM</span>
+                <span className="rosa">carta nº 047</span>
+              </div>
+              <div className="carta-preview-title">
+                Lo que aprendí haciendo una reunión que podría haber sido <em>un mail</em>.
+              </div>
+              <div className="carta-preview-body">
+                <p>Esta semana fue pesada. Una de esas en las que una reunión de 45 minutos se podría haber resuelto con tres líneas de Slack...</p>
+                <p>Pero lo que sacaste no estaba en la agenda. Te dejo lo que quedó en mi cuaderno.</p>
+              </div>
+              <div className="carta-preview-signature">— milo</div>
+            </div>
           </div>
         </div>
       </Reveal>
