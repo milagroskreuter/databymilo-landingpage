@@ -19,7 +19,7 @@ export default function NewsletterPage() {
   useEffect(() => { load(); }, []);
 
   async function handleRemove(id, email) {
-    if (!confirm(`Â¿Eliminar ${email} de la lista?`)) return;
+    if (!confirm(`¿Eliminar ${email} de la lista?`)) return;
     const res = await fetch("/api/admin/newsletter/contacts", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -48,9 +48,9 @@ export default function NewsletterPage() {
   return (
     <>
       <div className="adm-header">
-        <h1>Newsletter â€” Suscriptoras</h1>
+        <h1>Newsletter — Suscriptoras</h1>
         <Link href="/administracion-general/newsletter/compose" className="adm-btn adm-btn-primary">
-          âœ¦ Escribir email
+          ✦ Escribir email
         </Link>
       </div>
 
@@ -64,11 +64,11 @@ export default function NewsletterPage() {
         <div className="adm-stats-grid" style={{ marginBottom: 24 }}>
           <div className="adm-stat-card">
             <div className="adm-stat-label">Total</div>
-            <div className="adm-stat-value">{data?.total ?? "â€¦"}</div>
+            <div className="adm-stat-value">{data?.total ?? "…"}</div>
           </div>
           <div className="adm-stat-card">
             <div className="adm-stat-label">Activas</div>
-            <div className="adm-stat-value">{data?.active ?? "â€¦"}</div>
+            <div className="adm-stat-value">{data?.active ?? "…"}</div>
           </div>
         </div>
 
@@ -76,7 +76,7 @@ export default function NewsletterPage() {
           <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--adm-border)", display: "flex", gap: 12, flexWrap: "wrap" }}>
             <input
               className="adm-input"
-              placeholder="Buscar por email o nombreâ€¦"
+              placeholder="Buscar por email o nombre…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{ maxWidth: 280, marginBottom: 0 }}
@@ -94,7 +94,7 @@ export default function NewsletterPage() {
           </div>
 
           {loading ? (
-            <div style={{ padding: 32, textAlign: "center", color: "var(--adm-text-muted)" }}>Cargandoâ€¦</div>
+            <div style={{ padding: 32, textAlign: "center", color: "var(--adm-text-muted)" }}>Cargando…</div>
           ) : (
             <table className="adm-table">
               <thead>
@@ -116,7 +116,7 @@ export default function NewsletterPage() {
                   filtered.map((c) => (
                     <tr key={c.id}>
                       <td>{c.email}</td>
-                      <td style={{ color: "var(--adm-text-muted)" }}>{c.first_name || "â€”"}</td>
+                      <td style={{ color: "var(--adm-text-muted)" }}>{c.first_name || "—"}</td>
                       <td>
                         <span className={`adm-badge ${c.unsubscribed ? "adm-badge-inactive" : "adm-badge-active"}`}>
                           {c.unsubscribed ? "Desuscripta" : "Activa"}

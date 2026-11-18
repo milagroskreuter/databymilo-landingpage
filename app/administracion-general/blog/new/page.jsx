@@ -3,13 +3,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const TEMPLATE = `AcÃ¡ va el primer pÃ¡rrafo de introducciÃ³n.
+const TEMPLATE = `Acá va el primer párrafo de introducción.
 
-Segundo pÃ¡rrafo con el desarrollo.
+Segundo párrafo con el desarrollo.
 
-Una idea mÃ¡s que amplÃ­a el tema.
+Una idea más que amplía el tema.
 
-Cierre o reflexiÃ³n final.`;
+Cierre o reflexión final.`;
 
 export default function NewBlogPost() {
   const router = useRouter();
@@ -57,7 +57,7 @@ export default function NewBlogPost() {
     <>
       <div className="adm-header">
         <h1>Nueva entrada de blog</h1>
-        <Link href="/administracion-general/blog" className="adm-btn adm-btn-secondary adm-btn-sm">â† Volver</Link>
+        <Link href="/administracion-general/blog" className="adm-btn adm-btn-secondary adm-btn-sm">← Volver</Link>
       </div>
 
       <div className="adm-content">
@@ -67,8 +67,8 @@ export default function NewBlogPost() {
           <div className="adm-editor-grid">
             <div>
               <div className="adm-form-group">
-                <label className="adm-label">TÃ­tulo *</label>
-                <input className="adm-input" value={form.title} onChange={(e) => update("title", e.target.value)} required placeholder="El tÃ­tulo del post" />
+                <label className="adm-label">Título *</label>
+                <input className="adm-input" value={form.title} onChange={(e) => update("title", e.target.value)} required placeholder="El título del post" />
               </div>
               <div className="adm-form-group">
                 <label className="adm-label">Fecha</label>
@@ -76,7 +76,7 @@ export default function NewBlogPost() {
               </div>
               <div className="adm-form-group">
                 <label className="adm-label">Resumen (excerpt)</label>
-                <textarea className="adm-textarea" style={{ minHeight: 80 }} value={form.excerpt} onChange={(e) => update("excerpt", e.target.value)} placeholder="Dos lÃ­neas que resumen el post" />
+                <textarea className="adm-textarea" style={{ minHeight: 80 }} value={form.excerpt} onChange={(e) => update("excerpt", e.target.value)} placeholder="Dos líneas que resumen el post" />
               </div>
               <div className="adm-form-group">
                 <label className="adm-label">Tags (separados por coma)</label>
@@ -88,11 +88,11 @@ export default function NewBlogPost() {
               </div>
               <div className="adm-form-group">
                 <label className="adm-label">Slug personalizado (opcional)</label>
-                <input className="adm-input" value={form.slug} onChange={(e) => update("slug", e.target.value)} placeholder="se genera desde el tÃ­tulo si lo dejÃ¡s vacÃ­o" />
+                <input className="adm-input" value={form.slug} onChange={(e) => update("slug", e.target.value)} placeholder="se genera desde el título si lo dejás vacío" />
               </div>
               <div style={{ display: "flex", gap: 12 }}>
                 <button type="submit" className="adm-btn adm-btn-primary" disabled={loading || !form.title}>
-                  {loading ? "Guardandoâ€¦" : "Guardar post"}
+                  {loading ? "Guardando…" : "Guardar post"}
                 </button>
                 <Link href="/administracion-general/blog" className="adm-btn adm-btn-secondary">Cancelar</Link>
               </div>
@@ -108,7 +108,7 @@ export default function NewBlogPost() {
                   spellCheck={false}
                 />
                 <div style={{ fontSize: 11, color: "var(--adm-text-muted)", marginTop: 6 }}>
-                  Formato MDX. PodÃ©s usar **negrita**, *cursiva*, ## tÃ­tulos, [links](url), etc.
+                  Formato MDX. Podés usar **negrita**, *cursiva*, ## títulos, [links](url), etc.
                 </div>
               </div>
             </div>

@@ -17,7 +17,7 @@ export default function BlogAdminPage() {
   useEffect(() => { load(); }, []);
 
   async function handleDelete(slug, title) {
-    if (!confirm(`Â¿Eliminar "${title}"? Esta acciÃ³n no se puede deshacer.`)) return;
+    if (!confirm(`¿Eliminar "${title}"? Esta acción no se puede deshacer.`)) return;
     const res = await fetch(`/api/admin/blog/${slug}`, { method: "DELETE" });
     if (res.ok) {
       setMsg({ type: "success", text: `"${title}" eliminado` });
@@ -43,17 +43,17 @@ export default function BlogAdminPage() {
 
         <div className="adm-card" style={{ padding: 0, overflow: "hidden" }}>
           {loading ? (
-            <div style={{ padding: 32, textAlign: "center", color: "var(--adm-text-muted)" }}>Cargandoâ€¦</div>
+            <div style={{ padding: 32, textAlign: "center", color: "var(--adm-text-muted)" }}>Cargando…</div>
           ) : posts.length === 0 ? (
             <div style={{ padding: 40, textAlign: "center" }}>
-              <div style={{ color: "var(--adm-text-muted)", marginBottom: 16 }}>No hay posts todavÃ­a</div>
+              <div style={{ color: "var(--adm-text-muted)", marginBottom: 16 }}>No hay posts todavía</div>
               <Link href="/administracion-general/blog/new" className="adm-btn adm-btn-primary">Crear el primero</Link>
             </div>
           ) : (
             <table className="adm-table">
               <thead>
                 <tr>
-                  <th>TÃ­tulo</th>
+                  <th>Título</th>
                   <th>Fecha</th>
                   <th>Tags</th>
                   <th></th>
@@ -67,7 +67,7 @@ export default function BlogAdminPage() {
                       <div style={{ fontSize: 11, color: "var(--adm-text-muted)", marginTop: 2 }}>/{p.slug}</div>
                     </td>
                     <td style={{ color: "var(--adm-text-muted)", whiteSpace: "nowrap" }}>
-                      {p.date || "â€”"}
+                      {p.date || "—"}
                     </td>
                     <td>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>

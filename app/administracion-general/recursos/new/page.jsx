@@ -45,7 +45,7 @@ export default function NewRecursoPage() {
     <>
       <div className="adm-header">
         <h1>Nuevo recurso</h1>
-        <Link href="/administracion-general/recursos" className="adm-btn adm-btn-secondary adm-btn-sm">â† Volver</Link>
+        <Link href="/administracion-general/recursos" className="adm-btn adm-btn-secondary adm-btn-sm">← Volver</Link>
       </div>
 
       <div className="adm-content">
@@ -55,19 +55,19 @@ export default function NewRecursoPage() {
           <div className="adm-editor-grid">
             <div>
               <div className="adm-form-group">
-                <label className="adm-label">TÃ­tulo *</label>
+                <label className="adm-label">Título *</label>
                 <input className="adm-input" value={form.title} onChange={(e) => update("title", e.target.value)} required />
               </div>
               <div className="adm-form-group">
-                <label className="adm-label">Tipo (ej: GuÃ­a Â· PDF)</label>
-                <input className="adm-input" value={form.type} onChange={(e) => update("type", e.target.value)} placeholder="GuÃ­a Â· PDF" />
+                <label className="adm-label">Tipo (ej: Guía · PDF)</label>
+                <input className="adm-input" value={form.type} onChange={(e) => update("type", e.target.value)} placeholder="Guía · PDF" />
               </div>
               <div className="adm-form-group">
-                <label className="adm-label">PÃ¡ginas</label>
-                <input className="adm-input" value={form.pages} onChange={(e) => update("pages", e.target.value)} placeholder="17 pÃ¡ginas" />
+                <label className="adm-label">Páginas</label>
+                <input className="adm-input" value={form.pages} onChange={(e) => update("pages", e.target.value)} placeholder="17 páginas" />
               </div>
               <div className="adm-form-group">
-                <label className="adm-label">DescripciÃ³n corta</label>
+                <label className="adm-label">Descripción corta</label>
                 <textarea className="adm-textarea" style={{ minHeight: 80 }} value={form.desc} onChange={(e) => update("desc", e.target.value)} />
               </div>
               <div className="adm-form-group">
@@ -76,7 +76,7 @@ export default function NewRecursoPage() {
               </div>
               <div className="adm-form-group">
                 <label className="adm-label">Slug personalizado</label>
-                <input className="adm-input" value={form.slug} onChange={(e) => update("slug", e.target.value)} placeholder="se genera desde el tÃ­tulo" />
+                <input className="adm-input" value={form.slug} onChange={(e) => update("slug", e.target.value)} placeholder="se genera desde el título" />
               </div>
 
               <div className="adm-form-group">
@@ -102,7 +102,7 @@ export default function NewRecursoPage() {
                   </div>
                   <div className="adm-form-group">
                     <label className="adm-label">Badge</label>
-                    <input className="adm-input" value={form.badge} onChange={(e) => update("badge", e.target.value)} placeholder="Nueva guÃ­a" />
+                    <input className="adm-input" value={form.badge} onChange={(e) => update("badge", e.target.value)} placeholder="Nueva guía" />
                   </div>
                 </>
               ) : (
@@ -114,7 +114,7 @@ export default function NewRecursoPage() {
 
               <div style={{ display: "flex", gap: 12 }}>
                 <button type="submit" className="adm-btn adm-btn-primary" disabled={loading || !form.title}>
-                  {loading ? "Guardandoâ€¦" : "Guardar recurso"}
+                  {loading ? "Guardando…" : "Guardar recurso"}
                 </button>
                 <Link href="/administracion-general/recursos" className="adm-btn adm-btn-secondary">Cancelar</Link>
               </div>
@@ -122,13 +122,13 @@ export default function NewRecursoPage() {
 
             <div>
               <div className="adm-form-group">
-                <label className="adm-label">Bullets (quÃ© incluye)</label>
+                <label className="adm-label">Bullets (qué incluye)</label>
                 {form.bullets.map((b, i) => (
                   <input key={i} className="adm-input" value={b} onChange={(e) => updateBullet(i, e.target.value)} placeholder={`Punto ${i + 1}`} style={{ marginBottom: 8 }} />
                 ))}
               </div>
               <div className="adm-form-group">
-                <label className="adm-label">Â¿Para quiÃ©n es?</label>
+                <label className="adm-label">¿Para quién es?</label>
                 <textarea className="adm-textarea" value={form.forWho} onChange={(e) => update("forWho", e.target.value)} />
               </div>
               <div className="adm-form-group">

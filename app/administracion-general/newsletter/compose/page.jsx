@@ -11,7 +11,7 @@ export default function ComposePage() {
 
   async function handleSend(e) {
     e.preventDefault();
-    if (!confirm("Â¿Enviar este email a toda la lista?")) return;
+    if (!confirm("¿Enviar este email a toda la lista?")) return;
     setLoading(true);
     setMsg(null);
 
@@ -26,7 +26,7 @@ export default function ComposePage() {
 
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
-      setMsg({ type: "success", text: sendAt ? "Email programado âœ¦" : "Email enviado a toda la lista âœ¦" });
+      setMsg({ type: "success", text: sendAt ? "Email programado ✦" : "Email enviado a toda la lista ✦" });
       setSubject("");
       setBody("");
       setSendAt("");
@@ -49,7 +49,7 @@ export default function ComposePage() {
           <h1>Escribir newsletter</h1>
         </div>
         <Link href="/administracion-general/newsletter" className="adm-btn adm-btn-secondary adm-btn-sm">
-          â† Volver
+          ← Volver
         </Link>
       </div>
 
@@ -57,7 +57,7 @@ export default function ComposePage() {
         {msg && <div className={`adm-alert adm-alert-${msg.type}`}>{msg.text}</div>}
 
         <div className="adm-alert adm-alert-info" style={{ marginBottom: 24 }}>
-          EscribÃ­ el cuerpo del email en pÃ¡rrafos separados por una lÃ­nea en blanco. Se va a enviar a todas las suscriptoras activas.
+          Escribí el cuerpo del email en párrafos separados por una línea en blanco. Se va a enviar a todas las suscriptoras activas.
         </div>
 
         <form onSubmit={handleSend}>
@@ -69,7 +69,7 @@ export default function ComposePage() {
                   className="adm-input"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  placeholder="la carta del domingo Â· 17 nov"
+                  placeholder="la carta del domingo · 17 nov"
                   required
                 />
               </div>
@@ -85,12 +85,12 @@ export default function ComposePage() {
                   required
                 />
                 <div style={{ fontSize: 11, color: "var(--adm-text-muted)", marginTop: 6 }}>
-                  Separar pÃ¡rrafos con una lÃ­nea en blanco. La firma (milo) se agrega automÃ¡ticamente.
+                  Separar párrafos con una línea en blanco. La firma (milo) se agrega automáticamente.
                 </div>
               </div>
 
               <div className="adm-form-group">
-                <label className="adm-label">Programar envÃ­o (opcional)</label>
+                <label className="adm-label">Programar envío (opcional)</label>
                 <input
                   type="datetime-local"
                   className="adm-input"
@@ -98,7 +98,7 @@ export default function ComposePage() {
                   onChange={(e) => setSendAt(e.target.value)}
                 />
                 <div style={{ fontSize: 11, color: "var(--adm-text-muted)", marginTop: 6 }}>
-                  Dejalo vacÃ­o para enviar ahora.
+                  Dejalo vacío para enviar ahora.
                 </div>
               </div>
 
@@ -108,7 +108,7 @@ export default function ComposePage() {
                   className="adm-btn adm-btn-primary"
                   disabled={loading || !subject || !body}
                 >
-                  {loading ? "Enviandoâ€¦" : sendAt ? "Programar envÃ­o" : "Enviar ahora"}
+                  {loading ? "Enviando…" : sendAt ? "Programar envío" : "Enviar ahora"}
                 </button>
                 <Link href="/administracion-general/newsletter" className="adm-btn adm-btn-secondary">
                   Cancelar
@@ -139,15 +139,15 @@ export default function ComposePage() {
                     {subject || "(asunto)"}
                   </div>
                   {previewParas.length > 0 ? previewParas : (
-                    <p style={{ color: "#a07080", fontStyle: "italic", fontSize: 13 }}>El contenido va a aparecer acÃ¡â€¦</p>
+                    <p style={{ color: "#a07080", fontStyle: "italic", fontSize: 13 }}>El contenido va a aparecer acá…</p>
                   )}
                   <div style={{ borderTop: "1px dashed rgba(139,26,74,.2)", paddingTop: 16, marginTop: 16 }}>
                     <div style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: 28, color: "#8b1a4a", lineHeight: 1 }}>milo</div>
-                    <div style={{ fontSize: 11, color: "#a07080", marginTop: 4 }}>Data by Milo Â· databymilo.me</div>
+                    <div style={{ fontSize: 11, color: "#a07080", marginTop: 4 }}>Data by Milo · databymilo.me</div>
                   </div>
                 </div>
                 <div style={{ background: "#f5e6d8", padding: "12px 32px", textAlign: "center", fontSize: 11, color: "#a07080" }}>
-                  Cancelar suscripciÃ³n
+                  Cancelar suscripción
                 </div>
               </div>
             </div>

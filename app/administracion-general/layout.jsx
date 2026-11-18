@@ -4,15 +4,15 @@ import Link from "next/link";
 import "./admin.css";
 
 const NAV = [
-  { href: "/administracion-general", label: "Dashboard", icon: "â—ˆ" },
+  { href: "/administracion-general", label: "Dashboard", icon: "◆" },
   { section: "Newsletter" },
-  { href: "/administracion-general/newsletter", label: "Suscriptores", icon: "âœ‰" },
-  { href: "/administracion-general/newsletter/compose", label: "Escribir email", icon: "âœ¦" },
+  { href: "/administracion-general/newsletter", label: "Suscriptores", icon: "✉" },
+  { href: "/administracion-general/newsletter/compose", label: "Escribir email", icon: "✦" },
   { section: "Contenido" },
-  { href: "/administracion-general/blog", label: "Blog", icon: "âœ" },
-  { href: "/administracion-general/recursos", label: "Recursos", icon: "â¬¡" },
-  { section: "AnalÃ­tica" },
-  { href: "/administracion-general/stats", label: "EstadÃ­sticas", icon: "â–²" },
+  { href: "/administracion-general/blog", label: "Blog", icon: "✎" },
+  { href: "/administracion-general/recursos", label: "Recursos", icon: "⬡" },
+  { section: "Analítica" },
+  { href: "/administracion-general/stats", label: "Estadísticas", icon: "▲" },
 ];
 
 export default function AdminLayout({ children }) {
@@ -49,7 +49,7 @@ export default function AdminLayout({ children }) {
                 href={item.href}
                 className={isActive ? "active" : ""}
               >
-                <span style={{ fontSize: 16 }}>{item.icon}</span>
+                <span className="nav-icon">{item.icon}</span>
                 {item.label}
               </Link>
             );
@@ -58,7 +58,7 @@ export default function AdminLayout({ children }) {
 
         <div className="adm-sidebar-footer">
           <button className="adm-logout-btn" onClick={handleLogout}>
-            Cerrar sesiÃ³n
+            Cerrar sesi&oacute;n
           </button>
         </div>
       </aside>

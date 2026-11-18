@@ -17,7 +17,7 @@ export default function RecursosAdminPage() {
   useEffect(() => { load(); }, []);
 
   async function handleDelete(slug, title) {
-    if (!confirm(`Â¿Eliminar "${title}"?`)) return;
+    if (!confirm(`¿Eliminar "${title}"?`)) return;
     const res = await fetch(`/api/admin/recursos/${slug}`, { method: "DELETE" });
     if (res.ok) {
       setMsg({ type: "success", text: `"${title}" eliminado` });
@@ -41,7 +41,7 @@ export default function RecursosAdminPage() {
 
         <div className="adm-card" style={{ padding: 0, overflow: "hidden" }}>
           {loading ? (
-            <div style={{ padding: 32, textAlign: "center", color: "var(--adm-text-muted)" }}>Cargandoâ€¦</div>
+            <div style={{ padding: 32, textAlign: "center", color: "var(--adm-text-muted)" }}>Cargando…</div>
           ) : all.length === 0 ? (
             <div style={{ padding: 40, textAlign: "center" }}>
               <div style={{ color: "var(--adm-text-muted)", marginBottom: 16 }}>No hay recursos</div>
@@ -51,9 +51,9 @@ export default function RecursosAdminPage() {
             <table className="adm-table">
               <thead>
                 <tr>
-                  <th>TÃ­tulo</th>
+                  <th>Título</th>
                   <th>Tipo</th>
-                  <th>CategorÃ­a</th>
+                  <th>Categoría</th>
                   <th></th>
                 </tr>
               </thead>
@@ -64,7 +64,7 @@ export default function RecursosAdminPage() {
                       <div style={{ fontWeight: 600 }}>{r.title}</div>
                       <div style={{ fontSize: 11, color: "var(--adm-text-muted)", marginTop: 2 }}>{r.slug}</div>
                     </td>
-                    <td style={{ color: "var(--adm-text-muted)" }}>{r.type || "â€”"}</td>
+                    <td style={{ color: "var(--adm-text-muted)" }}>{r.type || "—"}</td>
                     <td>
                       <span className={`adm-badge ${r.isPaid ? "adm-badge-primary" : "adm-badge-active"}`}>
                         {r.isPaid ? "Pago" : "Gratuito"}
