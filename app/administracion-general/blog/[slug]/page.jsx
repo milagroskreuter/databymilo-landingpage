@@ -12,13 +12,14 @@ export default function EditBlogPost() {
     fetch(`/api/admin/blog/${slug}`)
       .then((r) => r.json())
       .then((data) => {
+        const p = data.post || data;
         setInitial({
-          title: data.title || "",
-          date: data.date || new Date().toISOString().split("T")[0],
-          excerpt: data.excerpt || "",
-          tags: data.tags || [],
-          content: data.content || "",
-          published: data.published ?? true,
+          title: p.title || "",
+          date: p.date || new Date().toISOString().split("T")[0],
+          excerpt: p.excerpt || "",
+          tags: p.tags || [],
+          content: p.content || "",
+          published: p.published ?? true,
         });
       });
   }, [slug]);
