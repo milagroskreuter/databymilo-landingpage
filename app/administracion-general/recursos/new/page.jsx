@@ -27,7 +27,7 @@ export default function NewRecursoPage() {
     const payload = {
       ...form,
       bullets: form.bullets.filter(Boolean),
-      slug: form.slug || form.title.toLowerCase().normalize("NFD").replace(/[Ì€-Í¯]/g, "").replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-"),
+      slug: form.slug || form.title.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-"),
     };
 
     const res = await fetch("/api/admin/recursos", {
