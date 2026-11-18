@@ -8,7 +8,7 @@ import Marquee from "./components/Marquee";
 import SectionDivider from "./components/SectionDivider";
 import Reveal from "./components/primitives/Reveal";
 import TypeEyebrow from "./components/primitives/TypeEyebrow";
-import { resources } from "./lib/resources";
+import { getResources } from "./lib/resources";
 import { getAllPosts } from "./lib/blog";
 
 function AboutTeaser() {
@@ -51,7 +51,7 @@ function AboutTeaser() {
 }
 
 function ResourcesTeaser() {
-  const featured = resources.filter((r) => r.slug).slice(0, 3);
+  const featured = getResources().filter((r) => r.slug).slice(0, 3);
   return (
     <section className="section">
       <div className="section-head">

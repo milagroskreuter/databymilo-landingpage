@@ -4,7 +4,7 @@ import CTABlock from "../../components/sections/CTABlock";
 import Footer from "../../components/sections/Footer";
 import SectionDivider from "../../components/SectionDivider";
 import TypeEyebrow from "../../components/primitives/TypeEyebrow";
-import { getResourceBySlug, getAvailableResources, paidResources } from "../../lib/resources";
+import { getResourceBySlug, getAvailableResources, getPaidResources } from "../../lib/resources";
 import DownloadButton from "../../components/DownloadButton";
 
 export async function generateStaticParams() {
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }) {
 
 function OtherResources({ currentSlug }) {
   const freeOthers = getAvailableResources().filter((r) => r.slug !== currentSlug);
-  const paidOthers = paidResources.filter((r) => r.slug !== currentSlug);
+  const paidOthers = getPaidResources().filter((r) => r.slug !== currentSlug);
   if (freeOthers.length === 0 && paidOthers.length === 0) return null;
 
   return (

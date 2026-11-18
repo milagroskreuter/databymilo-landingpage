@@ -2,6 +2,7 @@ import Resources from "../components/sections/Resources";
 import CTABlock from "../components/sections/CTABlock";
 import Footer from "../components/sections/Footer";
 import SectionDivider from "../components/SectionDivider";
+import { getResources, getPaidResources } from "../lib/resources";
 
 export const metadata = {
   title: "Recursos",
@@ -17,11 +18,13 @@ export const metadata = {
 };
 
 export default function RecursosPage() {
+  const resources = getResources();
+  const paidResources = getPaidResources();
   return (
     <>
       <main>
         <div className="journal">
-          <Resources />
+          <Resources resources={resources} paidResources={paidResources} />
           <SectionDivider />
           <CTABlock />
         </div>

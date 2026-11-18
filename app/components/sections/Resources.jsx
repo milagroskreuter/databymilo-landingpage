@@ -4,10 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Reveal from "../primitives/Reveal";
 import TypeEyebrow from "../primitives/TypeEyebrow";
-import { resources, paidResources } from "../../lib/resources";
-
-
-export default function Resources() {
+export default function Resources({ resources = [], paidResources = [] }) {
   return (
     <section id="recursos" className="section">
       <div className="section-head">
