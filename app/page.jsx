@@ -220,7 +220,7 @@ async function BlogTeaser() {
       </div>
       <Reveal>
         <h2 className="section-title">
-          Historias largas <em>en el blog</em>.
+          edición <em>corpo.</em>
         </h2>
         <p className="section-sub">Cuando algo no entra en un post. Sobre la corpo, la IA en las empresas y la carrera en tech.</p>
       </Reveal>

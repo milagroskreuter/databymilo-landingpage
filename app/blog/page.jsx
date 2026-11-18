@@ -8,12 +8,12 @@ import { getAllPosts, getAllTags, formatDate } from "../lib/blog";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Blog",
+  title: "edición corpo.",
   description:
     "Historias largas, explicaciones y data traducida al español. Casos reales, errores incluidos.",
   alternates: { canonical: "https://databymilo.me/blog" },
   openGraph: {
-    title: "Blog | Data by Milo",
+    title: "edición corpo. | Data by Milo",
     description: "Historias largas, explicaciones y data traducida al español.",
     url: "https://databymilo.me/blog",
   },
