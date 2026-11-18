@@ -18,6 +18,32 @@ export async function GET() {
   });
 }
 
+export async function POST(request) {
+  const { email, firstName, lastName } = await request.json().catch(() => ({}));
+  if (!email) return Response.json({ error: "Falta email" }, { status: 400 });
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { data, error } = await resend.contacts.create({
+    audienceId: AUDIENCE_ID,
+    email,
+    firstName: firstName || "",
+    lastName: lastName || "",
+    unsubscribed: false,
+  });
+  if (error) return Response.json({ error: error.message }, { status: 500 });
+  return Response.json({ ok: true, id: data?.id });
+}
+
+export async function PATCH(request) {
+  const { id, unsubscribed } = await request.json().catch(() => ({}));
+  if (!id) return Response.json({ error: "Falta id" }, { status: 400 });
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { error } = await resend.contacts.update({ audienceId: AUDIENCE_ID, id, unsubscribed });
+  if (error) return Response.json({ error: error.message }, { status: 500 });
+  return Response.json({ ok: true });
+}
+
 export async function DELETE(request) {
   const { id } = await request.json().catch(() => ({}));
   if (!id) return Response.json({ error: "Falta id" }, { status: 400 });

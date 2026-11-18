@@ -1,0 +1,38 @@
+import { Resend } from "resend";
+
+export const dynamic = "force-dynamic";
+
+const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID ?? "5d28eac4-182a-4bc6-9a9a-5d2a7028ea89";
+
+export async function GET() {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  const { data, error } = await resend.broadcasts.list();
+  if (error) return Response.json({ error: error.message }, { status: 500 });
+
+  const broadcasts = data?.data ?? [];
+
+  // Fetch metrics for each broadcast in parallel (best effort)
+  const withMetrics = await Promise.all(
+    broadcasts.map(async (b) => {
+      try {
+        const { data: detail } = await resend.broadcasts.get(b.id);
+        return { ...b, metrics: detail?.metrics ?? null };
+      } catch {
+        return b;
+      }
+    })
+  );
+
+  return Response.json({ data: withMetrics });
+}
+
+export async function DELETE(request) {
+  const { id } = await request.json().catch(() => ({}));
+  if (!id) return Response.json({ error: "Falta id" }, { status: 400 });
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { error } = await resend.broadcasts.remove(id);
+  if (error) return Response.json({ error: error.message }, { status: 500 });
+  return Response.json({ ok: true });
+}
