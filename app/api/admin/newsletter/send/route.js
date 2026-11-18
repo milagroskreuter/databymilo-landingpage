@@ -62,15 +62,48 @@ function buildHtml(subject, body) {
 </html>`;
 }
 
+function interpolate(text, contact) {
+  if (!contact) return text;
+  return text
+    .replace(/\{\{nombre\}\}/gi, contact.firstName || contact.first_name || "")
+    .replace(/\{\{apellido\}\}/gi, contact.lastName || contact.last_name || "")
+    .replace(/\{\{email\}\}/gi, contact.email || "");
+}
+
 export async function POST(request) {
-  const { subject, body, sendAt } = await request.json().catch(() => ({}));
+  const { subject, body, sendAt, to } = await request.json().catch(() => ({}));
   if (!subject || !body) {
     return Response.json({ error: "Faltan subject o body" }, { status: 400 });
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
 
-  // Create broadcast
+  // Send to a specific email address (or list of addresses)
+  if (to) {
+    const recipients = Array.isArray(to) ? to : [to];
+    const results = await Promise.allSettled(
+      recipients.map((recipient) => {
+        const contact = typeof recipient === "object" ? recipient : { email: recipient };
+        const toEmail = contact.email || contact;
+        return resend.emails.send({
+          from: "Milo · Data by Milo <hola@databymilo.me>",
+          to: toEmail,
+          replyTo: "hola@databymilo.me",
+          subject: interpolate(subject, contact),
+          html: buildHtml(interpolate(subject, contact), interpolate(body, contact)),
+          scheduledAt: sendAt || undefined,
+        });
+      })
+    );
+    const failed = results.filter(r => r.status === "rejected" || r.value?.error);
+    if (failed.length > 0) {
+      const msg = failed[0].reason?.message || failed[0].value?.error?.message || "Error al enviar";
+      return Response.json({ error: msg }, { status: 500 });
+    }
+    return Response.json({ ok: true, sent: recipients.length, mode: "individual" });
+  }
+
+  // Broadcast to entire audience
   const { data: broadcast, error: createErr } = await resend.broadcasts.create({
     audienceId: AUDIENCE_ID,
     from: "Milo · Data by Milo <hola@databymilo.me>",
@@ -83,12 +116,11 @@ export async function POST(request) {
     return Response.json({ error: createErr.message }, { status: 500 });
   }
 
-  // Send the broadcast
   const payload = sendAt ? { scheduledAt: sendAt } : {};
   const { error: sendErr } = await resend.broadcasts.send(broadcast.id, payload);
   if (sendErr) {
     return Response.json({ error: sendErr.message }, { status: 500 });
   }
 
-  return Response.json({ ok: true, id: broadcast.id });
+  return Response.json({ ok: true, id: broadcast.id, mode: "broadcast" });
 }

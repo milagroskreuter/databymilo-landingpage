@@ -2,24 +2,32 @@ export const dynamic = "force-dynamic";
 
 const PROJECT_ID = "prj_FCuvSA8k1Yw4jXIsAtHuE6FpB5V8";
 const TEAM_ID = "team_RbmJFWA5dPjwZTThOy3Mfl8v";
-const BASE = "https://vercel.com/api/v1/web";
+const BASE = "https://api.vercel.com/v1/query/web-analytics";
 
-async function vFetch(path, token) {
-  const res = await fetch(`${BASE}${path}`, {
+function dateRange(days) {
+  const until = new Date();
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  return {
+    since: since.toISOString().slice(0, 10),
+    until: until.toISOString().slice(0, 10),
+  };
+}
+
+async function vaFetch(path, params, token) {
+  const url = new URL(`${BASE}${path}`);
+  url.searchParams.set("projectId", PROJECT_ID);
+  url.searchParams.set("teamId", TEAM_ID);
+  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
+
+  const res = await fetch(url.toString(), {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
   if (!res.ok) {
     const text = await res.text().catch(() => res.status);
-    throw new Error(`Vercel API ${res.status}: ${text}`);
+    throw new Error(`Vercel Analytics ${res.status}: ${text}`);
   }
   return res.json();
-}
-
-function range(days) {
-  const to = Date.now();
-  const from = to - days * 24 * 60 * 60 * 1000;
-  return { from, to };
 }
 
 export async function GET(request) {
@@ -33,25 +41,34 @@ export async function GET(request) {
 
   const { searchParams } = new URL(request.url);
   const days = parseInt(searchParams.get("days") || "30", 10);
-  const { from, to } = range(days);
-  const qs = `projectId=${PROJECT_ID}&teamId=${TEAM_ID}&from=${from}&to=${to}`;
+  const { since, until } = dateRange(days);
+  const range = { since, until };
 
   try {
-    const [overview, pages, referrers, devices, countries] = await Promise.allSettled([
-      vFetch(`/stats?${qs}`, token),
-      vFetch(`/pages?${qs}&limit=10`, token),
-      vFetch(`/referrers?${qs}&limit=10`, token),
-      vFetch(`/devices?${qs}`, token),
-      vFetch(`/countries?${qs}&limit=8`, token),
-    ]);
+    const [counts, pages, referrers, devices, countries, browsers, dailyViews] =
+      await Promise.allSettled([
+        vaFetch("/visits/count", range, token),
+        vaFetch("/visits/aggregate", { ...range, by: "requestPath", limit: "10" }, token),
+        vaFetch("/visits/aggregate", { ...range, by: "referrerHostname", limit: "10" }, token),
+        vaFetch("/visits/aggregate", { ...range, by: "deviceType" }, token),
+        vaFetch("/visits/aggregate", { ...range, by: "country", limit: "8" }, token),
+        vaFetch("/visits/aggregate", { ...range, by: "browserName", limit: "6" }, token),
+        vaFetch("/visits/aggregate", { ...range, by: "day", limit: "90" }, token),
+      ]);
+
+    const ok = (r) => (r.status === "fulfilled" ? r.value?.data ?? null : null);
 
     return Response.json({
       days,
-      overview: overview.status === "fulfilled" ? overview.value : null,
-      pages: pages.status === "fulfilled" ? pages.value : null,
-      referrers: referrers.status === "fulfilled" ? referrers.value : null,
-      devices: devices.status === "fulfilled" ? devices.value : null,
-      countries: countries.status === "fulfilled" ? countries.value : null,
+      since,
+      until,
+      overview: ok(counts),
+      pages: ok(pages),
+      referrers: ok(referrers),
+      devices: ok(devices),
+      countries: ok(countries),
+      browsers: ok(browsers),
+      dailyViews: ok(dailyViews),
     });
   } catch (err) {
     return Response.json({ error: err.message }, { status: 502 });
