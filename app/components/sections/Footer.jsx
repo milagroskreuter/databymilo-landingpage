@@ -1,42 +1,33 @@
 "use client";
 import Link from "next/link";
-import { FiAtSign } from "react-icons/fi";
-import { socials, email } from "../../lib/socials";
+import { socials } from "../../lib/socials";
 
-const biblioteca = [
+const cuaderno = [
   { label: "Recursos", href: "/recursos" },
   { label: "Blog", href: "/blog" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "Sobre", href: "/sobre" },
 ];
 
+const seguime = socials;
+
 export default function Footer() {
-  const seguime = [...socials, email];
   return (
-    <footer
-      style={{
-        marginTop: 96,
-        background: "var(--vino)",
-        color: "var(--cream)",
-        padding: "64px 24px 40px",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
+    <footer className="footer-ink" style={{ marginTop: 96, padding: "64px 24px 40px", position: "relative", overflow: "hidden" }}>
       <div style={{ maxWidth: 1180, margin: "0 auto", position: "relative", zIndex: 2 }}>
         <div
-          className="grid-split footer-grid"
+          className="footer-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "2fr 1fr 1fr",
+            gridTemplateColumns: "2fr 1fr 1fr 1fr",
             gap: 48,
             paddingBottom: 36,
-            borderBottom: "1px dashed rgba(253,245,236,.3)",
+            borderBottom: "1px dashed rgba(253,245,236,.18)",
           }}
         >
+          {/* Brand col */}
           <div>
             <div
-              className="footer-brand"
               style={{
                 fontFamily: "var(--font-display)",
                 fontStyle: "italic",
@@ -46,27 +37,27 @@ export default function Footer() {
                 lineHeight: 1,
               }}
             >
-              data <span style={{ color: "var(--rosa-200)" }}>·</span> by milo
+              data <span style={{ color: "var(--rosa)" }}>·</span> by milo
             </div>
             <p
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: 13,
                 color: "var(--cream)",
-                opacity: 0.8,
-                marginTop: 18,
-                maxWidth: 360,
+                opacity: 0.72,
+                marginTop: 16,
+                maxWidth: 320,
                 lineHeight: 1.65,
               }}
             >
               Tech, data e IA contado desde adentro de la corpo. Para mujeres en LATAM, desde 2021.
             </p>
           </div>
+
+          {/* Este cuaderno */}
           <div>
-            <div className="eyebrow-j" style={{ color: "var(--rosa-200)" }}>
-              Este cuaderno
-            </div>
-            {biblioteca.map((item) => (
+            <div className="eyebrow-j" style={{ marginBottom: 16 }}>Este cuaderno</div>
+            {cuaderno.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -74,90 +65,64 @@ export default function Footer() {
                   display: "block",
                   fontFamily: "var(--font-body)",
                   fontSize: 14,
-                  marginTop: 12,
-                  color: "var(--cream)",
-                  opacity: 0.88,
+                  marginBottom: 10,
+                  color: "rgba(253,245,236,.82)",
                   textDecoration: "none",
+                  transition: "color 150ms",
                 }}
               >
                 {item.label}
               </Link>
             ))}
           </div>
+
+          {/* Seguime */}
           <div>
-            <div className="eyebrow-j" style={{ color: "var(--rosa-200)" }}>
-              Seguime
-            </div>
-            {seguime.map((s) => {
-              const Icon = s.Icon;
-              return (
-                <a
-                  key={s.name}
-                  href={s.href}
-                  target={s.external ? "_blank" : undefined}
-                  rel={s.external ? "noopener noreferrer" : undefined}
-                  aria-label={`${s.name}: ${s.handle}`}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    fontFamily: "var(--font-body)",
-                    fontSize: 14,
-                    marginTop: 12,
-                    color: "var(--cream)",
-                    opacity: 0.88,
-                    textDecoration: "none",
-                    transition: "opacity 180ms",
-                  }}
-                >
-                  <Icon size={16} aria-hidden="true" style={{ flexShrink: 0 }} />
-                  <span>{s.name}</span>
-                </a>
-              );
-            })}
+            <div className="eyebrow-j" style={{ marginBottom: 16 }}>Seguime</div>
+            {seguime.map((s) => (
+              <a
+                key={s.name}
+                href={s.href}
+                target={s.external ? "_blank" : undefined}
+                rel={s.external ? "noopener noreferrer" : undefined}
+                aria-label={`${s.name}: ${s.handle}`}
+                style={{
+                  display: "block",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  marginBottom: 10,
+                  color: "rgba(253,245,236,.82)",
+                  textDecoration: "none",
+                  transition: "color 150ms",
+                }}
+              >
+                {s.name}
+              </a>
+            ))}
+          </div>
+
+          {/* Escribime */}
+          <div>
+            <div className="eyebrow-j" style={{ marginBottom: 16 }}>Escribime</div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(253,245,236,.65)", lineHeight: 1.6, marginBottom: 14 }}>
+              Colaboraciones, propuestas y preguntas raras.
+            </p>
             <a
               href="mailto:databymilo@gmail.com"
-              aria-label="Colaboraciones & propuestas: databymilo@gmail.com"
               style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: 10,
-                marginTop: 20,
-                paddingTop: 16,
-                borderTop: "1px dashed rgba(253,245,236,.2)",
-                color: "var(--cream)",
+                fontFamily: "var(--font-body)",
+                fontSize: 14,
+                color: "rgba(253,245,236,.82)",
                 textDecoration: "none",
-                transition: "opacity 180ms",
+                transition: "color 150ms",
               }}
             >
-              <FiAtSign size={16} aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }} />
-              <div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 700,
-                    fontSize: 10,
-                    letterSpacing: ".14em",
-                    textTransform: "uppercase",
-                    opacity: 0.7,
-                    marginBottom: 3,
-                  }}
-                >
-                  Colaboraciones & propuestas
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    opacity: 0.88,
-                  }}
-                >
-                  databymilo@gmail.com
-                </div>
-              </div>
+              databymilo@gmail.com
             </a>
           </div>
         </div>
+
+        {/* Bottom row */}
         <div
           style={{
             display: "flex",
@@ -168,7 +133,7 @@ export default function Footer() {
             gap: 12,
           }}
         >
-          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--cream)", opacity: 0.7 }}>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(253,245,236,.5)" }}>
             © 2026 Data by Milo
           </div>
           <div
@@ -176,7 +141,7 @@ export default function Footer() {
               fontFamily: "var(--font-display)",
               fontStyle: "italic",
               fontSize: 15,
-              color: "var(--rosa-200)",
+              color: "var(--rosa)",
             }}
           >
             tech, pero cutie.

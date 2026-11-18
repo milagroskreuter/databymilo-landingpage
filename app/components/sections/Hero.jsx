@@ -1,126 +1,186 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
-const FULL_TEXT = "sin filtro";
-
-const SUBTEXTS = [
-  "Soy Milo. Trabajo en data para una fintech gringa, desde este lado del mapa. El cuaderno nació adentro de una corpo tech latina, y de ahí sale casi todo lo que cuento. Sin filtro corporativo ni filtro motivacional.",
-  "Si el contenido de tech te agota porque siempre es demasiado técnico o demasiado motivacional, acá es distinto. Cuento desde adentro, para las que están ahí o están mirando desde afuera.",
-  "Tech, data e IA contado desde adentro. No desde el escritorio del coach.",
-];
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
 export default function Hero() {
-  const [typed, setTyped] = useState("");
-  const [typingDone, setTypingDone] = useState(false);
-  const [subtext, setSubtext] = useState(SUBTEXTS[0]);
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const n = parseInt(localStorage.getItem("visitCount") || "0");
-    localStorage.setItem("visitCount", String(n + 1));
-    setSubtext(SUBTEXTS[n % SUBTEXTS.length]);
-  }, []);
-  const headlineRef = useRef(null);
-  const subtextRef = useRef(null);
+  const burst = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const ox = rect.left + rect.width / 2;
+    const oy = rect.top + rect.height / 2;
+    const chars = ["✦", "✧", "♥", "✿", "✦", "✧"];
+    const colors = ["#d4447a", "#8b1a4a", "#f2b7d1", "#fbe7a8", "#fadbe8", "#d4447a"];
+    for (let i = 0; i < 36; i++) {
+      const el = document.createElement("span");
+      el.textContent = chars[Math.floor(Math.random() * chars.length)];
+      const angle = (Math.PI * 2 * i) / 36 + Math.random() * 0.4;
+      const speed = 80 + Math.random() * 160;
+      el.style.cssText = `
+        position:fixed;pointer-events:none;z-index:9999;
+        font-size:${13+Math.random()*12}px;
+        color:${colors[Math.floor(Math.random()*colors.length)]};
+        left:${ox}px;top:${oy}px;
+        --tx:${Math.cos(angle)*speed}px;--ty:${Math.sin(angle)*speed-60}px;
+        --rot:${Math.random()*720-360}deg;
+        animation:confetti-fall ${700+Math.random()*500}ms ease-out forwards;
+        user-select:none;font-family:serif;
+      `;
+      document.body.appendChild(el);
+      el.addEventListener("animationend", () => el.remove(), { once: true });
+    }
+  };
 
-  // Typewriter
-  useEffect(() => {
-    let i = 0;
-    const id = setTimeout(() => {
-      const interval = setInterval(() => {
-        i++;
-        setTyped(FULL_TEXT.slice(0, i));
-        if (i >= FULL_TEXT.length) {
-          clearInterval(interval);
-          setTimeout(() => setTypingDone(true), 900);
-        }
-      }, 75);
-      return () => clearInterval(interval);
-    }, 500);
-    return () => clearTimeout(id);
-  }, []);
-
-  // Parallax (direct DOM, no re-renders) — disabled on mobile to avoid jank
-  useEffect(() => {
-    const handler = () => {
-      if (window.innerWidth <= 860) return;
-      const y = window.scrollY;
-      if (headlineRef.current) headlineRef.current.style.transform = `translateY(${y * 0.13}px)`;
-      if (subtextRef.current) subtextRef.current.style.transform = `translateY(${y * 0.06}px)`;
-    };
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed) { setError("Escribí tu email para continuar."); return; }
+    if (!EMAIL_RE.test(trimmed)) { setError("Ese email no parece válido."); return; }
+    const submitTarget = e.currentTarget;
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: trimmed }),
+      });
+      if (!res.ok) throw new Error();
+      burst({ currentTarget: submitTarget });
+      setSent(true);
+    } catch {
+      setError("Ups, algo se enredó. Probá de nuevo.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section
       className="section hero-section"
-      style={{ paddingTop: 72, paddingBottom: 80, borderTop: "none" }}
+      style={{
+        paddingTop: 72,
+        paddingBottom: 80,
+        borderTop: "none",
+        background: "radial-gradient(ellipse at 30% 60%, #fadbe8 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, #e8d9f0 0%, transparent 50%), var(--cream)",
+        borderRadius: 20,
+        marginTop: 8,
+      }}
     >
-      <div
-        className="hero-eyebrow-bar"
-        style={{
-          display: "flex",
-          alignItems: "baseline",
-          justifyContent: "space-between",
-          marginBottom: 44,
-        }}
-      >
-        <div className="eyebrow-j">Entrada Nº 001</div>
-        <div className="eyebrow-j" style={{ color: "var(--fg-3)" }}>pág. 01</div>
-      </div>
+      <div className="hero-grid">
+        {/* Left: headline + CTAs */}
+        <div>
+          <div
+            className="eyebrow-j"
+            style={{ marginBottom: 28 }}
+          >
+            Entrada Nº 001 · pág. 01
+          </div>
+          <h1
+            className="display"
+            style={{
+              fontSize: "clamp(44px, 5.8vw, 76px)",
+              margin: 0,
+              lineHeight: 1.05,
+            }}
+          >
+            la corpo no te lo cuenta,{" "}
+            <br />
+            <em style={{ fontStyle: "italic", color: "var(--rosa)" }}>pero</em>{" "}
+            <span
+              style={{
+                position: "relative",
+                display: "inline",
+              }}
+            >
+              <span style={{ position: "relative", zIndex: 1 }}>yo sí.</span>
+              <span
+                style={{
+                  position: "absolute",
+                  left: "-4px",
+                  right: "-4px",
+                  top: "55%",
+                  bottom: "-5%",
+                  background: "var(--butter)",
+                  zIndex: 0,
+                  borderRadius: 3,
+                  transform: "skewY(-1.5deg)",
+                }}
+              />
+            </span>
+          </h1>
 
-      <div style={{ maxWidth: 760 }}>
-        <h1
-          ref={headlineRef}
-          className="display"
-          style={{
-            fontSize: "clamp(52px, 7vw, 92px)",
-            margin: 0,
-            lineHeight: 1.05,
-            willChange: "transform",
-          }}
-        >
-          la corpo no te lo cuenta,{" "}
-          <br />
-          <em style={{ fontStyle: "italic", color: "var(--vino)" }}>
-            {typed}
-            {!typingDone && (
-              <span style={{ animation: "cursor-blink 0.65s step-end infinite", fontStyle: "normal", fontWeight: 300 }}>
-                |
-              </span>
-            )}
-          </em>
-          <br />
-          pero yo sí.
-        </h1>
+          <p
+            className="hero-subtext"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontStyle: "italic",
+              fontSize: "clamp(16px, 1.8vw, 20px)",
+              color: "var(--fg-2)",
+              lineHeight: 1.6,
+              marginTop: 28,
+              maxWidth: 500,
+            }}
+          >
+            Tech, data e IA contado desde adentro de la corpo. Para mujeres en LATAM, sin filtro corporativo ni motivacional.
+          </p>
 
-        <p
-          ref={subtextRef}
-          className="hero-subtext"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontStyle: "italic",
-            fontSize: 22,
-            color: "var(--fg-2)",
-            lineHeight: 1.55,
-            marginTop: 32,
-            maxWidth: 520,
-            willChange: "transform",
-          }}
-        >
-          {subtext}
-        </p>
+          <div className="hero-buttons" style={{ display: "flex", gap: 14, marginTop: 40, flexWrap: "wrap" }}>
+            <Link href="/blog" className="btn btn-vino">
+              leer el blog →
+            </Link>
+            <Link href="/sobre" className="btn btn-ghost">
+              sobre milo
+            </Link>
+          </div>
+        </div>
 
-        <div className="hero-buttons" style={{ display: "flex", gap: 14, marginTop: 44, flexWrap: "wrap" }}>
-          <Link href="/blog" className="btn btn-primary">
-            Leer el blog →
-          </Link>
-          <Link href="/sobre" className="btn btn-ghost">
-            Sobre Milo
-          </Link>
+        {/* Right: stamp-card newsletter */}
+        <div className="stamp-card">
+          <div className="stamp-card-badge">★</div>
+
+          {sent ? (
+            <div style={{ textAlign: "center", padding: "20px 0" }}>
+              <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 28, color: "var(--vino)", lineHeight: 1.2 }}>
+                ¡Listo!
+              </div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--fg-2)", marginTop: 10, lineHeight: 1.5 }}>
+                El primer mail llega el domingo.
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="stamp-card-title">Una carta los domingos. Corta y útil.</div>
+              <div className="stamp-card-sub">
+                Tech, IA y vida en la corpo — sin spam, sin coaches motivacionales. Solo una carta a las 9 AM.
+              </div>
+              <form onSubmit={handleSubmit} noValidate>
+                <input
+                  className="stamp-card-input"
+                  type="email"
+                  placeholder="tu@email.com"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); if (error) setError(""); }}
+                  autoComplete="email"
+                />
+                {error && (
+                  <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 12, color: "var(--rosa)", marginBottom: 8, lineHeight: 1.4 }}>
+                    ✦ {error}
+                  </div>
+                )}
+                <button className="stamp-card-btn" type="submit" disabled={loading}>
+                  {loading ? "Enviando…" : "Sumame →"}
+                </button>
+              </form>
+              <div className="stamp-card-micro">Sin spam · cancelá cuando quieras</div>
+            </>
+          )}
         </div>
       </div>
     </section>

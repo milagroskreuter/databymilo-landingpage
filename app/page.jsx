@@ -1,8 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import Hero from "./components/sections/Hero";
-import Highlights from "./components/sections/Highlights";
 import Newsletter from "./components/sections/Newsletter";
-import CTABlock from "./components/sections/CTABlock";
 import Footer from "./components/sections/Footer";
 import Marquee from "./components/Marquee";
 import SectionDivider from "./components/SectionDivider";
@@ -50,12 +49,70 @@ function AboutTeaser() {
   );
 }
 
+const lineas = [
+  {
+    num: "01",
+    emoji: "🏢",
+    title: "Vida en la corpo",
+    sub: "Todo lo que nadie te contó antes de entrar. Reuniones, política, crecimiento real.",
+  },
+  {
+    num: "02",
+    emoji: "🤖",
+    title: "IA aplicada",
+    sub: "No el hype. La IA que se usa de verdad adentro de empresas grandes, hoy.",
+  },
+  {
+    num: "03",
+    emoji: "📊",
+    title: "Data sin vueltas",
+    sub: "Recursos, guías y herramientas para trabajar con datos sin un PhD.",
+  },
+  {
+    num: "04",
+    emoji: "🌎",
+    title: "Carrera en LATAM",
+    sub: "Crecer profesionalmente desde este lado del mapa. Sin romanticismos.",
+  },
+];
+
+function LineasSection() {
+  return (
+    <section className="section lineas-section">
+      <div className="section-head">
+        <TypeEyebrow className="eyebrow-j">Capítulo 02</TypeEyebrow>
+        <div className="rule"></div>
+        <div className="pagenum">pág. 12</div>
+      </div>
+      <Reveal>
+        <h2 className="section-title">
+          Las cuatro <em>líneas</em>.
+        </h2>
+        <p className="section-sub">Todo lo que cuento en este cuaderno cae en alguna de estas cuatro.</p>
+      </Reveal>
+      <div className="lineas-grid">
+        {lineas.map((l, i) => (
+          <Reveal key={i} delay={i * 60}>
+            <div className="linea">
+              <div className="linea-num">{l.num}</div>
+              <div className="linea-emoji">{l.emoji}</div>
+              <div className="linea-title">{l.title}</div>
+              <div className="linea-sub">{l.sub}</div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 async function ResourcesTeaser() {
-  const featured = (await getResources()).filter((r) => r.slug).slice(0, 3);
+  let featured = [];
+  try { featured = (await getResources()).filter((r) => r.slug).slice(0, 3); } catch { return null; }
   return (
     <section className="section">
       <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 02</TypeEyebrow>
+        <TypeEyebrow className="eyebrow-j">Capítulo 03</TypeEyebrow>
         <div className="rule"></div>
         <div className="pagenum">pág. 20</div>
       </div>
@@ -65,14 +122,7 @@ async function ResourcesTeaser() {
         </h2>
         <p className="section-sub">Tres descargas para empezar. Sin mail, sin pop-up, sin letra chica.</p>
       </Reveal>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          gap: 20,
-          marginTop: 48,
-        }}
-      >
+      <div className="biblioteca-grid">
         {featured.map((r, i) => (
           <Reveal key={i} delay={i * 60}>
             <Link
@@ -159,11 +209,12 @@ async function ResourcesTeaser() {
 }
 
 async function BlogTeaser() {
-  const latestPosts = (await getAllPosts()).slice(0, 2);
+  let latestPosts = [];
+  try { latestPosts = (await getAllPosts()).slice(0, 2); } catch { return null; }
   return (
     <section className="section">
       <div className="section-head">
-        <TypeEyebrow className="eyebrow-j">Capítulo 03</TypeEyebrow>
+        <TypeEyebrow className="eyebrow-j">Capítulo 05</TypeEyebrow>
         <div className="rule"></div>
         <div className="pagenum">pág. 36</div>
       </div>
@@ -281,15 +332,13 @@ export default function Page() {
         <div className="journal">
           <AboutTeaser />
           <SectionDivider />
-          <Highlights />
+          <LineasSection />
           <SectionDivider />
           <ResourcesTeaser />
           <SectionDivider />
           <Newsletter />
           <SectionDivider />
           <BlogTeaser />
-          <SectionDivider />
-          <CTABlock />
         </div>
       </main>
       <Footer />

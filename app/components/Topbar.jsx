@@ -63,41 +63,30 @@ export default function Topbar() {
           href="/"
           onClick={handleLogoClick}
           aria-label="Data by Milo, volver al inicio"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            cursor: "pointer",
-            userSelect: "none",
-            textDecoration: "none",
-          }}
+          style={{ cursor: "pointer", userSelect: "none", textDecoration: "none" }}
         >
-          <img src="/assets/logo-monogram.svg" alt="Data by Milo logo" width={32} height={32} />
-          <div>
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontStyle: "italic",
-                fontWeight: 700,
-                fontSize: 20,
-                color: "#1a1a1a",
-                lineHeight: 1,
-              }}
-            >
-              data by milo
-            </div>
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 10,
-                letterSpacing: ".18em",
-                textTransform: "uppercase",
-                color: "#8b1a4a",
-                marginTop: 2,
-              }}
-            >
-              tech, pero cutie.
-            </div>
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontStyle: "italic",
+              fontWeight: 700,
+              fontSize: 22,
+              color: "var(--ink)",
+              lineHeight: 1,
+            }}
+          >
+            data <span style={{ color: "var(--rosa)" }}>·</span> by milo
+          </div>
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontStyle: "italic",
+              fontSize: 12,
+              color: "var(--rosa)",
+              marginTop: 2,
+            }}
+          >
+            tech, pero cutie.
           </div>
         </Link>
         <nav>
@@ -107,6 +96,9 @@ export default function Topbar() {
             </Link>
           ))}
         </nav>
+        <Link href="/#newsletter" className="topbar-cta">
+          la carta del domingo
+        </Link>
         <button
           type="button"
           className="topbar-burger"

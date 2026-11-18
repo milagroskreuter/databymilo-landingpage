@@ -1,32 +1,12 @@
-const words = ["TECH", "PERO CUTIE", "DATA", "IA", "SIN FILTRO", "LATAM", "EN ESPAÑOL", "DESDE 2021"];
+const words = ["tech", "pero cutie", "data", "IA", "sin filtro", "LATAM", "en español", "desde 2021"];
 
 function Track() {
   return (
     <span style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
       {words.map((w, i) => (
         <span key={i} style={{ display: "inline-flex", alignItems: "center" }}>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontWeight: 800,
-              fontSize: 11,
-              letterSpacing: ".22em",
-              textTransform: "uppercase",
-              color: "var(--cream)",
-            }}
-          >
-            {w}
-          </span>
-          <span
-            style={{
-              color: "var(--rosa-200)",
-              margin: "0 20px",
-              fontSize: 14,
-              lineHeight: 1,
-            }}
-          >
-            ✦
-          </span>
+          <span className="marquee-track-word">{w}</span>
+          <span className="marquee-sep">✦</span>
         </span>
       ))}
     </span>
@@ -39,14 +19,12 @@ export default function Marquee() {
       style={{
         overflow: "hidden",
         background: "var(--vino)",
-        padding: "13px 0",
+        paddingBlock: 20,
         position: "relative",
         zIndex: 1,
       }}
     >
-      <div style={{ display: "flex", width: "max-content", animation: "marquee-scroll 30s linear infinite" }}>
-        <Track />
-        <Track />
+      <div style={{ display: "flex", width: "max-content", animation: "marquee-scroll 32s linear infinite" }}>
         <Track />
         <Track />
       </div>
