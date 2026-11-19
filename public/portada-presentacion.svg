@@ -21,14 +21,14 @@
   <text x="56" y="130" font-family="'DM Sans', Arial, sans-serif" font-weight="500" font-size="10.5" fill="#d94f7a" letter-spacing="1.8" text-transform="uppercase">DATA BY MILO · GUÍA DE PRESENTACIÓN</text>
 
   <!-- Title line 1: "La Presentación" -->
-  <text x="56" y="230" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="68" fill="#1a0d14" letter-spacing="-0.5">La Presentación</text>
+  <text x="56" y="222" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="54" fill="#1a0d14" letter-spacing="-0.5">La Presentación</text>
 
   <!-- Title line 2: "que Funciona." -->
-  <text x="56" y="308" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-weight="700" font-size="68" fill="#d94f7a" letter-spacing="-0.5">que Funciona.</text>
+  <text x="56" y="288" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-weight="700" font-size="54" fill="#d94f7a" letter-spacing="-0.5">que Funciona.</text>
 
   <!-- Subtitle -->
-  <text x="56" y="368" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="19" fill="#2a1420">Cómo presentar data a no-técnicos</text>
-  <text x="56" y="394" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="19" fill="#2a1420">sin morir en el intento.</text>
+  <text x="56" y="348" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="19" fill="#2a1420">Cómo presentar data a no-técnicos</text>
+  <text x="56" y="374" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="19" fill="#2a1420">sin morir en el intento.</text>
 
   <!-- Stats bar background -->
   <rect x="56" y="650" width="488" height="100" rx="10" fill="#fff8f4"/>
