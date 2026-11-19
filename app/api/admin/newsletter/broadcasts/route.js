@@ -34,7 +34,7 @@ export async function GET(request) {
     broadcasts.map(async (b) => {
       try {
         const { data: detail } = await resend.broadcasts.get(b.id);
-        return { ...b, metrics: detail?.metrics ?? null };
+        return { ...b, subject: detail?.subject || b.subject || b.name || "", metrics: detail?.metrics ?? null };
       } catch {
         return b;
       }
