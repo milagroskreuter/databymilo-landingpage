@@ -3,17 +3,31 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import RichEditor, { legacyToHtml } from "./RichEditor";
 
-const DRAFT_KEY = "adm_newsletter_draft_v2";
+const LEGACY_DRAFT_KEY = "adm_newsletter_draft_v2";
+const DRAFTS_KEY = "adm_newsletter_drafts_v1";
 const TEMPLATES_KEY = "adm_newsletter_templates_v1";
 
-function saveDraft(d) {
-  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...d, savedAt: Date.now() })); } catch {}
+function loadDrafts() {
+  try {
+    const list = JSON.parse(localStorage.getItem(DRAFTS_KEY) || "null");
+    if (list) return list;
+    const old = JSON.parse(localStorage.getItem(LEGACY_DRAFT_KEY) || "null");
+    const migrated = old && (old.subject || old.body)
+      ? [{ id: String(old.savedAt || Date.now()), subject: old.subject || "", body: legacyToHtml(old.body || ""), headerStyle: old.headerStyle || "oscuro", updatedAt: old.savedAt || Date.now() }]
+      : [];
+    localStorage.setItem(DRAFTS_KEY, JSON.stringify(migrated));
+    localStorage.removeItem(LEGACY_DRAFT_KEY);
+    return migrated;
+  } catch { return []; }
 }
-function loadDraft() {
-  try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); } catch { return null; }
+function storeDrafts(list) {
+  try { localStorage.setItem(DRAFTS_KEY, JSON.stringify(list)); } catch {}
 }
-function clearDraft() {
-  try { localStorage.removeItem(DRAFT_KEY); } catch {}
+function newId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+function fmtDate(ts) {
+  return new Date(ts).toLocaleString("es-AR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 }
 function loadTemplates() {
   try { return JSON.parse(localStorage.getItem(TEMPLATES_KEY) || "[]"); } catch { return []; }
@@ -192,27 +206,61 @@ export default function ComposePage() {
 
   const bodyRef = useRef(null);
   const draftTimer = useRef(null);
+  const [drafts, setDrafts] = useState([]);
+  const [draftId, setDraftId] = useState(null);
+  const [view, setView] = useState("loading");
+
+  function openDraft(d) {
+    setDraftId(d.id);
+    setSubject(d.subject || "");
+    setBody(legacyToHtml(d.body || ""));
+    setHeaderStyle(d.headerStyle || "oscuro");
+    setSendAt(""); setMsg(null); setPreviewMode(false);
+    setView("edit");
+  }
+
+  function createNew() {
+    openDraft({ id: newId(), subject: "", body: "", headerStyle: "oscuro" });
+  }
+
+  function duplicateDraft(d) {
+    const copy = { ...d, id: newId(), subject: d.subject ? `${d.subject} (copia)` : "(copia)", updatedAt: Date.now() };
+    const list = [copy, ...drafts];
+    setDrafts(list); storeDrafts(list);
+  }
+
+  function deleteDraft(id) {
+    const list = drafts.filter(d => d.id !== id);
+    setDrafts(list); storeDrafts(list);
+    return list;
+  }
+
+  function backToList() {
+    clearTimeout(draftTimer.current);
+    const list = loadDrafts();
+    setDrafts(list);
+    if (list.length) setView("list"); else createNew();
+  }
 
   useEffect(() => {
-    const draft = loadDraft();
-    if (draft && (draft.subject || draft.body)) {
-      setSubject(draft.subject || "");
-      setBody(legacyToHtml(draft.body || ""));
-      if (draft.headerStyle) setHeaderStyle(draft.headerStyle);
-      setMsg({ type: "info", text: `Borrador restaurado — ${new Date(draft.savedAt).toLocaleString("es-AR", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" })}` });
-    }
+    const list = loadDrafts();
+    setDrafts(list);
+    if (list.length) setView("list"); else createNew();
   }, []);
 
   useEffect(() => {
     clearTimeout(draftTimer.current);
-    if (!subject && !body) return;
+    if (view !== "edit" || !draftId || (!subject && !body)) return;
     draftTimer.current = setTimeout(() => {
-      saveDraft({ subject, body, headerStyle });
+      const list = loadDrafts();
+      const entry = { id: draftId, subject, body, headerStyle, updatedAt: Date.now() };
+      const next = [entry, ...list.filter(d => d.id !== draftId)];
+      storeDrafts(next); setDrafts(next);
       setDraftSaved(true);
       setTimeout(() => setDraftSaved(false), 2000);
-    }, 1500);
+    }, 1200);
     return () => clearTimeout(draftTimer.current);
-  }, [subject, body, headerStyle]);
+  }, [subject, body, headerStyle, view, draftId]);
 
   useEffect(() => {
     if (sendMode === "search" && !contacts) {
@@ -281,9 +329,11 @@ export default function ComposePage() {
 
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
-      clearDraft();
+      clearTimeout(draftTimer.current);
+      deleteDraft(draftId);
       setMsg({ type: "success", text: sendAt ? "✦ Email programado" : `✦ Email enviado a ${dest}` });
       setSubject(""); setBody(""); setSendAt(""); setSelectedContacts([]);
+      setDraftId(newId());
     } else {
       setMsg({ type: "error", text: data.error || "Error al enviar" });
     }
@@ -291,8 +341,49 @@ export default function ComposePage() {
   }
 
   function handleDiscard() {
-    if (!confirm("¿Descartar este borrador?")) return;
-    clearDraft(); setSubject(""); setBody(""); setSendAt(""); setMsg(null);
+    if (!confirm("¿Eliminar este borrador?")) return;
+    clearTimeout(draftTimer.current);
+    const list = deleteDraft(draftId);
+    setSubject(""); setBody(""); setSendAt(""); setMsg(null);
+    if (list.length) setView("list"); else createNew();
+  }
+
+  if (view === "loading") return null;
+
+  if (view === "list") {
+    return (
+      <>
+        <div className="adm-header">
+          <h1>Borradores</h1>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button className="adm-btn adm-btn-primary adm-btn-sm" onClick={createNew}>+ Crear nuevo</button>
+            <Link href="/administracion-general/newsletter" className="adm-btn adm-btn-secondary adm-btn-sm">← Volver</Link>
+          </div>
+        </div>
+        <div className="adm-content">
+          <div style={{ display: "grid", gap: 10, maxWidth: 820 }}>
+            {drafts.map(d => {
+              const text = (d.body || "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
+              return (
+                <div key={d.id} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, padding: "14px 16px", background: "white", border: "1px solid var(--adm-border)", borderRadius: "var(--adm-radius)" }}>
+                  <div style={{ flex: "1 1 260px", minWidth: 0, cursor: "pointer" }} onClick={() => openDraft(d)}>
+                    <div style={{ fontFamily: "var(--adm-font-body)", fontWeight: 700, fontSize: 14, color: "var(--adm-fg)" }}>{d.subject || <span style={{ color: "var(--adm-fg-muted)", fontStyle: "italic", fontWeight: 400 }}>(sin asunto)</span>}</div>
+                    <div style={{ fontFamily: "var(--adm-font-body)", fontSize: 12, color: "var(--adm-fg-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: 3 }}>{text.slice(0, 140) || "Vacío"}</div>
+                    <div style={{ fontFamily: "var(--adm-font-body)", fontSize: 11, color: "var(--adm-fg-muted)", marginTop: 4 }}>Editado {fmtDate(d.updatedAt)}</div>
+                  </div>
+                  <button className="adm-btn adm-btn-sm adm-btn-primary" onClick={() => openDraft(d)}>Abrir</button>
+                  <button className="adm-btn adm-btn-sm adm-btn-secondary" onClick={() => duplicateDraft(d)}>Duplicar</button>
+                  <button className="adm-btn adm-btn-sm adm-btn-secondary" onClick={() => { if (confirm("¿Eliminar este borrador?")) deleteDraft(d.id); }}>Eliminar</button>
+                </div>
+              );
+            })}
+          </div>
+          <p style={{ fontSize: 11, color: "var(--adm-fg-muted)", fontFamily: "var(--adm-font-body)", marginTop: 14 }}>
+            Los borradores se guardan en este navegador.
+          </p>
+        </div>
+      </>
+    );
   }
 
   return (
@@ -306,7 +397,7 @@ export default function ComposePage() {
           <button className={`adm-btn adm-btn-sm ${previewMode ? "adm-btn-primary" : "adm-btn-secondary"}`} onClick={() => setPreviewMode(v => !v)}>
             {previewMode ? "✎ Editar" : "👁 Vista previa"}
           </button>
-          <Link href="/administracion-general/newsletter" className="adm-btn adm-btn-secondary adm-btn-sm">← Volver</Link>
+          <button className="adm-btn adm-btn-secondary adm-btn-sm" onClick={backToList}>← Borradores</button>
         </div>
       </div>
 
@@ -445,7 +536,7 @@ export default function ComposePage() {
                     {loading ? "Enviando…" : sendAt ? "✦ Programar envío" : "✦ Enviar ahora"}
                   </button>
                   {(subject || body) && (
-                    <button type="button" className="adm-btn adm-btn-secondary" onClick={handleDiscard}>Descartar borrador</button>
+                    <button type="button" className="adm-btn adm-btn-secondary" onClick={handleDiscard}>Eliminar borrador</button>
                   )}
                   <Link href="/administracion-general/newsletter" className="adm-btn adm-btn-secondary">Cancelar</Link>
                 </div>
