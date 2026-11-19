@@ -169,7 +169,7 @@ async function ResourcesTeaser() {
             <p className="destacado-desc" style={{ color: "var(--rosa)" }}>
               El sistema concreto para que tu próximo readout sea entendido a la primera, accionado por tu equipo y recordado después de la reunión.
             </p>
-            <Link href="/recursos" className="destacado-cta">
+            <Link href="/recursos/presentar-a-stakeholders" className="destacado-cta">
               Ver la guía →
             </Link>
           </div>
