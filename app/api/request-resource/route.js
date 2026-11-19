@@ -1,8 +1,12 @@
 import { Resend } from "resend";
+import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request) {
+  const { ok } = rateLimit(`request-resource:${getIp(request)}`, { max: 5, windowMs: 60_000 });
+  if (!ok) return Response.json({ error: "Demasiados intentos" }, { status: 429 });
+
   const ct = request.headers.get("content-type") ?? "";
   if (!ct.includes("application/json")) {
     return Response.json({ error: "Bad request" }, { status: 400 });

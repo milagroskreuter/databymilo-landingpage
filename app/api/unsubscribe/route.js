@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { redirect } from "next/navigation";
+import { parseUnsubToken } from "@/lib/unsub-token";
 
 export const dynamic = "force-dynamic";
 
@@ -14,14 +15,8 @@ export async function GET(request) {
     redirect("/desuscribirse");
   }
 
-  let email;
-  try {
-    email = Buffer.from(encoded, "base64").toString("utf8");
-  } catch {
-    redirect("/desuscribirse");
-  }
+  const email = parseUnsubToken(encoded);
 
-  // Basic sanity check
   if (!email || !email.includes("@")) {
     redirect("/desuscribirse");
   }

@@ -1,4 +1,6 @@
 import { Resend } from "resend";
+import { makeUnsubToken } from "@/lib/unsub-token";
+import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -8,7 +10,7 @@ const AUDIENCE_ID =
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
 function unsubUrl(email) {
-  return `https://databymilo.me/api/unsubscribe?e=${Buffer.from(email).toString("base64")}`;
+  return `https://databymilo.me/api/unsubscribe?e=${makeUnsubToken(email)}`;
 }
 
 function welcomeHtml(firstName, email) {
@@ -278,6 +280,9 @@ function followUpHtml(firstName, email) {
 }
 
 export async function POST(request) {
+  const { ok } = rateLimit(`subscribe:${getIp(request)}`, { max: 5, windowMs: 60_000 });
+  if (!ok) return Response.json({ error: "Demasiados intentos" }, { status: 429 });
+
   const ct = request.headers.get("content-type") ?? "";
   if (!ct.includes("application/json")) {
     return Response.json({ error: "Bad request" }, { status: 400 });
