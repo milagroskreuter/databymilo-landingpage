@@ -232,7 +232,7 @@ const RichEditor = forwardRef(function RichEditor({ value, onChange, placeholder
         onBlur={saveSel}
         data-placeholder={placeholder}
         className="adm-rich-editor"
-        style={{ minHeight: 320, padding: "20px 24px", background: "#fffcf6", border: "1px solid var(--adm-border)", borderTop: "none", borderRadius: "0 0 var(--adm-radius) var(--adm-radius)", outline: "none", fontFamily: "Arial, Helvetica, sans-serif", fontSize: 15, color: "#3d1a2a", lineHeight: 1.75, overflowWrap: "anywhere" }}
+        style={{ height: "60vh", minHeight: 320, overflowY: "auto", padding: "20px 24px", background: "#fffcf6", border: "1px solid var(--adm-border)", borderTop: "none", borderRadius: "0 0 var(--adm-radius) var(--adm-radius)", outline: "none", fontFamily: "Arial, Helvetica, sans-serif", fontSize: 15, color: "#3d1a2a", lineHeight: 1.75, overflowWrap: "anywhere" }}
       />
       <style>{`.adm-rich-editor:empty:before{content:attr(data-placeholder);color:#c099a8;font-style:italic;}`}</style>
     </div>

@@ -452,7 +452,7 @@ export default function ComposePage() {
               </div>
 
               {/* Preview column */}
-              <div>
+              <div style={{ position: "sticky", top: 16, alignSelf: "start", maxHeight: "calc(100vh - 32px)", overflowY: "auto" }}>
                 <div className="adm-label">Vista previa en vivo</div>
                 <EmailPreview subject={subject} body={body} headerStyle={headerStyle} compact={true} />
                 {sendMode === "search" && selectedContacts.length > 0 && (

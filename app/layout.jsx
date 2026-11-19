@@ -6,7 +6,7 @@ import ScrollProgress from "./components/ScrollProgress";
 import CursorSparkles from "./components/CursorSparkles";
 import JsonLd from "./components/JsonLd";
 import WelcomeConfetti from "./components/WelcomeConfetti";
-import PublicOnlyWidgets from "./components/PublicOnlyWidgets";
+import PublicOnlyWidgets, { PublicOnly } from "./components/PublicOnlyWidgets";
 import "./globals.css";
 
 const playfair = localFont({
@@ -145,10 +145,10 @@ export default function RootLayout({ children }) {
         <JsonLd />
         <WelcomeConfetti />
         <PublicOnlyWidgets />
-        <ScrollProgress />
+        <PublicOnly><ScrollProgress /></PublicOnly>
         <CursorSparkles />
         <div className="paper-bg" style={{ position: "fixed", inset: 0, zIndex: 0 }} />
-        <Topbar />
+        <PublicOnly><Topbar /></PublicOnly>
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
         <Analytics />
       </body>
