@@ -249,8 +249,8 @@ function HeroSection() {
           {/* Mockup image — guardá el archivo en /public/mockup-guia.png */}
           <div className="stake-hero-img" style={{ flexShrink: 0, maxWidth: 420 }}>
             <img
-              src="/mockup-guia.png"
-              alt="Vista previa de la guía en laptop y tablet"
+              src="/portada-presentacion.svg"
+              alt="Portada de La Presentación que Funciona"
               style={{ width: "100%", borderRadius: 12, display: "block" }}
             />
           </div>

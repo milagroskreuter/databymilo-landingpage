@@ -60,7 +60,7 @@ export default function Resources({ resources = [], paidResources = [] }) {
 }
 
 const PAID_IMAGES = {
-  "presentar-a-stakeholders": { src: "/mockup-guia.png", alt: "Mockup de la guía en laptop y tablet" },
+  "presentar-a-stakeholders": { src: "/portada-presentacion.svg", alt: "Portada de La Presentación que Funciona" },
   "metodo-iman": { src: "/metodo-iman/portada.webp", alt: "Portada del ebook Método Imán" },
 };
 

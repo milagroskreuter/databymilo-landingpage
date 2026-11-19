@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,700;1,700&amp;family=DM+Sans:wght@400;500&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="800" fill="#f9f4ee"/>
+
+  <!-- Top header bar -->
+  <rect width="600" height="56" fill="#3a1a2e"/>
+
+  <!-- Accent line -->
+  <rect y="56" width="600" height="5" fill="#d94f7a"/>
+
+  <!-- Ghost watermark "pf" -->
+  <text x="390" y="310" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="220" fill="#e8c8d4" opacity="0.5" text-anchor="middle">pf</text>
+
+  <!-- Eyebrow label -->
+  <text x="56" y="130" font-family="'DM Sans', Arial, sans-serif" font-weight="500" font-size="10.5" fill="#d94f7a" letter-spacing="1.8" text-transform="uppercase">DATA BY MILO · GUÍA DE PRESENTACIÓN</text>
+
+  <!-- Title line 1: "La Presentación" -->
+  <text x="56" y="230" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="68" fill="#1a0d14" letter-spacing="-0.5">La Presentación</text>
+
+  <!-- Title line 2: "que Funciona." -->
+  <text x="56" y="308" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-weight="700" font-size="68" fill="#d94f7a" letter-spacing="-0.5">que Funciona.</text>
+
+  <!-- Subtitle -->
+  <text x="56" y="368" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="19" fill="#2a1420">Cómo presentar data a no-técnicos</text>
+  <text x="56" y="394" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="19" fill="#2a1420">sin morir en el intento.</text>
+
+  <!-- Stats bar background -->
+  <rect x="56" y="650" width="488" height="100" rx="10" fill="#fff8f4"/>
+
+  <!-- Stat 1 -->
+  <text x="112" y="692" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="34" fill="#d94f7a">35</text>
+  <text x="80" y="712" font-family="'DM Sans', Arial, sans-serif" font-size="11" fill="#5a3045">páginas con ejemplos</text>
+  <text x="80" y="726" font-family="'DM Sans', Arial, sans-serif" font-size="11" fill="#5a3045">reales, antes y después</text>
+
+  <!-- Divider 1 -->
+  <line x1="220" y1="665" x2="220" y2="738" stroke="#e8d0d8" stroke-width="1"/>
+
+  <!-- Stat 2 -->
+  <text x="264" y="692" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="34" fill="#d94f7a">8+</text>
+  <text x="240" y="712" font-family="'DM Sans', Arial, sans-serif" font-size="11" fill="#5a3045">comparaciones de slides</text>
+  <text x="240" y="726" font-family="'DM Sans', Arial, sans-serif" font-size="11" fill="#5a3045">con y sin BLUF</text>
+
+  <!-- Divider 2 -->
+  <line x1="380" y1="665" x2="380" y2="738" stroke="#e8d0d8" stroke-width="1"/>
+
+  <!-- Stat 3 -->
+  <text x="418" y="692" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="34" fill="#d94f7a">4</text>
+  <text x="400" y="712" font-family="'DM Sans', Arial, sans-serif" font-size="11" fill="#5a3045">prompts de IA listos</text>
+  <text x="400" y="726" font-family="'DM Sans', Arial, sans-serif" font-size="11" fill="#5a3045">para copiar y usar</text>
+
+  <!-- Footer bar -->
+  <rect y="762" width="600" height="38" fill="#1a0d14"/>
+
+  <!-- Footer brand -->
+  <text x="56" y="786" font-family="Georgia, serif" font-style="italic" font-size="17" fill="#f9f4ee">data by milo</text>
+
+  <!-- Footer tagline -->
+  <text x="544" y="786" font-family="'DM Sans', Arial, sans-serif" font-size="8.5" fill="#9a7080" letter-spacing="1.8" text-anchor="end">DATA. PERO CUTE.</text>
+</svg>
