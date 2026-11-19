@@ -35,7 +35,6 @@ export default async function Page() {
         <HeroSection />
         <TrustBar />
         <ProblemSection />
-        <BeforeAfterSection />
         <StorySection />
         <ForYouSection />
         <LearnSection />
@@ -150,43 +149,6 @@ function TrustBar() {
         ))}
       </div>
     </div>
-  );
-}
-
-/* ANTES / DESPUÉS */
-const beforeAfter = [
-  { label: "Headline", before: "Estudiante | Buscando nuevas oportunidades", after: "Data Analyst | SQL · Power BI · Python | Convierto datos en decisiones de negocio" },
-  { label: "About", before: "Soy una persona proactiva, responsable y con ganas de aprender.", after: "Un párrafo que dice qué problema resolvés, con qué herramientas y un resultado con números." },
-  { label: "Experiencia", before: "Encargada de hacer reportes semanales.", after: "Automaticé el reporte semanal en Power BI y bajé de 6 a 1 hora el tiempo de armado." },
-  { label: "Resultado", before: "Postulás a 40 ofertas y nadie responde.", after: "Aparecés en las búsquedas y los reclutadores te escriben a vos." },
-];
-
-function BeforeAfterSection() {
-  return (
-    <section className="stake-section stake-section-top0" style={{ padding: "0 0 100px" }}>
-      <div className="journal">
-        <SectionHeader eyebrow="La diferencia" title={<>Mismo talento. <em>Otro perfil.</em></>} />
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 40 }}>
-          {beforeAfter.map((row) => (
-            <div key={row.label} className="stake-for-grid" style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", gap: 14, alignItems: "stretch" }}>
-              <div style={{ fontFamily: B, fontWeight: 800, fontSize: 11, letterSpacing: ".16em", textTransform: "uppercase", color: "var(--vino)", alignSelf: "center" }}>
-                {row.label}
-              </div>
-              <div style={{ background: "var(--cream-100)", border: "1px solid rgba(139,26,74,.08)", borderRadius: 10, padding: "16px 18px", fontFamily: B, fontSize: 14, lineHeight: 1.6, color: "var(--fg-3)" }}>
-                <span style={{ fontWeight: 800, marginRight: 6 }}>✕</span>{row.before}
-              </div>
-              <div style={{ background: "#f0f9f0", border: "1px solid rgba(34,100,34,.18)", borderRadius: 10, padding: "16px 18px", fontFamily: B, fontSize: 14, lineHeight: 1.6, color: "#2a472a" }}>
-                <span style={{ fontWeight: 800, color: "#1a8c1a", marginRight: 6 }}>✓</span>{row.after}
-              </div>
-            </div>
-          ))}
-        </div>
-        <MiniCTA
-          headline="La guía te lleva de la columna izquierda a la derecha, sección por sección."
-          note={`${PRICE} · Descarga inmediata · Garantía de 7 días`}
-        />
-      </div>
-    </section>
   );
 }
 
@@ -408,17 +370,15 @@ function InsideSection() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 28, marginTop: 48 }}>
           {insidePages.map((p) => (
             <figure key={p.src} style={{ margin: 0 }}>
-              <a href={p.src} target="_blank" rel="noopener noreferrer" style={{ display: "block" }}>
-                <img
-                  src={p.src}
-                  alt={p.caption}
-                  loading="lazy"
-                  style={{
-                    width: "100%", display: "block", borderRadius: 8,
-                    border: "1px solid rgba(139,26,74,.12)", boxShadow: "0 12px 32px rgba(139,26,74,.14)",
-                  }}
-                />
-              </a>
+              <img
+                src={p.src}
+                alt={p.caption}
+                loading="lazy"
+                style={{
+                  width: "100%", display: "block", borderRadius: 8,
+                  border: "1px solid rgba(139,26,74,.12)", boxShadow: "0 12px 32px rgba(139,26,74,.14)",
+                }}
+              />
               <figcaption style={{ fontFamily: B, fontSize: 13, fontWeight: 600, color: "var(--fg-2)", marginTop: 12, textAlign: "center" }}>
                 {p.caption}
               </figcaption>
