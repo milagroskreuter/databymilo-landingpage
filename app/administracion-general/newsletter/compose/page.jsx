@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import RichEditor, { legacyToHtml } from "./RichEditor";
 
 const DRAFT_KEY = "adm_newsletter_draft_v2";
 const TEMPLATES_KEY = "adm_newsletter_templates_v1";
@@ -29,119 +30,16 @@ const TIPS = [
   "Párrafos cortos — 3 líneas máximo — se leen mejor en móvil.",
 ];
 
-// ── Helpers de edición ────────────────────────────────────────────────────────
-
-function wrapSel(el, before, after, placeholder = "texto") {
-  if (!el) return;
-  const start = el.selectionStart;
-  const end = el.selectionEnd;
-  const sel = el.value.slice(start, end) || placeholder;
-  const wrapped = before + sel + after;
-  const newVal = el.value.slice(0, start) + wrapped + el.value.slice(end);
-  el.focus();
-  el.value = newVal;
-  el.setSelectionRange(start + before.length, start + before.length + sel.length);
-  el.dispatchEvent(new Event("input", { bubbles: true }));
-  return newVal;
-}
-
-function insertBlock(el, block) {
-  if (!el) return;
-  const start = el.selectionStart;
-  const before = el.value.slice(0, start);
-  const after = el.value.slice(start);
-  const pre = before && !before.endsWith("\n\n") ? (before.endsWith("\n") ? "\n" : "\n\n") : "";
-  const suf = after && !after.startsWith("\n\n") ? (after.startsWith("\n") ? "\n" : "\n\n") : "";
-  const newVal = before + pre + block + suf + after;
-  el.focus();
-  el.value = newVal;
-  el.dispatchEvent(new Event("input", { bubbles: true }));
-  return newVal;
-}
-
-function insertLink(el, setText) {
-  if (!el) return;
-  const start = el.selectionStart;
-  const end = el.selectionEnd;
-  const sel = el.value.slice(start, end);
-  const url = window.prompt("URL del link:", "https://");
-  if (!url) return;
-  const text = sel || "ver más";
-  // If selection spans a whole line or is empty → CTA block
-  const isBlock = !sel.trim() || sel.includes("\n");
-  if (isBlock) {
-    return insertBlock(el, `[cta ${text}](${url})`);
-  } else {
-    return wrapSel(el, `[`, `](${url})`, text);
-  }
-}
-
-function insertImage(el) {
-  if (!el) return;
-  const url = window.prompt("URL de la imagen:", "https://");
-  if (!url) return;
-  return insertBlock(el, `![](${url})`);
-}
-
-// ── Preview rendering ─────────────────────────────────────────────────────────
-
-function inlineJsx(text) {
-  if (!text) return null;
-  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g);
-  return parts.map((p, i) => {
-    if (p.startsWith("**") && p.endsWith("**")) return <strong key={i}>{p.slice(2, -2)}</strong>;
-    if (p.startsWith("*") && p.endsWith("*")) return <em key={i}>{p.slice(1, -1)}</em>;
-    const lm = p.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-    if (lm) return <a key={i} href={lm[2]} style={{ color: "#8b1a4a" }}>{lm[1]}</a>;
-    return p;
-  });
-}
-
-function PreviewBlock({ block, compact }) {
-  const s = compact ? { mb: 12, fs: 12, fsLg: 14, fsH: 15, fsSig: 26 } : { mb: 16, fs: 15, fsLg: 18, fsH: 20, fsSig: 36 };
-  switch (block.type) {
-    case "quote":
-      return <div style={{ borderLeft: "4px solid #d4447a", padding: "10px 14px", background: "#fdf0f6", borderRadius: "0 8px 8px 0", marginBottom: s.mb }}>
-        <p style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: s.fsLg, color: "#8b1a4a", margin: 0, lineHeight: 1.5 }}>{inlineJsx(block.text)}</p>
-      </div>;
-    case "box":
-      return <div style={{ background: "#8b1a4a", borderRadius: 10, padding: compact ? "14px 18px" : "22px 28px", textAlign: "center", marginBottom: s.mb }}>
-        <p style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: s.fsLg, color: "#fdf5ec", margin: 0, lineHeight: 1.4 }}>{inlineJsx(block.text)}</p>
-      </div>;
-    case "divider":
-      return <hr style={{ border: "none", borderTop: "1px dashed rgba(139,26,74,.2)", margin: `0 0 ${s.mb}px` }} />;
-    case "heading":
-      return <p style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: s.fsH, color: "#1a0a10", marginBottom: s.mb, lineHeight: 1.3 }}>{inlineJsx(block.text)}</p>;
-    case "image":
-      return <div style={{ marginBottom: s.mb, textAlign: "center" }}>
-        <img src={block.url} alt="" style={{ maxWidth: "100%", borderRadius: 8 }} />
-      </div>;
-    case "cta":
-      return <div style={{ marginBottom: s.mb }}>
-        <a href={block.url} style={{ display: "inline-block", padding: compact ? "8px 20px" : "12px 28px", background: "#8b1a4a", color: "#fdf5ec", borderRadius: 999, fontFamily: "Arial,sans-serif", fontSize: s.fs, fontWeight: 700, textDecoration: "none" }}>{block.text} →</a>
-      </div>;
-    default:
-      return <p style={{ fontFamily: "Arial,sans-serif", fontSize: s.fs, color: "#3d1a2a", lineHeight: 1.75, marginBottom: s.mb }}>{inlineJsx(block.text)}</p>;
-  }
-}
-
-function parseBody(text) {
-  return text.split("\n\n").filter(Boolean).map((block, i) => {
-    if (block.startsWith("> ")) return { type: "quote", text: block.slice(2), key: i };
-    if (block.startsWith("[box]") && block.endsWith("[/box]")) return { type: "box", text: block.slice(5, -6), key: i };
-    if (block.trim() === "---") return { type: "divider", key: i };
-    if (block.startsWith("# ")) return { type: "heading", text: block.slice(2), key: i };
-    if (block.startsWith("![](")) return { type: "image", url: block.slice(4, -1), key: i };
-    const ctaM = block.match(/^\[cta (.+?)\]\((.+?)\)$/);
-    if (ctaM) return { type: "cta", text: ctaM[1], url: ctaM[2], key: i };
-    return { type: "para", text: block, key: i };
-  });
-}
-
 // ── Email preview component ───────────────────────────────────────────────────
 
+const SOCIALS = [
+  { label: "Instagram", handle: "@databymilo", url: "https://www.instagram.com/databymilo" },
+  { label: "Pinterest", handle: "@databymilo", url: "https://ar.pinterest.com/databymilo/" },
+  { label: "LinkedIn", handle: "milagros kreuter", url: "https://www.linkedin.com/in/milagroskreuter/" },
+];
+
 function EmailPreview({ subject, body, headerStyle, compact }) {
-  const blocks = parseBody(body);
+  const html = legacyToHtml(body);
   const headerDark = (
     <div style={{ background: "#8b1a4a", padding: compact ? "16px 24px" : "28px 40px", textAlign: "center", borderRadius: "10px 10px 0 0" }}>
       <div style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: compact ? 10 : 12, letterSpacing: ".18em", textTransform: "uppercase", color: "#f2b7d1", marginBottom: 4 }}>Data by Milo</div>
@@ -160,104 +58,23 @@ function EmailPreview({ subject, body, headerStyle, compact }) {
       {headerStyle === "claro" ? headerLight : headerDark}
       <div style={{ padding: compact ? "18px 20px" : "36px 40px 28px", background: "#fffcf6" }}>
         {subject && <div style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: compact ? 12 : 16, fontWeight: 700, color: "#1a0a10", marginBottom: compact ? 12 : 20 }}>{subject}</div>}
-        {blocks.length > 0 ? blocks.map(b => <PreviewBlock key={b.key} block={b} compact={compact} />) : <p style={{ color: "#c099a8", fontStyle: "italic", fontSize: compact ? 11 : 13 }}>El contenido va a aparecer acá…</p>}
+        {html ? <div style={compact ? { zoom: 0.8 } : undefined} dangerouslySetInnerHTML={{ __html: html }} /> : <p style={{ color: "#c099a8", fontStyle: "italic", fontSize: compact ? 11 : 13 }}>El contenido va a aparecer acá…</p>}
         <div style={{ borderTop: "1px dashed rgba(139,26,74,.2)", paddingTop: compact ? 12 : 18, marginTop: compact ? 4 : 8 }}>
           <div style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: compact ? 24 : 34, color: "#8b1a4a", lineHeight: 1 }}>milo</div>
-          <div style={{ fontSize: compact ? 10 : 11, color: "#a07080", marginTop: 3 }}>Data by Milo · databymilo.me</div>
+          <div style={{ fontSize: compact ? 10 : 11, color: "#a07080", marginTop: 3, marginBottom: 12 }}>Data by Milo · databymilo.me</div>
+          {SOCIALS.map(s => (
+            <div key={s.label} style={{ marginBottom: 6 }}>
+              <span style={{ fontFamily: "Arial,sans-serif", fontWeight: 700, fontSize: compact ? 8 : 10, letterSpacing: ".14em", textTransform: "uppercase", color: "#a07080" }}>{s.label}</span>
+              &nbsp;&nbsp;
+              <a href={s.url} target="_blank" rel="noreferrer" style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: compact ? 11 : 14, color: "#8b1a4a", textDecoration: "none" }}>{s.handle}</a>
+            </div>
+          ))}
         </div>
       </div>
       <div style={{ background: "#f5e6d8", padding: compact ? "10px 20px" : "14px 40px", textAlign: "center", fontSize: compact ? 10 : 11, color: "#a07080" }}>
         {!compact && "Recibís este mail porque te suscribiste en databymilo.me."}{!compact && <br />}
         <span style={{ color: "#8b1a4a", textDecoration: "underline", cursor: "default" }}>Cancelar suscripción</span>
       </div>
-    </div>
-  );
-}
-
-// ── Formato toolbar ───────────────────────────────────────────────────────────
-
-const FMT_BTNS = [
-  { label: "N", title: "Negrita (seleccioná texto)", action: (el) => wrapSel(el, "**", "**") },
-  { label: "I", title: "Itálica (seleccioná texto)", italic: true, action: (el) => wrapSel(el, "*", "*") },
-  { label: "sep" },
-  { label: "❝", title: 'Cita / pull quote (nuevo párrafo)', action: (el) => insertBlock(el, "> Escribí la cita acá") },
-  { label: "▣", title: "Caja destacada (oscura)", action: (el) => insertBlock(el, "[box]Texto en caja destacada[/box]") },
-  { label: "—", title: "Divisor / separador", action: (el) => insertBlock(el, "---") },
-  { label: "§", title: "Encabezado de sección (# Texto)", action: (el) => insertBlock(el, "# Encabezado de sección") },
-  { label: "sep" },
-  { label: "🔗", title: "Link / botón CTA (seleccioná texto → link inline; sin selección → botón)", action: (el) => insertLink(el) },
-  { label: "🖼", title: "Imagen (pegá la URL)", action: (el) => insertImage(el) },
-];
-
-function FormatToolbar({ bodyRef, setBody }) {
-  function run(action) {
-    const val = action(bodyRef.current);
-    if (val !== undefined) setBody(val);
-  }
-  return (
-    <div style={{ display: "flex", gap: 3, flexWrap: "wrap", marginBottom: 6, alignItems: "center", padding: "6px 8px", background: "var(--adm-tinted)", border: "1px solid var(--adm-border)", borderRadius: "var(--adm-radius) var(--adm-radius) 0 0", borderBottom: "none" }}>
-      {FMT_BTNS.map((btn, i) =>
-        btn.label === "sep" ? (
-          <div key={i} style={{ width: 1, height: 20, background: "var(--adm-border)", margin: "0 2px" }} />
-        ) : (
-          <button
-            key={i}
-            type="button"
-            title={btn.title}
-            onClick={() => run(btn.action)}
-            style={{
-              fontFamily: btn.italic ? "Georgia,serif" : "var(--adm-font-body)",
-              fontStyle: btn.italic ? "italic" : "normal",
-              fontWeight: !btn.italic && btn.label === "N" ? 700 : 400,
-              fontSize: 13,
-              minWidth: 28,
-              height: 28,
-              background: "white",
-              border: "1px solid var(--adm-border)",
-              borderRadius: 4,
-              cursor: "pointer",
-              color: "var(--adm-fg)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "0 6px",
-            }}
-          >
-            {btn.label}
-          </button>
-        )
-      )}
-      <div style={{ flex: 1 }} />
-      <div style={{ fontSize: 10, color: "var(--adm-fg-muted)", fontFamily: "var(--adm-font-body)" }}>
-        {FMT_BTNS.map(b => b.label !== "sep" ? null : null)}
-      </div>
-    </div>
-  );
-}
-
-// ── Cheatsheet de sintaxis ────────────────────────────────────────────────────
-
-function SyntaxCheat() {
-  const [open, setOpen] = useState(false);
-  return (
-    <div style={{ marginTop: 6 }}>
-      <button type="button" onClick={() => setOpen(v => !v)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: "var(--adm-primary)", fontFamily: "var(--adm-font-body)", padding: 0 }}>
-        {open ? "▲ Ocultar atajos de formato" : "▼ Ver atajos de formato"}
-      </button>
-      {open && (
-        <div style={{ marginTop: 8, padding: "10px 14px", background: "var(--adm-tinted)", border: "1px solid var(--adm-border)", borderRadius: "var(--adm-radius)", fontSize: 11, color: "var(--adm-fg-muted)", fontFamily: "var(--adm-font-body)", lineHeight: 1.9 }}>
-          <code style={{ background: "rgba(139,26,74,.08)", padding: "1px 4px", borderRadius: 3 }}>**texto**</code> → negrita &nbsp;|&nbsp;
-          <code style={{ background: "rgba(139,26,74,.08)", padding: "1px 4px", borderRadius: 3 }}>*texto*</code> → itálica<br />
-          <code style={{ background: "rgba(139,26,74,.08)", padding: "1px 4px", borderRadius: 3 }}>&gt; cita</code> → pull quote rosado &nbsp;|&nbsp;
-          <code style={{ background: "rgba(139,26,74,.08)", padding: "1px 4px", borderRadius: 3 }}>[box]texto[/box]</code> → caja oscura<br />
-          <code style={{ background: "rgba(139,26,74,.08)", padding: "1px 4px", borderRadius: 3 }}>---</code> → divisor &nbsp;|&nbsp;
-          <code style={{ background: "rgba(139,26,74,.08)", padding: "1px 4px", borderRadius: 3 }}># Encabezado</code> → título de sección<br />
-          <code style={{ background: "rgba(139,26,74,.08)", padding: "1px 4px", borderRadius: 3 }}>[texto](url)</code> → link inline &nbsp;|&nbsp;
-          <code style={{ background: "rgba(139,26,74,.08)", padding: "1px 4px", borderRadius: 3 }}>[cta texto](url)</code> → botón CTA<br />
-          <code style={{ background: "rgba(139,26,74,.08)", padding: "1px 4px", borderRadius: 3 }}>![](url)</code> → imagen<br />
-          <span style={{ opacity: .7 }}>Separar bloques con una línea en blanco.</span>
-        </div>
-      )}
     </div>
   );
 }
@@ -273,9 +90,9 @@ function TemplatesPanel({ bodyRef, setBody }) {
   useEffect(() => { setTemplates(loadTemplates()); }, []);
 
   function saveCurrentAsTemplate() {
-    const el = bodyRef.current;
-    if (!el || !newName.trim()) return;
-    const sel = el.value.slice(el.selectionStart, el.selectionEnd) || el.value;
+    const ed = bodyRef.current;
+    if (!ed || !newName.trim()) return;
+    const sel = ed.getSelectionHtml() || ed.getHtml();
     if (!sel.trim()) return;
     const tpl = { id: Date.now(), name: newName.trim(), content: sel.trim() };
     const updated = [...templates, tpl];
@@ -286,8 +103,7 @@ function TemplatesPanel({ bodyRef, setBody }) {
   }
 
   function insertTemplate(tpl) {
-    const val = insertBlock(bodyRef.current, tpl.content);
-    if (val !== undefined) setBody(val);
+    bodyRef.current?.insertHtml(legacyToHtml(tpl.content));
   }
 
   function deleteTemplate(id) {
@@ -318,7 +134,7 @@ function TemplatesPanel({ bodyRef, setBody }) {
             <div key={tpl.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 0", borderBottom: "1px solid var(--adm-border)" }}>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: "var(--adm-font-body)", fontSize: 13, fontWeight: 600, color: "var(--adm-fg)" }}>{tpl.name}</div>
-                <div style={{ fontFamily: "var(--adm-font-body)", fontSize: 11, color: "var(--adm-fg-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 300 }}>{tpl.content.slice(0, 80)}{tpl.content.length > 80 ? "…" : ""}</div>
+                <div style={{ fontFamily: "var(--adm-font-body)", fontSize: 11, color: "var(--adm-fg-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 300 }}>{tpl.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 80)}</div>
               </div>
               <button type="button" onClick={() => insertTemplate(tpl)} className="adm-btn adm-btn-sm adm-btn-primary">Insertar</button>
               <button type="button" onClick={() => deleteTemplate(tpl.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--adm-fg-muted)", fontSize: 16, lineHeight: 1, padding: "0 4px" }} title="Eliminar plantilla">×</button>
@@ -381,7 +197,7 @@ export default function ComposePage() {
     const draft = loadDraft();
     if (draft && (draft.subject || draft.body)) {
       setSubject(draft.subject || "");
-      setBody(draft.body || "");
+      setBody(legacyToHtml(draft.body || ""));
       if (draft.headerStyle) setHeaderStyle(draft.headerStyle);
       setMsg({ type: "info", text: `Borrador restaurado — ${new Date(draft.savedAt).toLocaleString("es-AR", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" })}` });
     }
@@ -424,7 +240,8 @@ export default function ComposePage() {
       (c.first_name || "").toLowerCase().includes(contactSearch.toLowerCase()))
   );
 
-  const wordCount = body.trim() ? body.trim().split(/\s+/).length : 0;
+  const plainText = body.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").trim();
+  const wordCount = plainText ? plainText.split(/\s+/).length : 0;
   const readMin = Math.max(1, Math.round(wordCount / 200));
   const subjectLen = subject.length;
 
@@ -594,16 +411,8 @@ export default function ComposePage() {
                   <span style={{ fontSize: 11, color: "var(--adm-fg-muted)", fontFamily: "var(--adm-font-body)", marginRight: 4 }}>Variables:</span>
                   {VARS.map(v => (
                     <button key={v} type="button"
-                      onClick={() => {
-                        const el = bodyRef.current;
-                        if (!el) return;
-                        const start = el.selectionStart;
-                        const newVal = el.value.slice(0, start) + v + el.value.slice(start);
-                        el.focus(); el.value = newVal;
-                        el.setSelectionRange(start + v.length, start + v.length);
-                        el.dispatchEvent(new Event("input", { bubbles: true }));
-                        setBody(newVal);
-                      }}
+                      onMouseDown={e => e.preventDefault()}
+                      onClick={() => bodyRef.current?.insertHtml(v)}
                       style={{ fontFamily: "var(--adm-font-body)", fontSize: 11, background: "rgba(139,26,74,.08)", border: "1px solid rgba(139,26,74,.2)", borderRadius: 4, padding: "2px 7px", cursor: "pointer", color: "var(--adm-primary)", fontWeight: 600 }}
                     >{v}</button>
                   ))}
@@ -613,17 +422,7 @@ export default function ComposePage() {
 
                 {/* Formato toolbar + textarea */}
                 <div className="adm-form-group">
-                  <FormatToolbar bodyRef={bodyRef} setBody={setBody} />
-                  <textarea
-                    ref={bodyRef}
-                    className="adm-textarea"
-                    style={{ minHeight: 300, borderRadius: "0 0 var(--adm-radius) var(--adm-radius)", borderTop: "none" }}
-                    value={body}
-                    onChange={e => setBody(e.target.value)}
-                    placeholder={"# hola {{nombre}},\n\nesta semana estuvo pasando algo interesante en las corpos...\n\n> la frase que te quedó dando vueltas\n\n---\n\n[cta leer más](https://databymilo.me/blog)"}
-                    required
-                  />
-                  <SyntaxCheat />
+                  <RichEditor ref={bodyRef} value={body} onChange={setBody} placeholder="Escribí tu carta acá… seleccioná texto para darle formato." />
                 </div>
 
                 {/* Plantillas */}
@@ -642,7 +441,7 @@ export default function ComposePage() {
 
                 {/* Acciones */}
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <button type="submit" className="adm-btn adm-btn-primary" disabled={loading || !subject || !body}>
+                  <button type="submit" className="adm-btn adm-btn-primary" disabled={loading || !subject || !plainText}>
                     {loading ? "Enviando…" : sendAt ? "✦ Programar envío" : "✦ Enviar ahora"}
                   </button>
                   {(subject || body) && (

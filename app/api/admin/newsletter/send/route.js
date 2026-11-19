@@ -35,8 +35,9 @@ function buildHtml(subject, body, headerStyle = "oscuro") {
         </div>
       </td></tr>`;
 
-  const blocks = body.split("\n\n").filter(Boolean);
-  const bodyHtml = blocks.map((block) => {
+  const isHtml = body.trim().startsWith("<");
+  const blocks = isHtml ? [] : body.split("\n\n").filter(Boolean);
+  const bodyHtml = isHtml ? body.replace(/<script[\s\S]*?<\/script>/gi, "") : blocks.map((block) => {
     if (block.startsWith("> ")) {
       const text = inlineFormat(block.slice(2));
       return `<table cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 24px;">
