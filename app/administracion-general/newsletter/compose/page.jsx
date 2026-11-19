@@ -209,14 +209,67 @@ export default function ComposePage() {
   const [drafts, setDrafts] = useState([]);
   const [draftId, setDraftId] = useState(null);
   const [view, setView] = useState("loading");
+  const [scheduled, setScheduled] = useState([]);
+  const [busyId, setBusyId] = useState(null);
 
   function openDraft(d) {
     setDraftId(d.id);
     setSubject(d.subject || "");
     setBody(legacyToHtml(d.body || ""));
     setHeaderStyle(d.headerStyle || "oscuro");
-    setSendAt(""); setMsg(null); setPreviewMode(false);
+    setSendAt(d.sendAt || ""); setMsg(null); setPreviewMode(false);
     setView("edit");
+  }
+
+  async function fetchScheduled() {
+    try {
+      const r = await fetch("/api/admin/newsletter/broadcasts");
+      const d = await r.json();
+      return (d.data || [])
+        .filter(b => b.status === "scheduled")
+        .sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at));
+    } catch { return []; }
+  }
+
+  async function editScheduled(b) {
+    if (!confirm("Para editarlo se cancela el envío programado y se abre como borrador. Después lo volvés a programar. ¿Seguir?")) return;
+    setBusyId(b.id);
+    try {
+      const r = await fetch(`/api/admin/newsletter/broadcasts?id=${encodeURIComponent(b.id)}`);
+      const d = await r.json();
+      if (!r.ok || d.body == null) {
+        alert("Este mail se programó antes de esta versión y no se puede abrir para editar. Podés cancelarlo y escribirlo de nuevo.");
+        return;
+      }
+      const when = d.scheduledAt ? new Date(d.scheduledAt) : null;
+      const local = when && when > new Date()
+        ? new Date(when.getTime() - when.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+        : "";
+      const draft = { id: newId(), subject: d.subject, body: d.body, headerStyle: d.headerStyle, sendAt: local, updatedAt: Date.now() };
+      const next = [draft, ...loadDrafts()];
+      storeDrafts(next);
+      const del = await fetch("/api/admin/newsletter/broadcasts", {
+        method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: b.id }),
+      });
+      if (!del.ok) {
+        setDrafts(next);
+        alert("Se guardó una copia como borrador, pero no se pudo cancelar el envío programado original. Cancelalo desde la lista antes de reprogramar.");
+        return;
+      }
+      setDrafts(next);
+      openDraft(draft);
+    } finally { setBusyId(null); }
+  }
+
+  async function cancelScheduled(b) {
+    if (!confirm(`¿Cancelar el envío programado "${b.subject}"? No se manda y no vuelve a aparecer.`)) return;
+    setBusyId(b.id);
+    const del = await fetch("/api/admin/newsletter/broadcasts", {
+      method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: b.id }),
+    });
+    if (del.ok) setScheduled(list => list.filter(x => x.id !== b.id));
+    else alert("No se pudo cancelar.");
+    setBusyId(null);
   }
 
   function createNew() {
@@ -235,17 +288,23 @@ export default function ComposePage() {
     return list;
   }
 
-  function backToList() {
+  async function backToList() {
     clearTimeout(draftTimer.current);
     const list = loadDrafts();
     setDrafts(list);
-    if (list.length) setView("list"); else createNew();
+    const sch = await fetchScheduled();
+    setScheduled(sch);
+    if (list.length || sch.length) setView("list"); else createNew();
   }
 
   useEffect(() => {
-    const list = loadDrafts();
-    setDrafts(list);
-    if (list.length) setView("list"); else createNew();
+    (async () => {
+      const list = loadDrafts();
+      setDrafts(list);
+      const sch = await fetchScheduled();
+      setScheduled(sch);
+      if (list.length || sch.length) setView("list"); else createNew();
+    })();
   }, []);
 
   useEffect(() => {
@@ -253,14 +312,14 @@ export default function ComposePage() {
     if (view !== "edit" || !draftId || (!subject && !body)) return;
     draftTimer.current = setTimeout(() => {
       const list = loadDrafts();
-      const entry = { id: draftId, subject, body, headerStyle, updatedAt: Date.now() };
+      const entry = { id: draftId, subject, body, headerStyle, sendAt, updatedAt: Date.now() };
       const next = [entry, ...list.filter(d => d.id !== draftId)];
       storeDrafts(next); setDrafts(next);
       setDraftSaved(true);
       setTimeout(() => setDraftSaved(false), 2000);
     }, 1200);
     return () => clearTimeout(draftTimer.current);
-  }, [subject, body, headerStyle, view, draftId]);
+  }, [subject, body, headerStyle, sendAt, view, draftId]);
 
   useEffect(() => {
     if (sendMode === "search" && !contacts) {
@@ -345,7 +404,7 @@ export default function ComposePage() {
     clearTimeout(draftTimer.current);
     const list = deleteDraft(draftId);
     setSubject(""); setBody(""); setSendAt(""); setMsg(null);
-    if (list.length) setView("list"); else createNew();
+    if (list.length || scheduled.length) setView("list"); else createNew();
   }
 
   if (view === "loading") return null;
@@ -354,13 +413,33 @@ export default function ComposePage() {
     return (
       <>
         <div className="adm-header">
-          <h1>Borradores</h1>
+          <h1>Mis mails</h1>
           <div style={{ display: "flex", gap: 8 }}>
             <button className="adm-btn adm-btn-primary adm-btn-sm" onClick={createNew}>+ Crear nuevo</button>
             <Link href="/administracion-general/newsletter" className="adm-btn adm-btn-secondary adm-btn-sm">← Volver</Link>
           </div>
         </div>
         <div className="adm-content">
+          {scheduled.length > 0 && (
+            <div style={{ maxWidth: 820, marginBottom: 28 }}>
+              <div className="adm-label" style={{ marginBottom: 8 }}>Programados</div>
+              <div style={{ display: "grid", gap: 10 }}>
+                {scheduled.map(b => (
+                  <div key={b.id} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, padding: "14px 16px", background: "#fff8fb", border: "1px solid rgba(139,26,74,.25)", borderRadius: "var(--adm-radius)" }}>
+                    <div style={{ flex: "1 1 260px", minWidth: 0 }}>
+                      <div style={{ fontFamily: "var(--adm-font-body)", fontWeight: 700, fontSize: 14, color: "var(--adm-fg)" }}>{b.subject || "(sin asunto)"}</div>
+                      <div style={{ fontFamily: "var(--adm-font-body)", fontSize: 12, color: "var(--adm-primary)", marginTop: 4 }}>
+                        ⏰ Sale el {b.scheduled_at ? fmtDate(b.scheduled_at) : "—"} · a toda la lista
+                      </div>
+                    </div>
+                    <button className="adm-btn adm-btn-sm adm-btn-primary" disabled={busyId === b.id} onClick={() => editScheduled(b)}>Editar</button>
+                    <button className="adm-btn adm-btn-sm adm-btn-secondary" disabled={busyId === b.id} onClick={() => cancelScheduled(b)}>Cancelar envío</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {drafts.length > 0 && scheduled.length > 0 && <div className="adm-label" style={{ marginBottom: 8, maxWidth: 820 }}>Borradores</div>}
           <div style={{ display: "grid", gap: 10, maxWidth: 820 }}>
             {drafts.map(d => {
               const text = (d.body || "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();

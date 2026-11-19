@@ -100,7 +100,7 @@ function buildHtml(subject, body, headerStyle = "oscuro") {
         ${headerHtml}
 
         <tr><td style="background:#fffcf6;border:1px solid rgba(139,26,74,.1);border-top:none;padding:40px 40px 32px;">
-          ${bodyHtml}
+<!--HEADER:${headerStyle}--><!--BODY_START-->${bodyHtml}<!--BODY_END-->
 
           <hr style="border:none;border-top:1px dashed rgba(139,26,74,.2);margin:0 0 24px;" />
           <p style="font-family:Georgia,serif;font-style:italic;font-size:36px;color:#8b1a4a;margin:0 0 4px;line-height:1;">
