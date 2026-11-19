@@ -4,16 +4,85 @@ export const dynamic = "force-dynamic";
 
 const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID ?? "5d28eac4-182a-4bc6-9a9a-5d2a7028ea89";
 
-function buildHtml(subject, body) {
+function inlineFormat(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#8b1a4a;text-decoration:underline;">$1</a>');
+}
+
+function buildHtml(subject, body, headerStyle = "oscuro") {
   const unsubPlaceholder = "{{ RESEND_UNSUBSCRIBE_URL }}";
-  const bodyHtml = body
-    .split("\n\n")
-    .filter(Boolean)
-    .map((para) => {
-      const escaped = para.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      return `<p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.75;margin:0 0 20px;">${escaped}</p>`;
-    })
-    .join("\n");
+
+  const headerHtml = headerStyle === "claro"
+    ? `<tr><td style="background:linear-gradient(135deg,#fce8f0 0%,#fdf5ec 100%);border-radius:12px 12px 0 0;padding:32px 40px;text-align:center;border-bottom:1px solid rgba(139,26,74,.12);">
+        <div style="font-family:Georgia,serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8b1a4a;margin-bottom:8px;font-weight:700;">
+          Data by Milo
+        </div>
+        <div style="font-family:Georgia,serif;font-weight:700;font-size:28px;color:#8b1a4a;line-height:1.2;">
+          La Carta del Domingo
+        </div>
+      </td></tr>`
+    : `<tr><td style="background:#8b1a4a;border-radius:12px 12px 0 0;padding:28px 40px;text-align:center;">
+        <div style="font-family:Georgia,serif;font-style:italic;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#f2b7d1;margin-bottom:8px;">
+          Data by Milo
+        </div>
+        <div style="font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:15px;color:rgba(253,245,236,.7);letter-spacing:.06em;">
+          la carta del domingo
+        </div>
+      </td></tr>`;
+
+  const blocks = body.split("\n\n").filter(Boolean);
+  const bodyHtml = blocks.map((block) => {
+    if (block.startsWith("> ")) {
+      const text = inlineFormat(block.slice(2));
+      return `<table cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 24px;">
+        <tr><td style="border-left:4px solid #d4447a;padding:16px 20px;background:#fdf0f6;border-radius:0 10px 10px 0;">
+          <p style="font-family:Georgia,serif;font-style:italic;font-size:18px;color:#8b1a4a;margin:0;line-height:1.5;">${text}</p>
+        </td></tr>
+      </table>`;
+    }
+
+    if (block.startsWith("[box]") && block.endsWith("[/box]")) {
+      const text = inlineFormat(block.slice(5, -6));
+      return `<table cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 24px;">
+        <tr><td style="background:#8b1a4a;border-radius:12px;padding:24px 28px;text-align:center;">
+          <p style="font-family:Georgia,serif;font-style:italic;font-size:20px;color:#fdf5ec;margin:0;line-height:1.45;">${text}</p>
+        </td></tr>
+      </table>`;
+    }
+
+    if (block.trim() === "---") {
+      return `<hr style="border:none;border-top:1px dashed rgba(139,26,74,.2);margin:0 0 24px;" />`;
+    }
+
+    if (block.startsWith("# ")) {
+      const text = inlineFormat(block.slice(2));
+      return `<p style="font-family:Georgia,serif;font-style:italic;font-size:22px;color:#1a0a10;margin:0 0 20px;line-height:1.35;">${text}</p>`;
+    }
+
+    // Imagen: ![](url)
+    if (block.startsWith("![](")) {
+      const url = block.slice(4, -1);
+      return `<div style="margin:0 0 24px;text-align:center;"><img src="${url}" alt="" style="max-width:100%;border-radius:8px;" /></div>`;
+    }
+
+    // CTA button: [cta texto](url)
+    const ctaM = block.match(/^\[cta (.+?)\]\((.+?)\)$/);
+    if (ctaM) {
+      return `<table cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+        <tr><td style="background:#8b1a4a;border-radius:999px;padding:13px 28px;">
+          <a href="${ctaM[2]}" style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:14px;color:#fdf5ec;text-decoration:none;letter-spacing:.04em;">${ctaM[1]} &rarr;</a>
+        </td></tr>
+      </table>`;
+    }
+
+    const escaped = inlineFormat(block);
+    return `<p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#3d1a2a;line-height:1.75;margin:0 0 20px;">${escaped}</p>`;
+  }).join("\n");
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -27,14 +96,7 @@ function buildHtml(subject, body) {
     <tr><td align="center">
       <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
-        <tr><td style="background:#8b1a4a;border-radius:12px 12px 0 0;padding:28px 40px;text-align:center;">
-          <div style="font-family:Georgia,serif;font-style:italic;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#f2b7d1;margin-bottom:8px;">
-            Data by Milo
-          </div>
-          <div style="font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:15px;color:rgba(253,245,236,.7);letter-spacing:.06em;">
-            la carta del domingo
-          </div>
-        </td></tr>
+        ${headerHtml}
 
         <tr><td style="background:#fffcf6;border:1px solid rgba(139,26,74,.1);border-top:none;padding:40px 40px 32px;">
           ${bodyHtml}
@@ -43,9 +105,27 @@ function buildHtml(subject, body) {
           <p style="font-family:Georgia,serif;font-style:italic;font-size:36px;color:#8b1a4a;margin:0 0 4px;line-height:1;">
             milo
           </p>
-          <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#a07080;margin:0;line-height:1.5;">
+          <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#a07080;margin:0 0 24px;line-height:1.5;">
             Data by Milo · <a href="https://databymilo.me" style="color:#8b1a4a;text-decoration:none;">databymilo.me</a>
           </p>
+
+          <table cellpadding="0" cellspacing="0" style="margin:0;">
+            <tr><td style="padding-bottom:8px;">
+              <span style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07080;">Instagram</span>
+              &nbsp;&nbsp;
+              <a href="https://www.instagram.com/databymilo" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:#8b1a4a;text-decoration:none;">@databymilo</a>
+            </td></tr>
+            <tr><td style="padding-bottom:8px;">
+              <span style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07080;">Pinterest</span>
+              &nbsp;&nbsp;
+              <a href="https://ar.pinterest.com/databymilo/" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:#8b1a4a;text-decoration:none;">@databymilo</a>
+            </td></tr>
+            <tr><td>
+              <span style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07080;">LinkedIn</span>
+              &nbsp;&nbsp;
+              <a href="https://www.linkedin.com/in/milagroskreuter/" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:#8b1a4a;text-decoration:none;">milagros kreuter</a>
+            </td></tr>
+          </table>
         </td></tr>
 
         <tr><td style="background:#f5e6d8;border-radius:0 0 12px 12px;padding:18px 40px;text-align:center;">
@@ -71,10 +151,11 @@ function interpolate(text, contact) {
 }
 
 export async function POST(request) {
-  const { subject, subjectB, body, sendAt, to, tagFilter } = await request.json().catch(() => ({}));
+  const { subject, subjectB, body, sendAt, to, tagFilter, headerStyle } = await request.json().catch(() => ({}));
   if (!subject || !body) {
     return Response.json({ error: "Faltan subject o body" }, { status: 400 });
   }
+  const hs = headerStyle || "oscuro";
 
   const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -102,7 +183,7 @@ export async function POST(request) {
           from: "Milo · Data by Milo <hola@databymilo.me>",
           to: c.email, replyTo: "hola@databymilo.me",
           subject: interpolate(subj, c),
-          html: buildHtml(interpolate(subj, c), interpolate(body, c)),
+          html: buildHtml(interpolate(subj, c), interpolate(body, c), hs),
           scheduledAt: sendAt || undefined,
         })
       ));
@@ -127,7 +208,7 @@ export async function POST(request) {
         from: "Milo · Data by Milo <hola@databymilo.me>",
         to: c.email, replyTo: "hola@databymilo.me",
         subject: interpolate(subject, c),
-        html: buildHtml(interpolate(subject, c), interpolate(body, c)),
+        html: buildHtml(interpolate(subject, c), interpolate(body, c), hs),
         scheduledAt: sendAt || undefined,
       })
     ));
@@ -146,7 +227,7 @@ export async function POST(request) {
           to: toEmail,
           replyTo: "hola@databymilo.me",
           subject: interpolate(subject, contact),
-          html: buildHtml(interpolate(subject, contact), interpolate(body, contact)),
+          html: buildHtml(interpolate(subject, contact), interpolate(body, contact), hs),
           scheduledAt: sendAt || undefined,
         });
       })
@@ -165,7 +246,7 @@ export async function POST(request) {
     from: "Milo · Data by Milo <hola@databymilo.me>",
     replyTo: "hola@databymilo.me",
     subject,
-    html: buildHtml(subject, body),
+    html: buildHtml(subject, body, hs),
   });
 
   if (createErr) {
