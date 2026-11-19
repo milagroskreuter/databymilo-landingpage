@@ -136,6 +136,13 @@ async function ResourcesTeaser() {
           </Reveal>
         ))}
       </div>
+      <Reveal delay={180}>
+        <div style={{ marginTop: 32, display: "flex", justifyContent: "center" }}>
+          <Link href="/recursos" className="btn btn-ghost">
+            Ver toda la biblioteca →
+          </Link>
+        </div>
+      </Reveal>
 
       {/* Destacados — recurso pago destacado */}
       <div className="destacados">
