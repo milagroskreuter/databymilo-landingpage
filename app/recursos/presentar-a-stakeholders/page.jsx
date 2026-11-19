@@ -5,14 +5,14 @@ import Footer from "../../components/sections/Footer";
 import { getResources } from "../../lib/resources";
 
 export const metadata = {
-  title: "Cómo presentar data a stakeholders no técnicos",
+  title: "La Presentación que Funciona",
   description:
-    "La guía de 35 páginas con el sistema concreto para que tu próximo readout sea entendido a la primera, accionado por tu equipo y recordado después de la reunión.",
+    "Cómo presentar data a no-técnicos sin morir en el intento. 35 páginas con framework, estructura BLUF, slides antes/después, prompts de IA y checklist imprimible.",
   alternates: { canonical: "https://databymilo.me/recursos/presentar-a-stakeholders" },
   openGraph: {
-    title: "Cómo presentar data a stakeholders no técnicos | Data by Milo",
+    title: "La Presentación que Funciona | Data by Milo",
     description:
-      "35 páginas. Framework, estructura BLUF, slides antes/después, prompts de IA y checklist imprimible. USD 7.",
+      "Cómo presentar data a no-técnicos sin morir en el intento. 35 páginas. Framework, BLUF, slides antes/después, prompts de IA y checklist imprimible. USD 7.",
     url: "https://databymilo.me/recursos/presentar-a-stakeholders",
   },
 };
@@ -204,11 +204,19 @@ function HeroSection() {
               lineHeight: 1.08, letterSpacing: "-.02em",
               color: "var(--ink)", margin: "0 0 24px",
             }}>
-              Cómo presentar data a stakeholders no técnicos{" "}
+              La Presentación{" "}
               <em style={{ fontStyle: "italic", color: "var(--vino)" }}>
-                sin morir en el intento
+                que Funciona
               </em>
             </h1>
+            <p style={{
+              fontFamily: D, fontStyle: "italic",
+              fontSize: "clamp(15px, 1.8vw, 19px)",
+              color: "var(--fg-3)", margin: "-16px 0 24px",
+              letterSpacing: "-.01em",
+            }}>
+              ¿Cómo presentar data a no-técnicos sin morir en el intento?
+            </p>
 
             <p style={{
               fontFamily: D, fontStyle: "italic", fontSize: "clamp(17px, 2vw, 21px)",
