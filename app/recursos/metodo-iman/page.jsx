@@ -312,12 +312,12 @@ function ForYouSection() {
 
 /* 5. QUÉ VAS A APRENDER */
 const learnCards = [
-  { title: "Cómo te busca un reclutador", desc: "Qué ve primero, qué filtros usa y qué pesa en el buscador. Cuando entendés cómo buscan, entendés cómo aparecer." },
-  { title: "El headline que trabaja por vos", desc: "La fórmula rol | skill | valor, el método de las 5 ofertas para encontrar tus keywords y 20 ejemplos por profesión." },
-  { title: "Un About y una experiencia que convencen", desc: "La estructura en 4 párrafos, cómo cuantificar logros aunque creas que no tenés números y antes/después en 3 rubros." },
-  { title: "Perfil bilingüe y ajustes ocultos", desc: "Tu perfil en inglés y español, Open to Work solo para reclutadores, URL personalizada y la ubicación que no te deja afuera." },
-  { title: "Mensajes que reciben respuesta", desc: "Más de 15 plantillas: conexión, seguimiento, pedir recomendaciones, escribirle a un reclutador y responder un InMail." },
-  { title: "Hacks para llegar primero", desc: "Ver ofertas de la última hora, búsquedas booleanas, encontrar posts de \"estamos contratando\" y alertas que trabajan solas." },
+  { title: "Cómo te busca un reclutador", desc: "Qué mira primero cuando abre tu perfil y cómo decide si te escribe o pasa al siguiente. Con eso claro, cada cambio que hagas en tu perfil tiene un motivo." },
+  { title: "El headline que trabaja por vos", desc: "Una fórmula simple para escribir el tuyo, una forma concreta de descubrir qué palabras buscan para tu rol y 20 ejemplos por profesión para inspirarte." },
+  { title: "Un About y una experiencia que convencen", desc: "Una estructura paso a paso para contar quién sos y qué lograste, aunque sientas que no tenés logros para mostrar, con ejemplos completos de distintos rubros." },
+  { title: "Perfil bilingüe y ajustes ocultos", desc: "Cómo tener tu perfil en inglés y en español al mismo tiempo, y los ajustes que casi nadie toca y que cambian quién te encuentra." },
+  { title: "Mensajes que reciben respuesta", desc: "Más de 15 plantillas listas para adaptar a cada situación en la que tenés que escribirle a alguien que no conocés, reclutadores incluidos." },
+  { title: "Hacks para llegar primero", desc: "Trucos de búsqueda para enterarte de las ofertas antes que el resto y dejar de depender de lo que LinkedIn decide mostrarte." },
 ];
 
 function LearnSection() {
@@ -397,17 +397,17 @@ function InsideSection() {
 
 /* 7. ÍNDICE */
 const chapters = [
-  { title: "Antes de arrancar", sub: "Cómo te buscan los reclutadores y el método imán" },
-  { title: "Ajustes de base", sub: "Perfil bilingüe, URL, ubicación y Open to Work" },
+  { title: "Antes de arrancar", sub: "Lo que tenés que entender antes de tocar tu perfil" },
+  { title: "Ajustes de base", sub: "La configuración que define quién te encuentra" },
   { title: "Foto y banner", sub: "La primera impresión en dos segundos" },
-  { title: "Headline", sub: "Fórmula, keywords y 20 ejemplos" },
-  { title: "About", sub: "4 párrafos, 3 ejemplos y prompt de IA" },
+  { title: "Headline", sub: "La línea que más pesa en tu perfil, con 20 ejemplos" },
+  { title: "About", sub: "Tu presentación, con 3 ejemplos completos" },
   { title: "Experience", sub: "De lista de tareas a evidencia de resultados" },
-  { title: "Skills y endorsements", sub: "Tu repositorio de 50 keywords" },
+  { title: "Skills y endorsements", sub: "Cómo elegir las skills que te hacen aparecer" },
   { title: "Featured, educación y recomendaciones", sub: "Las secciones que prueban lo que decís" },
-  { title: "Contenido que atrae reclutadores", sub: "Ideas, 3 posts de ejemplo y calendario" },
-  { title: "Networking inteligente", sub: "8 plantillas y reto de 7 días" },
-  { title: "Hacks avanzados", sub: "Ofertas de la última hora y búsqueda booleana" },
+  { title: "Contenido que atrae reclutadores", sub: "Qué publicar para que te vean, con posts de ejemplo" },
+  { title: "Networking inteligente", sub: "8 plantillas y un reto de 7 días para empezar a conectar" },
+  { title: "Hacks avanzados", sub: "Búsquedas para llegar a las ofertas antes que el resto" },
   { title: "Checklist y mantenimiento", sub: "Tu rutina semanal de 30 minutos" },
   { title: "Recursos y plantillas", sub: "Mensajes, verbos de acción y herramientas" },
   { title: "Plan de 30 días", sub: "Semana a semana, para que pase de verdad" },
