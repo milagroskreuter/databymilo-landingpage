@@ -35,7 +35,6 @@ export default async function Page() {
         <HeroSection />
         <TrustBar />
         <ProblemSection />
-        <BeforeAfterSection />
         <StorySection />
         <ForYouSection />
         <LearnSection />
@@ -150,43 +149,6 @@ function TrustBar() {
         ))}
       </div>
     </div>
-  );
-}
-
-/* ANTES / DESPUÉS */
-const beforeAfter = [
-  { label: "Headline", before: "Estudiante | Buscando nuevas oportunidades", after: "Data Analyst | SQL · Power BI · Python | Convierto datos en decisiones de negocio" },
-  { label: "About", before: "Soy una persona proactiva, responsable y con ganas de aprender.", after: "Un párrafo que dice qué problema resolvés, con qué herramientas y un resultado con números." },
-  { label: "Experiencia", before: "Encargada de hacer reportes semanales.", after: "Automaticé el reporte semanal en Power BI y bajé de 6 a 1 hora el tiempo de armado." },
-  { label: "Resultado", before: "Postulás a 40 ofertas y nadie responde.", after: "Aparecés en las búsquedas y los reclutadores te escriben a vos." },
-];
-
-function BeforeAfterSection() {
-  return (
-    <section className="stake-section stake-section-top0" style={{ padding: "0 0 100px" }}>
-      <div className="journal">
-        <SectionHeader eyebrow="La diferencia" title={<>Mismo talento. <em>Otro perfil.</em></>} />
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 40 }}>
-          {beforeAfter.map((row) => (
-            <div key={row.label} className="stake-for-grid" style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", gap: 14, alignItems: "stretch" }}>
-              <div style={{ fontFamily: B, fontWeight: 800, fontSize: 11, letterSpacing: ".16em", textTransform: "uppercase", color: "var(--vino)", alignSelf: "center" }}>
-                {row.label}
-              </div>
-              <div style={{ background: "var(--cream-100)", border: "1px solid rgba(139,26,74,.08)", borderRadius: 10, padding: "16px 18px", fontFamily: B, fontSize: 14, lineHeight: 1.6, color: "var(--fg-3)" }}>
-                <span style={{ fontWeight: 800, marginRight: 6 }}>✕</span>{row.before}
-              </div>
-              <div style={{ background: "#f0f9f0", border: "1px solid rgba(34,100,34,.18)", borderRadius: 10, padding: "16px 18px", fontFamily: B, fontSize: 14, lineHeight: 1.6, color: "#2a472a" }}>
-                <span style={{ fontWeight: 800, color: "#1a8c1a", marginRight: 6 }}>✓</span>{row.after}
-              </div>
-            </div>
-          ))}
-        </div>
-        <MiniCTA
-          headline="La guía te lleva de la columna izquierda a la derecha, sección por sección."
-          note={`${PRICE} · Descarga inmediata · Garantía de 7 días`}
-        />
-      </div>
-    </section>
   );
 }
 
@@ -350,12 +312,12 @@ function ForYouSection() {
 
 /* 5. QUÉ VAS A APRENDER */
 const learnCards = [
-  { title: "Cómo te busca un reclutador", desc: "Qué ve primero, qué filtros usa y qué pesa en el buscador. Cuando entendés cómo buscan, entendés cómo aparecer." },
-  { title: "El headline que trabaja por vos", desc: "La fórmula rol | skill | valor, el método de las 5 ofertas para encontrar tus keywords y 20 ejemplos por profesión." },
-  { title: "Un About y una experiencia que convencen", desc: "La estructura en 4 párrafos, cómo cuantificar logros aunque creas que no tenés números y antes/después en 3 rubros." },
-  { title: "Perfil bilingüe y ajustes ocultos", desc: "Tu perfil en inglés y español, Open to Work solo para reclutadores, URL personalizada y la ubicación que no te deja afuera." },
-  { title: "Mensajes que reciben respuesta", desc: "Más de 15 plantillas: conexión, seguimiento, pedir recomendaciones, escribirle a un reclutador y responder un InMail." },
-  { title: "Hacks para llegar primero", desc: "Ver ofertas de la última hora, búsquedas booleanas, encontrar posts de \"estamos contratando\" y alertas que trabajan solas." },
+  { title: "Cómo te busca un reclutador", desc: "Qué mira primero cuando abre tu perfil y cómo decide si te escribe o pasa al siguiente. Con eso claro, cada cambio que hagas en tu perfil tiene un motivo." },
+  { title: "El headline que trabaja por vos", desc: "Una fórmula simple para escribir el tuyo, una forma concreta de descubrir qué palabras buscan para tu rol y 20 ejemplos por profesión para inspirarte." },
+  { title: "Un About y una experiencia que convencen", desc: "Una estructura paso a paso para contar quién sos y qué lograste, aunque sientas que no tenés logros para mostrar, con ejemplos completos de distintos rubros." },
+  { title: "Perfil bilingüe y ajustes ocultos", desc: "Cómo tener tu perfil en inglés y en español al mismo tiempo, y los ajustes que casi nadie toca y que cambian quién te encuentra." },
+  { title: "Mensajes que reciben respuesta", desc: "Más de 15 plantillas listas para adaptar a cada situación en la que tenés que escribirle a alguien que no conocés, reclutadores incluidos." },
+  { title: "Hacks para llegar primero", desc: "Trucos de búsqueda para enterarte de las ofertas antes que el resto y dejar de depender de lo que LinkedIn decide mostrarte." },
 ];
 
 function LearnSection() {
@@ -408,17 +370,15 @@ function InsideSection() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 28, marginTop: 48 }}>
           {insidePages.map((p) => (
             <figure key={p.src} style={{ margin: 0 }}>
-              <a href={p.src} target="_blank" rel="noopener noreferrer" style={{ display: "block" }}>
-                <img
-                  src={p.src}
-                  alt={p.caption}
-                  loading="lazy"
-                  style={{
-                    width: "100%", display: "block", borderRadius: 8,
-                    border: "1px solid rgba(139,26,74,.12)", boxShadow: "0 12px 32px rgba(139,26,74,.14)",
-                  }}
-                />
-              </a>
+              <img
+                src={p.src}
+                alt={p.caption}
+                loading="lazy"
+                style={{
+                  width: "100%", display: "block", borderRadius: 8,
+                  border: "1px solid rgba(139,26,74,.12)", boxShadow: "0 12px 32px rgba(139,26,74,.14)",
+                }}
+              />
               <figcaption style={{ fontFamily: B, fontSize: 13, fontWeight: 600, color: "var(--fg-2)", marginTop: 12, textAlign: "center" }}>
                 {p.caption}
               </figcaption>
@@ -437,17 +397,17 @@ function InsideSection() {
 
 /* 7. ÍNDICE */
 const chapters = [
-  { title: "Antes de arrancar", sub: "Cómo te buscan los reclutadores y el método imán" },
-  { title: "Ajustes de base", sub: "Perfil bilingüe, URL, ubicación y Open to Work" },
+  { title: "Antes de arrancar", sub: "Lo que tenés que entender antes de tocar tu perfil" },
+  { title: "Ajustes de base", sub: "La configuración que define quién te encuentra" },
   { title: "Foto y banner", sub: "La primera impresión en dos segundos" },
-  { title: "Headline", sub: "Fórmula, keywords y 20 ejemplos" },
-  { title: "About", sub: "4 párrafos, 3 ejemplos y prompt de IA" },
+  { title: "Headline", sub: "La línea que más pesa en tu perfil, con 20 ejemplos" },
+  { title: "About", sub: "Tu presentación, con 3 ejemplos completos" },
   { title: "Experience", sub: "De lista de tareas a evidencia de resultados" },
-  { title: "Skills y endorsements", sub: "Tu repositorio de 50 keywords" },
+  { title: "Skills y endorsements", sub: "Cómo elegir las skills que te hacen aparecer" },
   { title: "Featured, educación y recomendaciones", sub: "Las secciones que prueban lo que decís" },
-  { title: "Contenido que atrae reclutadores", sub: "Ideas, 3 posts de ejemplo y calendario" },
-  { title: "Networking inteligente", sub: "8 plantillas y reto de 7 días" },
-  { title: "Hacks avanzados", sub: "Ofertas de la última hora y búsqueda booleana" },
+  { title: "Contenido que atrae reclutadores", sub: "Qué publicar para que te vean, con posts de ejemplo" },
+  { title: "Networking inteligente", sub: "8 plantillas y un reto de 7 días para empezar a conectar" },
+  { title: "Hacks avanzados", sub: "Búsquedas para llegar a las ofertas antes que el resto" },
   { title: "Checklist y mantenimiento", sub: "Tu rutina semanal de 30 minutos" },
   { title: "Recursos y plantillas", sub: "Mensajes, verbos de acción y herramientas" },
   { title: "Plan de 30 días", sub: "Semana a semana, para que pase de verdad" },
