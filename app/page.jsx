@@ -164,10 +164,10 @@ async function ResourcesTeaser() {
           <div className="destacado-body">
             <div className="destacado-meta">★ Nueva guía</div>
             <h3 className="destacado-title">
-              Cómo presentar data a stakeholders no técnicos sin morir en el intento.
+              La Presentación que Funciona.
             </h3>
             <p className="destacado-desc" style={{ color: "var(--rosa)" }}>
-              El sistema concreto para que tu próximo readout sea entendido a la primera, accionado por tu equipo y recordado después de la reunión.
+              Cómo presentar data a no-técnicos sin morir en el intento. El sistema para que tu readout sea entendido, accionado y recordado.
             </p>
             <Link href="/recursos/presentar-a-stakeholders" className="destacado-cta">
               Ver la guía →
