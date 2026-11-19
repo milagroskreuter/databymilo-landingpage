@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const FAQS = [
+export const STAKEHOLDERS_FAQS = [
   {
     q: "¿Es para principiantes en data o para gente con experiencia?",
     a: "Funciona para ambas. Si recién empezás, te da un sistema que vas a usar desde tu primera presentación. Si ya llevás un par de años, te ordena cosas que probablemente intuís pero no aplicás de forma consistente. No funciona para data scientists muy senior que presentan solo a otros DS.",
@@ -40,12 +40,12 @@ const FAQS = [
   },
 ];
 
-export default function FAQAccordion() {
+export default function FAQAccordion({ faqs }) {
   const [open, setOpen] = useState(null);
 
   return (
     <div style={{ maxWidth: 720, margin: "0 auto" }}>
-      {FAQS.map((faq, i) => (
+      {faqs.map((faq, i) => (
         <div
           key={i}
           style={{ borderBottom: "1px solid rgba(139,26,74,.12)" }}

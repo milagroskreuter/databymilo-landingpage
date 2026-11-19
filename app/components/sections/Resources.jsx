@@ -27,18 +27,26 @@ export default function Resources({ resources = [], paidResources = [] }) {
             <h2 className="section-title">
               La <em>biblioteca</em>.
             </h2>
-            <p className="section-sub">Tres descargas para empezar. Sin mail, sin pop-up, sin letra chica.</p>
+            <p className="section-sub">Guías completas para dar el próximo paso en tu carrera, y descargas gratis para empezar hoy.</p>
           </div>
           <span className="stamp">guardá esto</span>
         </div>
       </Reveal>
+
+      <PaidSection products={paidResources} />
+
+      <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 96 }}>
+        <div style={{ flex: 1, height: 1, background: "rgba(139,26,74,.2)" }} />
+        <span className="eyebrow-j" style={{ letterSpacing: ".22em" }}>Gratis · Sin mail, sin pop-up</span>
+        <div style={{ flex: 1, height: 1, background: "rgba(139,26,74,.2)" }} />
+      </div>
 
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
           gap: 24,
-          marginTop: 64,
+          marginTop: 40,
         }}
       >
         {resources.map((r, i) => (
@@ -47,23 +55,24 @@ export default function Resources({ resources = [], paidResources = [] }) {
           </Reveal>
         ))}
       </div>
-
-      <PaidSection products={paidResources} />
-
     </section>
   );
 }
 
+const PAID_IMAGES = {
+  "presentar-a-stakeholders": { src: "/mockup-guia.png", alt: "Mockup de la guía en laptop y tablet" },
+  "metodo-iman": { src: "/metodo-iman/portada.webp", alt: "Portada del ebook Método Imán" },
+};
+
 function PaidSection({ products }) {
+  if (!products.length) return null;
   return (
-    <div style={{ marginTop: 80 }}>
+    <div style={{ marginTop: 56 }}>
       <div style={{
         display: "flex", alignItems: "center", gap: 20, marginBottom: 40,
       }}>
         <div style={{ flex: 1, height: 1, background: "rgba(139,26,74,.2)" }} />
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
-          <span className="eyebrow-j" style={{ letterSpacing: ".22em" }}>✦ Destacados</span>
-        </div>
+        <span className="eyebrow-j" style={{ letterSpacing: ".22em" }}>✦ Guías completas</span>
         <div style={{ flex: 1, height: 1, background: "rgba(139,26,74,.2)" }} />
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -139,7 +148,7 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
           </p>
 
           <ul style={{ listStyle: "none", padding: 0, margin: "0 0 28px", display: "flex", flexDirection: "column", gap: 8 }}>
-            {bullets.map((b, i) => (
+            {(bullets || []).map((b, i) => (
               <li key={i} style={{
                 fontFamily: "var(--font-body)", fontSize: 14, color: "var(--fg-2)",
                 display: "flex", alignItems: "flex-start", gap: 10,
@@ -164,13 +173,13 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
                 letterSpacing: ".02em",
               }}
             >
-              ¡QUIERO MI GUÍA!
+              VER LA GUÍA →
             </Link>
             <span style={{
               fontFamily: "var(--font-body)", fontSize: 12, color: "var(--fg-3)",
               letterSpacing: ".02em",
             }}>
-              Descarga inmediata · Garantía 7 días sin preguntas
+              {price ? `${price} · ` : ""}Descarga inmediata · Garantía 7 días sin preguntas
             </span>
           </div>
         </div>
@@ -178,8 +187,8 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
         <div className="paid-card-img-wrap" style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <img
             className="paid-card-img"
-            src="/mockup-guia.png"
-            alt="Mockup de la guía en laptop y tablet"
+            src={(PAID_IMAGES[slug] || PAID_IMAGES["presentar-a-stakeholders"]).src}
+            alt={(PAID_IMAGES[slug] || PAID_IMAGES["presentar-a-stakeholders"]).alt}
             style={{
               width: 220,
               borderRadius: 12,

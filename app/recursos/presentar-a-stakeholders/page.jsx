@@ -1,18 +1,18 @@
 import Link from "next/link";
-import FAQAccordion from "./FAQAccordion";
+import FAQAccordion, { STAKEHOLDERS_FAQS } from "../../components/FAQAccordion";
 import CTABlock from "../../components/sections/CTABlock";
 import Footer from "../../components/sections/Footer";
 import { getResources } from "../../lib/resources";
 
 export const metadata = {
-  title: "Cómo presentar data a stakeholders no técnicos | Data by Milo",
+  title: "Cómo presentar data a stakeholders no técnicos",
   description:
     "La guía de 35 páginas con el sistema concreto para que tu próximo readout sea entendido a la primera, accionado por tu equipo y recordado después de la reunión.",
   alternates: { canonical: "https://databymilo.me/recursos/presentar-a-stakeholders" },
   openGraph: {
     title: "Cómo presentar data a stakeholders no técnicos | Data by Milo",
     description:
-      "35 páginas. Framework, estructura BLUF, slides antes/después, prompts de IA y checklist imprimible. USD 15.",
+      "35 páginas. Framework, estructura BLUF, slides antes/después, prompts de IA y checklist imprimible. USD 7.",
     url: "https://databymilo.me/recursos/presentar-a-stakeholders",
   },
 };
@@ -23,17 +23,19 @@ const B = "var(--font-body)";
 const A = "var(--font-accent)";
 
 export default async function Page() {
-  const resources = await getResources();
+  const resources = await getResources().catch(() => []);
   return (
     <>
       <main style={{ background: "var(--cream)" }}>
         <HeroSection />
+        <TrustBar />
         <ProblemSection />
         <ForYouSection />
         <LearnSection />
         <ContentsSection />
         <AboutSection />
         <PricingSection />
+        <GuaranteeSection />
         <FAQSection />
         <FinalCTASection />
         <FreeResourcesSection resources={resources} />
@@ -42,7 +44,53 @@ export default async function Page() {
         <CTABlock />
       </div>
       <Footer />
+      <a href={PAYMENT_URL} target="_blank" rel="noopener noreferrer" className="iman-sticky-cta">
+        ¡QUIERO MI GUÍA! · USD 7
+      </a>
     </>
+  );
+}
+
+function TrustBar() {
+  const items = ["🔒 Pago seguro por Hotmart", "⚡ Descarga inmediata", "🛡️ Garantía de 7 días", "🌎 Pagás en tu moneda local"];
+  return (
+    <div style={{ background: "#fffcf6", borderBottom: "1px solid rgba(139,26,74,.1)", padding: "18px 0" }}>
+      <div className="journal" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px 32px" }}>
+        {items.map((t) => (
+          <span key={t} style={{ fontFamily: B, fontSize: 13, fontWeight: 700, color: "var(--fg-2)" }}>{t}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GuaranteeSection() {
+  return (
+    <section className="stake-section stake-section-top0" style={{ padding: "0 0 100px" }}>
+      <div className="journal">
+        <div className="stake-about-grid" style={{
+          maxWidth: 760, margin: "0 auto", display: "grid", gridTemplateColumns: "auto 1fr", gap: "24px 36px", alignItems: "center",
+          background: "var(--rosa-50)", border: "1px dashed rgba(139,26,74,.3)", borderRadius: 16, padding: "36px 40px",
+        }}>
+          <div style={{
+            width: 110, height: 110, borderRadius: "50%", border: "3px solid var(--vino)", margin: "0 auto",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "var(--vino)",
+          }}>
+            <span style={{ fontFamily: D, fontWeight: 800, fontSize: 40, lineHeight: 1 }}>7</span>
+            <span style={{ fontFamily: B, fontWeight: 800, fontSize: 10, letterSpacing: ".16em" }}>DÍAS</span>
+          </div>
+          <div>
+            <h3 style={{ fontFamily: D, fontWeight: 700, fontSize: 24, color: "var(--ink)", margin: "0 0 10px" }}>
+              El riesgo es todo mío.
+            </h3>
+            <p style={{ fontFamily: B, fontSize: 16, lineHeight: 1.75, color: "var(--fg-2)", margin: 0 }}>
+              Comprala, leela y usala en tu próxima presentación. Si en 7 días sentís que no te sirvió,
+              pedís la devolución desde Hotmart y te devuelven el 100%. Sin preguntas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -260,7 +308,7 @@ function ForYouSection() {
     "Sentís que armás análisis copados que después nadie usa para decidir nada",
     "Te cuesta hacerte entender sin que te tilden de \"muy detallista\" o \"muy en la maleza\"",
     "Pasaste por la situación de preparar una hora antes de un readout con un nudo en el estómago",
-    "Querés invertir 15 USD en algo concreto antes de pagar 500 USD por un curso",
+    "Querés invertir 7 USD en algo concreto antes de pagar 500 USD por un curso",
   ];
   const notForYou = [
     "Presentás solo a un equipo de data senior que ya habla tu mismo idioma",
@@ -310,7 +358,7 @@ function ForYouSection() {
         </div>
         <MiniCTA
           headline="¿Te reconociste? Tenés todo lo que necesitás para empezar."
-          note="USD 15 · Precio de lanzamiento · Descarga inmediata"
+          note="USD 7 · Precio de lanzamiento · Descarga inmediata"
         />
       </div>
     </section>
@@ -362,7 +410,7 @@ function LearnSection() {
         </div>
         <MiniCTA
           headline="Todo esto en un PDF que podés leer en una tarde y usar el resto de tu carrera."
-          note="USD 15 · Un solo pago · Sin suscripción"
+          note="USD 7 · Un solo pago · Sin suscripción"
         />
       </div>
     </section>
@@ -438,7 +486,7 @@ function ContentsSection() {
         <MiniCTA
           accent
           headline="Ya viste lo que hay adentro. ¿Empezás antes de tu próxima presentación?"
-          note="USD 15 · Precio de lanzamiento. No sé hasta cuándo va a estar así."
+          note="USD 7 · Precio de lanzamiento. No sé hasta cuándo va a estar así."
         />
       </div>
     </section>
@@ -552,7 +600,7 @@ function PricingSection() {
             </div>
             <div style={{ padding: "40px 40px 32px", textAlign: "center" }}>
               <div style={{ fontFamily: D, fontWeight: 800, fontSize: 60, color: "var(--vino)", lineHeight: 1 }}>
-                USD 15
+                USD 7
               </div>
               <div style={{ fontFamily: B, fontSize: 14, color: "var(--fg-3)", marginTop: 8 }}>
                 Pagás una vez, la guía es tuya para siempre.
@@ -609,7 +657,7 @@ function FAQSection() {
       <div className="journal">
         <SectionHeader eyebrow="Preguntas frecuentes" title={<>Preguntas <em>frecuentes</em></>} />
         <div style={{ marginTop: 48 }}>
-          <FAQAccordion />
+          <FAQAccordion faqs={STAKEHOLDERS_FAQS} />
         </div>
         <MiniCTA
           headline="¿Se fueron las dudas? Si comprás y no es lo que esperabas, te devuelvo el 100%."

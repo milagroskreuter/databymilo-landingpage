@@ -151,7 +151,7 @@ async function ResourcesTeaser() {
             </div>
             <div className="destacado-vbottom">
               <span>Nº 04</span>
-              <span>USD 15</span>
+              <span>USD 7</span>
             </div>
           </div>
           <div className="destacado-body">
