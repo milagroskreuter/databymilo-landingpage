@@ -110,22 +110,12 @@ function buildHtml(subject, body, headerStyle = "oscuro") {
             Data by Milo · <a href="https://databymilo.me" style="color:#8b1a4a;text-decoration:none;">databymilo.me</a>
           </p>
 
-          <table cellpadding="0" cellspacing="0" style="margin:0;">
-            <tr><td style="padding-bottom:8px;">
-              <span style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07080;">Instagram</span>
-              &nbsp;&nbsp;
-              <a href="https://www.instagram.com/databymilo" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:#8b1a4a;text-decoration:none;">@databymilo</a>
-            </td></tr>
-            <tr><td style="padding-bottom:8px;">
-              <span style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07080;">Pinterest</span>
-              &nbsp;&nbsp;
-              <a href="https://ar.pinterest.com/databymilo/" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:#8b1a4a;text-decoration:none;">@databymilo</a>
-            </td></tr>
-            <tr><td>
-              <span style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07080;">LinkedIn</span>
-              &nbsp;&nbsp;
-              <a href="https://www.linkedin.com/in/milagroskreuter/" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:#8b1a4a;text-decoration:none;">milagros kreuter</a>
-            </td></tr>
+          <table cellpadding="0" cellspacing="0" role="presentation" style="margin:0;">
+            <tr>
+              <td style="padding-right:10px;"><a href="https://www.instagram.com/databymilo"><img src="https://databymilo.me/icons/email/social-instagram.png" width="32" height="32" alt="Instagram" style="display:block;border:0;" /></a></td>
+              <td style="padding-right:10px;"><a href="https://ar.pinterest.com/databymilo/"><img src="https://databymilo.me/icons/email/social-pinterest.png" width="32" height="32" alt="Pinterest" style="display:block;border:0;" /></a></td>
+              <td><a href="https://www.linkedin.com/in/milagroskreuter/"><img src="https://databymilo.me/icons/email/social-linkedin.png" width="32" height="32" alt="LinkedIn" style="display:block;border:0;" /></a></td>
+            </tr>
           </table>
         </td></tr>
 

@@ -33,9 +33,9 @@ const TIPS = [
 // ── Email preview component ───────────────────────────────────────────────────
 
 const SOCIALS = [
-  { label: "Instagram", handle: "@databymilo", url: "https://www.instagram.com/databymilo" },
-  { label: "Pinterest", handle: "@databymilo", url: "https://ar.pinterest.com/databymilo/" },
-  { label: "LinkedIn", handle: "milagros kreuter", url: "https://www.linkedin.com/in/milagroskreuter/" },
+  { label: "Instagram", icon: "/icons/email/social-instagram.png", url: "https://www.instagram.com/databymilo" },
+  { label: "Pinterest", icon: "/icons/email/social-pinterest.png", url: "https://ar.pinterest.com/databymilo/" },
+  { label: "LinkedIn", icon: "/icons/email/social-linkedin.png", url: "https://www.linkedin.com/in/milagroskreuter/" },
 ];
 
 function EmailPreview({ subject, body, headerStyle, compact }) {
@@ -62,13 +62,13 @@ function EmailPreview({ subject, body, headerStyle, compact }) {
         <div style={{ borderTop: "1px dashed rgba(139,26,74,.2)", paddingTop: compact ? 12 : 18, marginTop: compact ? 4 : 8 }}>
           <div style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: compact ? 24 : 34, color: "#8b1a4a", lineHeight: 1 }}>milo</div>
           <div style={{ fontSize: compact ? 10 : 11, color: "#a07080", marginTop: 3, marginBottom: 12 }}>Data by Milo · databymilo.me</div>
-          {SOCIALS.map(s => (
-            <div key={s.label} style={{ marginBottom: 6 }}>
-              <span style={{ fontFamily: "Arial,sans-serif", fontWeight: 700, fontSize: compact ? 8 : 10, letterSpacing: ".14em", textTransform: "uppercase", color: "#a07080" }}>{s.label}</span>
-              &nbsp;&nbsp;
-              <a href={s.url} target="_blank" rel="noreferrer" style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: compact ? 11 : 14, color: "#8b1a4a", textDecoration: "none" }}>{s.handle}</a>
-            </div>
-          ))}
+          <div style={{ display: "flex", gap: 10 }}>
+            {SOCIALS.map(s => (
+              <a key={s.label} href={s.url} target="_blank" rel="noreferrer" title={s.label}>
+                <img src={s.icon} alt={s.label} width={compact ? 26 : 32} height={compact ? 26 : 32} style={{ display: "block" }} />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
       <div style={{ background: "#f5e6d8", padding: compact ? "10px 20px" : "14px 40px", textAlign: "center", fontSize: compact ? 10 : 11, color: "#a07080" }}>
