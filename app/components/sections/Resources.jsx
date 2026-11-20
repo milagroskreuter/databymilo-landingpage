@@ -75,9 +75,9 @@ function PaidSection({ products }) {
         <span className="eyebrow-j" style={{ letterSpacing: ".22em" }}>✦ Guías completas</span>
         <div style={{ flex: 1, height: 1, background: "rgba(139,26,74,.2)" }} />
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <div className="paid-grid">
         {products.map((p, i) => (
-          <Reveal key={i} delay={80}>
+          <Reveal key={i} delay={80 + i * 80}>
             <PaidResourceCard {...p} />
           </Reveal>
         ))}
@@ -102,16 +102,42 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
         overflow: "hidden",
         transition: "box-shadow 300ms ease",
         borderTop: "4px solid var(--vino)",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <div className="paid-card-grid" style={{
-        padding: "32px 36px 36px",
-        display: "grid",
-        gridTemplateColumns: "1fr auto",
-        gap: 40,
-        alignItems: "start",
+      <div className="paid-card-img-wrap" style={{
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "32px 24px",
+        background: "var(--rosa-50)",
+        borderBottom: "1px solid rgba(139,26,74,.08)",
       }}>
-        <div style={{ minWidth: 0 }}>
+        <img
+          className="paid-card-img"
+          src={(PAID_IMAGES[slug] || PAID_IMAGES["presentar-a-stakeholders"]).src}
+          alt={(PAID_IMAGES[slug] || PAID_IMAGES["presentar-a-stakeholders"]).alt}
+          style={{
+            height: 240,
+            width: "auto",
+            maxWidth: "100%",
+            borderRadius: 10,
+            boxShadow: "0 12px 32px rgba(139,26,74,.22)",
+            display: "block",
+            transform: hovered ? "translateY(-4px)" : "none",
+            transition: "transform 300ms ease",
+          }}
+        />
+      </div>
+
+      <div className="paid-card-body" style={{
+        padding: "28px 32px 32px",
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minWidth: 0,
+      }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20, alignItems: "center" }}>
             <span style={{
               fontFamily: "var(--font-body)", fontWeight: 800, fontSize: 10,
@@ -134,7 +160,7 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
 
           <h3 style={{
             fontFamily: "var(--font-display)", fontWeight: 700,
-            fontSize: "clamp(20px, 2.5vw, 28px)", lineHeight: 1.2,
+            fontSize: "clamp(20px, 2.2vw, 25px)", lineHeight: 1.2,
             color: "var(--ink)", margin: "0 0 14px",
           }}>
             {title}
@@ -159,7 +185,7 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
             ))}
           </ul>
 
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 14, marginTop: "auto" }}>
             <Link
               href={`/recursos/${slug}`}
               style={{
@@ -182,20 +208,6 @@ function PaidResourceCard({ type, pages, title, desc, price, priceNote, slug, ba
               {price ? `${price} · ` : ""}Descarga inmediata · Garantía 7 días sin preguntas
             </span>
           </div>
-        </div>
-
-        <div className="paid-card-img-wrap" style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <img
-            className="paid-card-img"
-            src={(PAID_IMAGES[slug] || PAID_IMAGES["presentar-a-stakeholders"]).src}
-            alt={(PAID_IMAGES[slug] || PAID_IMAGES["presentar-a-stakeholders"]).alt}
-            style={{
-              width: 220,
-              borderRadius: 12,
-              boxShadow: "0 12px 32px rgba(139,26,74,.22)",
-              display: "block",
-            }}
-          />
         </div>
       </div>
     </div>

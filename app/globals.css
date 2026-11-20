@@ -929,14 +929,19 @@ button { font-family: inherit; }
 }
 
 /* ---------- Recursos · Paid card ---------- */
+.paid-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+@media (max-width: 860px) {
+  .paid-grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 720px) {
-  .paid-card-grid {
-    grid-template-columns: 1fr !important;
-    gap: 24px !important;
-    padding: 26px 22px !important;
-  }
-  .paid-card-img-wrap { order: -1; }
-  .paid-card-img { width: 180px !important; }
+  .paid-card-body { padding: 24px 22px 26px !important; }
+  .paid-card-img-wrap { padding: 26px 20px !important; }
+  .paid-card-img { height: 210px !important; }
 }
 
 /* ---------- Método Imán landing ---------- */
