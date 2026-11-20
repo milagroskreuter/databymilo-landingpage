@@ -8,6 +8,13 @@ import Reveal from "./components/primitives/Reveal";
 import { getResources } from "./lib/resources";
 import { getAllPosts } from "./lib/blog";
 
+export const metadata = {
+  alternates: {
+    canonical: "https://databymilo.me",
+    types: { "application/rss+xml": "https://databymilo.me/feed.xml" },
+  },
+};
+
 function AboutTeaser() {
   return (
     <section className="section">

@@ -5,7 +5,8 @@ export default function DownloadButton({ href, title, slug }) {
   function handleClick() {
     track("resource_download", { title, slug });
     if (slug) {
-      fetch(`/api/recursos/download/${slug}`, { method: "POST" }).catch(() => {});
+      // keepalive: que el aviso llegue aunque el navegador cambie de página con la descarga.
+      fetch(`/api/recursos/download/${encodeURIComponent(slug)}`, { method: "POST", keepalive: true }).catch(() => {});
     }
   }
 

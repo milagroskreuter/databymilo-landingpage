@@ -62,9 +62,9 @@ export default function About() {
       </div>
 
       <Reveal>
-        <h2 className="section-title">
+        <h1 className="section-title">
           De no entender nada, <em>a escribirlo todo</em>.
-        </h2>
+        </h1>
         <p className="section-sub">La historia corta de por qué existe este cuaderno.</p>
       </Reveal>
 

@@ -10,17 +10,16 @@ export default async function sitemap() {
     { url: `${base}/recursos`, priority: 0.9, changeFrequency: "weekly" },
     { url: `${base}/blog`, priority: 0.8, changeFrequency: "weekly" },
     { url: `${base}/sobre`, priority: 0.7, changeFrequency: "monthly" },
-    { url: `${base}/portfolio`, priority: 0.5, changeFrequency: "monthly" },
   ].map((r) => ({ ...r, lastModified: now }));
 
-  const postRoutes = (await getAllPosts()).map((post) => ({
+  const postRoutes = (await getAllPosts().catch(() => [])).map((post) => ({
     url: `${base}/blog/${post.slug}`,
     priority: 0.7,
     changeFrequency: "monthly",
     lastModified: post.date ? new Date(post.date) : now,
   }));
 
-  const resourceRoutes = (await getAvailableResources()).map((resource) => ({
+  const resourceRoutes = (await getAvailableResources().catch(() => [])).map((resource) => ({
     url: `${base}/recursos/${resource.slug}`,
     priority: 0.8,
     changeFrequency: "monthly",

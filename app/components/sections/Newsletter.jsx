@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Reveal from "../primitives/Reveal";
 import CorpoCheckbox from "../CorpoCheckbox";
+import { markSubscribed } from "../subscribed";
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
@@ -108,6 +109,7 @@ export default function Newsletter() {
                     });
                     if (!res.ok) throw new Error();
                     burst({ currentTarget: submitTarget });
+                    markSubscribed();
                     setSent(true);
                   } catch {
                     setError("Ups, algo se enredó. Probá de nuevo.");
@@ -118,6 +120,7 @@ export default function Newsletter() {
               >
                 <div className="carta-form">
                   <input
+                    aria-label="Tu email"
                     type="email"
                     placeholder="tu@email.com"
                     value={email}
@@ -130,7 +133,7 @@ export default function Newsletter() {
                 </div>
                 <CorpoCheckbox checked={corpo} onChange={setCorpo} tone="dark" style={{ marginTop: 14 }} />
                 {error && (
-                  <div
+                  <div role="alert"
                     style={{
                       fontFamily: "var(--font-display)",
                       fontStyle: "italic",

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const HOME_ENTRADA = 1;
@@ -27,14 +28,28 @@ function withEntrada(posts) {
   });
 }
 
-export async function getAllPosts() {
-  const supabase = getClient();
+// Una nota está visible si está publicada o si su fecha programada ya pasó.
+// Es el mismo criterio para el listado y para la página de la nota.
+function visibleFilter() {
   const now = new Date().toISOString();
+  return `published.eq.true,and(published.eq.false,publish_at.lte.${now})`;
+}
+
+// cache(): dentro de un mismo request (metadata + página + relacionadas) la
+// consulta se hace una sola vez en vez de 3-4 veces con todo el contenido.
+export const getAllPosts = cache(async function getAllPosts() {
+  let supabase;
+  try {
+    supabase = getClient();
+  } catch (err) {
+    console.error("getAllPosts:", err.message);
+    return [];
+  }
   // Show: explicitly published OR scheduled posts whose publish_at has passed
   const { data, error } = await supabase
     .from("blog_posts")
     .select("id, slug, title, date, excerpt, tags, cover_image, content, published, publish_at")
-    .or(`published.eq.true,and(published.eq.false,publish_at.lte.${now})`)
+    .or(visibleFilter())
     .order("date", { ascending: true });
 
   if (error || !data) return [];
@@ -51,16 +66,23 @@ export async function getAllPosts() {
   })));
 
   return numbered.slice().reverse(); // newest first
-}
+});
 
-export async function getPostBySlug(slug) {
-  const supabase = getClient();
+export const getPostBySlug = cache(async function getPostBySlug(slug) {
+  let supabase;
+  try {
+    supabase = getClient();
+  } catch {
+    return null;
+  }
+  // Antes pedía published = true: las notas programadas aparecían en el listado
+  // pero su página daba 404 hasta que alguien las publicaba a mano.
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")
     .eq("slug", slug)
-    .eq("published", true)
-    .single();
+    .or(visibleFilter())
+    .maybeSingle();
 
   if (error || !data) return null;
 
@@ -79,7 +101,7 @@ export async function getPostBySlug(slug) {
     entrada: withNum?.entrada ?? 2,
     entradaStr: withNum?.entradaStr ?? "002",
   };
-}
+});
 
 export async function getRelatedPosts(slug, limit = 3) {
   const all = await getAllPosts();

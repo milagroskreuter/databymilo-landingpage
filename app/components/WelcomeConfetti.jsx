@@ -3,19 +3,26 @@ import { useEffect } from "react";
 
 export default function WelcomeConfetti() {
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (localStorage.getItem("welcomed")) return;
-    localStorage.setItem("welcomed", "1");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // localStorage puede tirar error (modo privado, cookies bloqueadas): sin
+    // try/catch ese error rompía la hidratación de toda la página.
+    try {
+      if (localStorage.getItem("welcomed")) return;
+      localStorage.setItem("welcomed", "1");
+    } catch {
+      return;
+    }
 
     const chars = ["✦", "✧", "♥", "✿", "·", "✦"];
     const colors = ["#d4447a", "#8b1a4a", "#f2b7d1", "#fbe7a8", "#fadbe8"];
 
-    setTimeout(() => {
+    const id = setTimeout(() => {
       const ox = window.innerWidth / 2;
       const oy = window.innerHeight * 0.3;
       for (let i = 0; i < 42; i++) {
         const el = document.createElement("span");
         el.textContent = chars[Math.floor(Math.random() * chars.length)];
+        el.setAttribute("aria-hidden", "true");
         const angle = (Math.PI * 2 * i) / 42 + Math.random() * 0.5;
         const speed = 80 + Math.random() * 160;
         el.style.cssText = `
@@ -33,6 +40,7 @@ export default function WelcomeConfetti() {
         el.addEventListener("animationend", () => el.remove(), { once: true });
       }
     }, 1000);
+    return () => clearTimeout(id);
   }, []);
 
   return null;

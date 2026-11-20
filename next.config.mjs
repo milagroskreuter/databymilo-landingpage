@@ -4,7 +4,9 @@ const CSP = [
   "default-src 'self'",
   // Next.js hydration + our JSON-LD inline script require 'unsafe-inline'.
   // Replace with nonce-based CSP if stricter policy is needed in the future.
-  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com",
+  // 'unsafe-eval' solo en desarrollo: el refresco en caliente de Next lo necesita,
+  // sin él la página no hidrata en `next dev`. En producción no se agrega.
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data: https:",
   "font-src 'self'",

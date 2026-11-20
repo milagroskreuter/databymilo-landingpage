@@ -137,12 +137,19 @@ function buildHtml(subject, body, headerStyle = "oscuro", unsubUrl) {
 </html>`;
 }
 
-function interpolate(text, contact) {
+const escHtml = (v) =>
+  String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+// Los nombres los escribe quien se suscribe (o alguien que suscribe a otra
+// persona), así que dentro del HTML del mail se escapan: si no, un "nombre"
+// con <a href=...> terminaría como un link real en un mail nuestro.
+function interpolate(text, contact, html = false) {
   if (!contact) return text;
+  const val = (v) => (html ? escHtml(v || "") : String(v || "").replace(/\s+/g, " "));
   return text
-    .replace(/\{\{nombre\}\}/gi, contact.firstName || contact.first_name || "")
-    .replace(/\{\{apellido\}\}/gi, contact.lastName || contact.last_name || "")
-    .replace(/\{\{email\}\}/gi, contact.email || "");
+    .replace(/\{\{nombre\}\}/gi, val(contact.firstName || contact.first_name))
+    .replace(/\{\{apellido\}\}/gi, val(contact.lastName || contact.last_name))
+    .replace(/\{\{email\}\}/gi, val(contact.email));
 }
 
 export async function POST(request) {
@@ -189,8 +196,11 @@ export async function POST(request) {
             to: s.email,
             replyTo: "hola@databymilo.me",
             subject: interpolate(subject, contact),
-            html: buildHtml(interpolate(subject, contact), interpolate(body, contact), hs, unsub),
-            headers: { "List-Unsubscribe": `<${unsub}>` },
+            html: buildHtml(interpolate(subject, contact, true), interpolate(body, contact, true), hs, unsub),
+            headers: {
+              "List-Unsubscribe": `<${unsub}>`,
+              "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+            },
           };
         })
       );
@@ -227,7 +237,7 @@ export async function POST(request) {
           from: "Milo · Data by Milo <hola@databymilo.me>",
           to: c.email, replyTo: "hola@databymilo.me",
           subject: interpolate(subj, c),
-          html: buildHtml(interpolate(subj, c), interpolate(body, c), hs, listUnsubUrl(c.email, "carta")),
+          html: buildHtml(interpolate(subj, c, true), interpolate(body, c, true), hs, listUnsubUrl(c.email, "carta")),
           scheduledAt: sendAt || undefined,
         })
       ));
@@ -251,7 +261,7 @@ export async function POST(request) {
         from: "Milo · Data by Milo <hola@databymilo.me>",
         to: c.email, replyTo: "hola@databymilo.me",
         subject: interpolate(subject, c),
-        html: buildHtml(interpolate(subject, c), interpolate(body, c), hs, listUnsubUrl(c.email, "carta")),
+        html: buildHtml(interpolate(subject, c, true), interpolate(body, c, true), hs, listUnsubUrl(c.email, "carta")),
         scheduledAt: sendAt || undefined,
       })
     ));
@@ -270,7 +280,7 @@ export async function POST(request) {
           to: toEmail,
           replyTo: "hola@databymilo.me",
           subject: interpolate(subject, contact),
-          html: buildHtml(interpolate(subject, contact), interpolate(body, contact), hs, listUnsubUrl(toEmail, "carta")),
+          html: buildHtml(interpolate(subject, contact, true), interpolate(body, contact, true), hs, listUnsubUrl(toEmail, "carta")),
           scheduledAt: sendAt || undefined,
         });
       })

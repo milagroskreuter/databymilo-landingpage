@@ -51,8 +51,11 @@ export async function POST(request) {
 
   const email =
     typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
+  // El nombre termina dentro de mails nuestros: fuera etiquetas, links y saltos de línea.
   const firstName =
-    typeof body?.name === "string" ? body.name.trim().slice(0, 80) : undefined;
+    typeof body?.name === "string"
+      ? body.name.replace(/[<>{}\u0000-\u001f]/g, "").replace(/https?:\/\/\S+/gi, "").trim().slice(0, 80)
+      : undefined;
 
   if (!EMAIL_RE.test(email)) {
     return Response.json({ error: "Email inválido" }, { status: 400 });

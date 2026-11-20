@@ -5,6 +5,7 @@ import { FiAtSign } from "react-icons/fi";
 import Reveal from "../primitives/Reveal";
 import CorpoCheckbox from "../CorpoCheckbox";
 import { socials } from "../../lib/socials";
+import { markSubscribed } from "../subscribed";
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
@@ -47,6 +48,7 @@ export default function CTABlock() {
         }),
       });
       if (!res.ok) throw new Error();
+      markSubscribed();
       setSent(true);
     } catch {
       triggerError("Ups, algo se enredó. Probá de nuevo.");
@@ -118,6 +120,7 @@ export default function CTABlock() {
                 style={{ display: "flex", flexWrap: "wrap", gap: 10, maxWidth: 460 }}
               >
                 <input
+                  aria-label="Tu nombre (opcional)"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   type="text"
@@ -174,7 +177,7 @@ export default function CTABlock() {
                   {loading ? "Enviando…" : "Sumame →"}
                 </button>
                 {error && (
-                  <div
+                  <div role="alert"
                     style={{
                       flex: "1 0 100%",
                       fontFamily: "var(--font-display)",

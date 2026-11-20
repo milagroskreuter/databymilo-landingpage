@@ -1,5 +1,6 @@
 import { createHash, timingSafeEqual } from "crypto";
 import { rateLimit, getIp } from "@/lib/rate-limit";
+import { SESSION_COOKIE, SESSION_MAX_AGE, createSessionToken } from "@/lib/admin-session";
 
 export const dynamic = "force-dynamic";
 
@@ -36,16 +37,18 @@ export async function POST(request) {
     return Response.json({ error: "Config faltante" }, { status: 500 });
   }
 
+  // La cookie lleva un token firmado que vence, nunca el secreto en sí.
+  const token = await createSessionToken(secret);
   const response = Response.json({ ok: true, redirect: "/administracion-general" });
   response.headers.set(
     "Set-Cookie",
-    `admin_token=${secret}; ${COOKIE_FLAGS}; Max-Age=${60 * 60 * 24 * 30}`
+    `${SESSION_COOKIE}=${token}; ${COOKIE_FLAGS}; Max-Age=${SESSION_MAX_AGE}`
   );
   return response;
 }
 
 export async function DELETE() {
   const response = Response.json({ ok: true });
-  response.headers.set("Set-Cookie", `admin_token=; ${COOKIE_FLAGS}; Max-Age=0`);
+  response.headers.set("Set-Cookie", `${SESSION_COOKIE}=; ${COOKIE_FLAGS}; Max-Age=0`);
   return response;
 }

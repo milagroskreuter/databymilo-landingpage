@@ -1,5 +1,5 @@
-import localFont from "next/font/local";
-import { Caveat } from "next/font/google";
+import { Playfair_Display, Montserrat, Caveat } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import Topbar from "./components/Topbar";
 import ScrollProgress from "./components/ScrollProgress";
@@ -9,36 +9,18 @@ import WelcomeConfetti from "./components/WelcomeConfetti";
 import PublicOnlyWidgets, { PublicOnly } from "./components/PublicOnlyWidgets";
 import "./globals.css";
 
-const playfair = localFont({
-  src: [
-    {
-      path: "../public/fonts/PlayfairDisplay-VariableFont_wght.ttf",
-      style: "normal",
-      weight: "400 900",
-    },
-    {
-      path: "../public/fonts/PlayfairDisplay-Italic-VariableFont_wght.ttf",
-      style: "italic",
-      weight: "400 900",
-    },
-  ],
+// Fuentes servidas por next/font en woff2 y solo con el subconjunto latino
+// (antes eran 4 TTF variables de ~2 MB en total que se precargaban en cada página).
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
   variable: "--font-playfair",
   display: "swap",
 });
 
-const montserrat = localFont({
-  src: [
-    {
-      path: "../public/fonts/Montserrat-VariableFont_wght.ttf",
-      style: "normal",
-      weight: "100 900",
-    },
-    {
-      path: "../public/fonts/Montserrat-Italic-VariableFont_wght.ttf",
-      style: "italic",
-      weight: "100 900",
-    },
-  ],
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
   variable: "--font-montserrat",
   display: "swap",
 });
@@ -105,8 +87,9 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
+  // Sin canonical global: si no, toda página que no defina el suyo (portfolio,
+  // 404, desuscribirse...) le decía a Google que es una copia de la home.
   alternates: {
-    canonical: "https://databymilo.me",
     types: {
       "application/rss+xml": "https://databymilo.me/feed.xml",
     },
@@ -118,19 +101,6 @@ export default function RootLayout({ children }) {
     <html lang="es" className={`${playfair.variable} ${montserrat.variable} ${caveat.variable}`}>
       <head>
         <meta name="p:domain_verify" content="dfb4609894b5df079f60c537eed79c92"/>
-        {/* Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TJFMZ3JG');`,
-          }}
-        />
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8FD6CSP2G" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-G8FD6CSP2G');`,
-          }}
-        />
       </head>
       <body data-paper="aged" data-density="balanced" data-mood="day">
         {/* Google Tag Manager (noscript) */}
@@ -143,14 +113,20 @@ export default function RootLayout({ children }) {
           />
         </noscript>
         <JsonLd />
-        <WelcomeConfetti />
+        <PublicOnly><WelcomeConfetti /></PublicOnly>
         <PublicOnlyWidgets />
         <PublicOnly><ScrollProgress /></PublicOnly>
-        <CursorSparkles />
+        <PublicOnly><CursorSparkles /></PublicOnly>
         <div className="paper-bg" style={{ position: "fixed", inset: 0, zIndex: 0 }} />
         <PublicOnly><Topbar /></PublicOnly>
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
         <Analytics />
+        {/* Google Tag Manager, después de hidratar para no frenar la primera carga.
+            GA4 (G-G8FD6CSP2G) se carga desde el contenedor de GTM: antes también se
+            cargaba directo acá y cada visita se contaba dos veces. */}
+        <Script id="gtm" strategy="afterInteractive">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TJFMZ3JG');`}
+        </Script>
       </body>
     </html>
   );

@@ -670,12 +670,16 @@ body { padding-top: 98px; }
   border-bottom: 1px solid rgba(139, 26, 74, 0.12);
   max-height: 0;
   overflow: hidden;
-  transition: max-height 280ms cubic-bezier(.4,0,.2,1);
+  transition: max-height 280ms cubic-bezier(.4,0,.2,1), visibility 0s linear 280ms;
   pointer-events: none;
+  /* Cerrado: fuera del orden de Tab y de los lectores de pantalla. */
+  visibility: hidden;
 }
 .topbar-mobile-menu.is-open {
   max-height: 360px;
   pointer-events: auto;
+  visibility: visible;
+  transition: max-height 280ms cubic-bezier(.4,0,.2,1), visibility 0s;
 }
 .topbar-mobile-menu > nav {
   display: flex !important;
@@ -717,7 +721,21 @@ body { padding-top: 98px; }
   .cta-grid { grid-template-columns: 1fr !important; gap: 32px !important; padding: 36px 28px !important; }
 }
 
-input:focus, button:focus { outline: none; }
+/* Sin anillo al hacer clic con el mouse, pero sí al navegar con teclado:
+   antes se borraba siempre y quien usa Tab no veía dónde estaba parada.
+   El !important gana sobre los outline:none inline de los formularios. */
+input:focus, button:focus, textarea:focus, select:focus { outline: none; }
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--rosa) !important;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
 button { font-family: inherit; }
 
 /* ---------- Animations ---------- */
@@ -1827,3 +1845,20 @@ button { font-family: inherit; }
   margin-top: 0;
   opacity: 1;
 }
+
+/* ---------- Menos movimiento ----------
+   Para quien activó "reducir movimiento" en el sistema (mareos, vértigo):
+   sin marquee, sin rebotes ni scroll suave. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Página actual en el menú */
+.topbar nav a[aria-current="page"] { color: var(--vino); }
+.topbar nav a[aria-current="page"]::after { clip-path: inset(0 0% 0 0); }
+.topbar-mobile-menu > nav a[aria-current="page"] { color: var(--vino); }

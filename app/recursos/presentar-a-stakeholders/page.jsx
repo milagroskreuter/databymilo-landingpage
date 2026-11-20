@@ -522,7 +522,7 @@ function AboutSection() {
             background: "var(--rosa-100)",
           }}>
             <img
-              src="/milo-foto.png"
+              src="/milo-foto.webp" width={480} height={480} loading="lazy" decoding="async"
               alt="Milo, Data Analyst"
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
             />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import CorpoCheckbox from "../CorpoCheckbox";
+import { markSubscribed } from "../subscribed";
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
@@ -58,6 +59,7 @@ export default function Hero() {
       });
       if (!res.ok) throw new Error();
       burst({ currentTarget: submitTarget });
+      markSubscribed();
       setSent(true);
     } catch {
       setError("Ups, algo se enredó. Probá de nuevo.");
@@ -166,6 +168,7 @@ export default function Hero() {
               </div>
               <form onSubmit={handleSubmit} noValidate>
                 <input
+                  aria-label="Tu email"
                   className="stamp-card-input"
                   type="email"
                   placeholder="tu@email.com"
@@ -179,7 +182,7 @@ export default function Hero() {
                   style={{ fontSize: 12, marginBottom: 12, textAlign: "left" }}
                 />
                 {error && (
-                  <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 12, color: "var(--rosa)", marginBottom: 8, lineHeight: 1.4 }}>
+                  <div role="alert" style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 12, color: "var(--rosa)", marginBottom: 8, lineHeight: 1.4 }}>
                     ✦ {error}
                   </div>
                 )}

@@ -1,31 +1,34 @@
 import { NextResponse } from "next/server";
+import { SESSION_COOKIE, verifySessionToken } from "@/lib/admin-session";
 
-// Comparación en tiempo constante (el runtime edge no trae timingSafeEqual).
-function safeEqual(a, b) {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
-}
-
-export function middleware(request) {
+export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/administracion-general/login")) return NextResponse.next();
+  if (pathname.startsWith("/administracion-general/login")) {
+    const res = NextResponse.next();
+    res.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return res;
+  }
 
   const isAdminPage = pathname.startsWith("/administracion-general");
   const isAdminApi = pathname.startsWith("/api/admin") && pathname !== "/api/admin/auth";
 
   if (isAdminPage || isAdminApi) {
-    const token = request.cookies.get("admin_token")?.value;
-    const secret = process.env.ADMIN_SESSION_SECRET;
+    const token = request.cookies.get(SESSION_COOKIE)?.value;
+    const ok = await verifySessionToken(token, process.env.ADMIN_SESSION_SECRET);
 
-    if (!token || !secret || !safeEqual(token, secret)) {
+    if (!ok) {
       if (isAdminApi) {
         return Response.json({ error: "No autorizado" }, { status: 401 });
       }
       return NextResponse.redirect(new URL("/administracion-general/login", request.url));
     }
+
+    // El panel nunca debe quedar guardado en cachés compartidas ni indexado.
+    const res = NextResponse.next();
+    res.headers.set("Cache-Control", "private, no-store");
+    res.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return res;
   }
 
   return NextResponse.next();

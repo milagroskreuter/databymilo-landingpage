@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { markSubscribed } from "./subscribed";
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
@@ -62,6 +63,7 @@ export default function ListSignupForm({
         body: JSON.stringify({ email: trimmed, name: name.trim(), lists: [listSlug] }),
       });
       if (!res.ok) throw new Error();
+      markSubscribed();
       setSent(true);
     } catch {
       setError("Ups, algo se enredó. Probá de nuevo.");
@@ -131,6 +133,7 @@ export default function ListSignupForm({
                   <span style={{ fontWeight: 400, opacity: 0.6, marginLeft: 6 }}>opcional</span>
                 </label>
                 <input
+                  aria-label="Tu nombre (opcional)"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -164,7 +167,7 @@ export default function ListSignupForm({
               </button>
             </div>
             {error && (
-              <div
+              <div role="alert"
                 style={{
                   fontFamily: "var(--font-display)",
                   fontStyle: "italic",

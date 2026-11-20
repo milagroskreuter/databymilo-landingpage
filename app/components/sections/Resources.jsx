@@ -24,9 +24,9 @@ export default function Resources({ resources = [], paidResources = [] }) {
           }}
         >
           <div>
-            <h2 className="section-title">
+            <h1 className="section-title">
               La <em>biblioteca</em>.
-            </h2>
+            </h1>
             <p className="section-sub">Guías completas para dar el próximo paso en tu carrera, y descargas gratis para empezar hoy.</p>
           </div>
           <span className="stamp">guardá esto</span>

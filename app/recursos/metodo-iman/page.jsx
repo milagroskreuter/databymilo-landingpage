@@ -450,7 +450,7 @@ function AboutSection() {
             width: 200, height: 200, borderRadius: 16, overflow: "hidden",
             border: "3px solid var(--rosa-200)", flexShrink: 0, background: "var(--rosa-100)",
           }}>
-            <img src="/milo-foto.png" alt="Milo, Data Analyst" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }} />
+            <img src="/milo-foto.webp" width={480} height={480} loading="lazy" decoding="async" alt="Milo, Data Analyst" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }} />
           </div>
           <div>
             <span className="eyebrow-j" style={{ display: "block", marginBottom: 16 }}>Hola, soy Milo</span>

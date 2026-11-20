@@ -1,6 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import CorpoCheckbox from "./CorpoCheckbox";
+
+// Páginas donde el popup estorba: quien se acaba de dar de baja, las páginas de
+// suscripción a listas (ya son un formulario) y recursos (las landings de venta
+// y la biblioteca, que promete "sin pop-up").
+const HIDDEN_ON = ["/desuscribirse", "/listas", "/recursos"];
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
@@ -13,17 +19,77 @@ export default function NewsletterPopup() {
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
   const [corpo, setCorpo] = useState(false);
+  const pathname = usePathname();
+  const hidden = HIDDEN_ON.some((p) => pathname === p || pathname?.startsWith(p + "/"));
+  const dialogRef = useRef(null);
+  const firstInputRef = useRef(null);
 
+  // Antes aparecía a los 2 segundos, tapando el formulario del hero. Ahora espera
+  // una señal de interés: haber bajado la mitad de la página o 30 s leyendo.
   useEffect(() => {
+    if (hidden) return;
     try {
       if (localStorage.getItem("popup_subscribed")) return;
       const last = localStorage.getItem("popup_dismissed_at");
       const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
       if (last && Date.now() - Number(last) < THREE_DAYS) return;
     } catch {}
-    const id = setTimeout(() => setVisible(true), 2000);
-    return () => clearTimeout(id);
-  }, []);
+
+    let done = false;
+    const show = () => {
+      if (done) return;
+      done = true;
+      try {
+        if (localStorage.getItem("popup_subscribed")) return;
+      } catch {}
+      setVisible(true);
+    };
+    const onScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      const max = scrollHeight - clientHeight;
+      if (max > 0 && scrollTop / max >= 0.5) show();
+    };
+    const id = setTimeout(show, 30000);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      done = true;
+      clearTimeout(id);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [hidden, pathname]);
+
+  // Accesibilidad: foco al primer campo, Escape cierra, Tab no se escapa del modal
+  // y al cerrar el foco vuelve a donde estaba.
+  useEffect(() => {
+    if (!visible) return;
+    const previous = document.activeElement;
+    firstInputRef.current?.focus({ preventScroll: true });
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        dismiss();
+        return;
+      }
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const items = dialogRef.current.querySelectorAll(
+        'button:not([disabled]), input, a[href], [tabindex]:not([tabindex="-1"])'
+      );
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      if (previous && typeof previous.focus === "function") previous.focus({ preventScroll: true });
+    };
+  }, [visible]);
 
   const dismiss = () => {
     try { localStorage.setItem("popup_dismissed_at", String(Date.now())); } catch {}
@@ -70,7 +136,7 @@ export default function NewsletterPopup() {
     }
   };
 
-  if (!visible) return null;
+  if (!visible || hidden) return null;
 
   return (
     <div
@@ -84,7 +150,12 @@ export default function NewsletterPopup() {
         animation: "fadeIn 300ms ease",
       }}
     >
-      <div style={{
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="newsletter-popup-title"
+        style={{
         background: "var(--cream)",
         borderRadius: 16,
         padding: "48px 44px 40px",
@@ -125,7 +196,7 @@ export default function NewsletterPopup() {
               color: "var(--vino)", marginBottom: 14,
             }}>Un mail · Domingos · 9 AM</div>
 
-            <h2 style={{
+            <h2 id="newsletter-popup-title" style={{
               fontFamily: "var(--font-display)", fontWeight: 700,
               fontSize: "clamp(24px, 5vw, 30px)", color: "var(--ink)",
               margin: "0 0 12px", lineHeight: 1.15,
@@ -142,7 +213,7 @@ export default function NewsletterPopup() {
             </p>
 
             <form noValidate onSubmit={submit}>
-              <label style={{
+              <label htmlFor="popup-name" style={{
                 fontFamily: "var(--font-body)", fontWeight: 700,
                 fontSize: 10, letterSpacing: ".18em", textTransform: "uppercase",
                 color: "var(--vino)",
@@ -151,6 +222,8 @@ export default function NewsletterPopup() {
                 <span style={{ fontWeight: 400, opacity: 0.6, marginLeft: 6 }}>opcional</span>
               </label>
               <input
+                id="popup-name"
+                ref={firstInputRef}
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -166,13 +239,17 @@ export default function NewsletterPopup() {
                   boxSizing: "border-box",
                 }}
               />
-              <label style={{
+              <label htmlFor="popup-email" style={{
                 fontFamily: "var(--font-body)", fontWeight: 700,
                 fontSize: 10, letterSpacing: ".18em", textTransform: "uppercase",
                 color: "var(--vino)",
               }}>Tu email</label>
               <input
+                id="popup-email"
                 type="email"
+                autoComplete="email"
+                aria-invalid={error ? "true" : undefined}
+                aria-describedby={error ? "popup-email-error" : undefined}
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -193,7 +270,7 @@ export default function NewsletterPopup() {
                 }}
               />
               {error && (
-                <div style={{
+                <div id="popup-email-error" role="alert" style={{
                   fontFamily: "var(--font-display)",
                   fontStyle: "italic",
                   fontSize: 13,

@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navItems = [
   { label: "Inicio", href: "/" },
@@ -37,6 +38,15 @@ function burst(x, y) {
 export default function Topbar() {
   const clicks = useRef(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname?.startsWith(href + "/");
+
+  // Al cambiar de página (incluido el botón atrás) el menú mobile se cierra solo.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   const handleLogoClick = (e) => {
     clicks.current++;
@@ -89,9 +99,9 @@ export default function Topbar() {
             tech, pero cutie.
           </div>
         </Link>
-        <nav>
+        <nav aria-label="Principal">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href}>
+            <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
               {item.label}
             </Link>
           ))}
@@ -117,13 +127,11 @@ export default function Topbar() {
       <div
         id="mobile-menu"
         className={`topbar-mobile-menu ${menuOpen ? "is-open" : ""}`}
-        role="dialog"
-        aria-modal="true"
         aria-hidden={!menuOpen}
       >
-        <nav onClick={closeMenu}>
+        <nav aria-label="Menú mobile" onClick={closeMenu}>
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href}>
+            <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
               {item.label}
             </Link>
           ))}

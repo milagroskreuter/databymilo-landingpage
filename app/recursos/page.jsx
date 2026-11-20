@@ -18,8 +18,8 @@ export const metadata = {
 };
 
 export default async function RecursosPage() {
-  const resources = await getResources();
-  const paidResources = await getPaidResources();
+  const resources = await getResources().catch(() => []);
+  const paidResources = await getPaidResources().catch(() => []);
   return (
     <>
       <main>
