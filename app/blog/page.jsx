@@ -249,7 +249,7 @@ export default async function BlogIndexPage({ searchParams }) {
               </div>
             )}
 
-            <EdicionCorpoForm />
+            <EdicionCorpoForm maxWidth={1040} />
           </section>
           <SectionDivider />
           <CTABlock />

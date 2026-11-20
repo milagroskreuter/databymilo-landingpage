@@ -4,7 +4,7 @@ import { useState } from "react";
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
 // Suscripción solo a los avisos de notas nuevas del blog (lista Edición Corpo).
-export default function EdicionCorpoForm() {
+export default function EdicionCorpoForm({ maxWidth = "100%" }) {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export default function EdicionCorpoForm() {
         borderRadius: 14,
         background: "var(--rosa-50)",
         border: "1px dashed rgba(139,26,74,.3)",
-        maxWidth: 760,
+        maxWidth,
       }}
     >
       <div

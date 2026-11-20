@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FiAtSign } from "react-icons/fi";
 import Reveal from "../primitives/Reveal";
+import CorpoCheckbox from "../CorpoCheckbox";
 import { socials } from "../../lib/socials";
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
@@ -14,6 +15,7 @@ export default function CTABlock() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
+  const [corpo, setCorpo] = useState(false);
 
   const triggerError = (msg) => {
     setError(msg);
@@ -38,7 +40,11 @@ export default function CTABlock() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmed, name: name.trim() }),
+        body: JSON.stringify({
+          email: trimmed,
+          name: name.trim(),
+          lists: corpo ? ["carta", "corpo"] : ["carta"],
+        }),
       });
       if (!res.ok) throw new Error();
       setSent(true);
@@ -152,6 +158,12 @@ export default function CTABlock() {
                     outline: "none",
                     animation: shake ? "input-shake 500ms ease-in-out" : "none",
                   }}
+                />
+                <CorpoCheckbox
+                  checked={corpo}
+                  onChange={setCorpo}
+                  tone="dark"
+                  style={{ flex: "1 0 100%" }}
                 />
                 <button
                   type="submit"

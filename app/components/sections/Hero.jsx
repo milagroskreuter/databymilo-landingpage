@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import CorpoCheckbox from "../CorpoCheckbox";
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
@@ -10,6 +11,7 @@ export default function Hero() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [corpo, setCorpo] = useState(false);
 
   const burst = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -49,7 +51,10 @@ export default function Hero() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmed }),
+        body: JSON.stringify({
+          email: trimmed,
+          lists: corpo ? ["carta", "corpo"] : ["carta"],
+        }),
       });
       if (!res.ok) throw new Error();
       burst({ currentTarget: submitTarget });
@@ -167,6 +172,11 @@ export default function Hero() {
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); if (error) setError(""); }}
                   autoComplete="email"
+                />
+                <CorpoCheckbox
+                  checked={corpo}
+                  onChange={setCorpo}
+                  style={{ fontSize: 12, marginBottom: 12, textAlign: "left" }}
                 />
                 {error && (
                   <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 12, color: "var(--rosa)", marginBottom: 8, lineHeight: 1.4 }}>
