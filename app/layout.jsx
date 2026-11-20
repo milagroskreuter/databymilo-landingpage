@@ -65,7 +65,7 @@ export const metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Data by Milo · análisis de datos en español",
+        alt: "Data by Milo · la corpo no te lo cuenta, pero yo sí",
       },
     ],
   },
