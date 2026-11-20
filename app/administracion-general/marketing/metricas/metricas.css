@@ -1,0 +1,155 @@
+/* Área Métricas de redes (Marketing). Todo con prefijo .mk-metricas- */
+
+.mk-metricas { display: flex; flex-direction: column; gap: 20px; }
+.mk-metricas-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.mk-metricas-skel { height: 320px; border-radius: var(--adm-radius); }
+.mk-metricas-muted { color: var(--adm-fg-muted); font-size: 12.5px; }
+.mk-metricas-note { color: var(--adm-fg-muted); font-size: 11.5px; margin-top: 10px !important; line-height: 1.5; }
+.mk-metricas-danger { color: #c0392b; font-weight: 700; }
+.mk-metricas .adm-alert { position: relative; padding-right: 36px; }
+.mk-metricas-flash-x {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; font-size: 18px; cursor: pointer; color: inherit; opacity: .6;
+}
+.mk-metricas-link {
+  background: none; border: none; color: var(--adm-fg-muted); font: inherit; font-size: 12px;
+  text-decoration: underline; cursor: pointer;
+}
+.mk-metricas-link:hover { color: #c0392b; }
+
+/* ---- Secciones ---- */
+.mk-metricas-section { padding: 20px 22px; }
+.mk-metricas-section-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.mk-metricas-seg { display: inline-flex; border: 1px solid var(--adm-border-mid); border-radius: 999px; overflow: hidden; flex-wrap: wrap; }
+.mk-metricas-seg button {
+  background: transparent; border: none; padding: 5px 12px; font: inherit; font-size: 11.5px; font-weight: 600;
+  color: var(--adm-fg-2); cursor: pointer;
+}
+.mk-metricas-seg button + button { border-left: 1px solid var(--adm-border); }
+.mk-metricas-seg button.on { background: var(--adm-primary); color: #fff; }
+
+/* ---- Tarjetas de estado ---- */
+.mk-metricas-status-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.mk-metricas-status {
+  background: var(--adm-card-bg); border: 1px solid var(--adm-border); border-top: 3px solid var(--net);
+  border-radius: var(--adm-radius); padding: 16px; display: flex; flex-direction: column; gap: 8px;
+}
+.mk-metricas-status-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.mk-metricas-status-name { font-family: var(--adm-font-display); font-style: italic; font-weight: 700; font-size: 17px; color: var(--adm-ink); }
+.mk-metricas-status-handle { font-size: 12px; color: var(--adm-fg-2); margin-top: -4px; }
+.mk-metricas-status-list { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 12px; }
+.mk-metricas-status-list dt { color: var(--adm-fg-muted); }
+.mk-metricas-status-list dd { color: var(--adm-fg-2); }
+.mk-metricas-status-error {
+  font-size: 11.5px; color: #a3302a; background: #fdecea; border-radius: 6px; padding: 6px 8px; line-height: 1.45;
+}
+.mk-metricas-status-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: auto; padding-top: 4px; }
+.mk-metricas-hint { font-size: 11.5px; color: var(--adm-fg-muted); line-height: 1.5; }
+.mk-metricas-hint a, .mk-metricas-guide a { color: var(--adm-primary); }
+.mk-metricas-inline-form { display: flex; gap: 6px; width: 100%; }
+.mk-metricas-inline-form .adm-input { flex: 1; min-width: 0; padding: 6px 10px; font-size: 12px; }
+
+.mk-metricas-pill {
+  display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .03em; padding: 3px 9px; border-radius: 999px;
+  white-space: nowrap; vertical-align: middle;
+}
+.mk-metricas-pill-ok { background: #e3f3ea; color: #17663e; }
+.mk-metricas-pill-warn { background: #fdf1dc; color: #9a5b00; }
+.mk-metricas-pill-err { background: #fdecea; color: #a3302a; }
+.mk-metricas-pill-off { background: var(--adm-cream-200); color: var(--adm-fg-muted); }
+
+.mk-metricas-howto { width: 100%; font-size: 12px; color: var(--adm-fg-2); }
+.mk-metricas-howto summary { cursor: pointer; color: var(--adm-primary); font-weight: 600; }
+.mk-metricas-howto ol { margin: 8px 0 0 18px !important; display: flex; flex-direction: column; gap: 4px; line-height: 1.5; }
+
+/* ---- Seguidores ---- */
+.mk-metricas-follow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.mk-metricas-follow { border: 1px solid var(--adm-border); border-radius: var(--adm-radius); padding: 14px; background: #fffdfa; }
+.mk-metricas-follow-head { display: flex; align-items: center; gap: 8px; }
+.mk-metricas-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--net); flex-shrink: 0; }
+.mk-metricas-follow-name { font-weight: 700; font-size: 13px; }
+.mk-metricas-follow-value { margin-left: auto; font-family: var(--adm-font-display); font-weight: 700; font-size: 22px; color: var(--adm-ink); }
+.mk-metricas-follow-sub { font-size: 11.5px; color: var(--adm-fg-muted); margin: 2px 0 6px; min-height: 16px; }
+
+.mk-metricas-chart { position: relative; }
+.mk-metricas-chart svg { width: 100%; height: 150px; display: block; cursor: crosshair; overflow: visible; }
+.mk-metricas-chart-empty {
+  height: 150px; display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 12px; color: var(--adm-fg-muted); background: var(--adm-tinted); border-radius: 8px; padding: 0 16px;
+}
+.mk-metricas-axis { font-size: 10px; fill: var(--adm-fg-muted); font-family: var(--adm-font-body); }
+.mk-metricas-goal-line { stroke: var(--adm-accent); stroke-dasharray: 4 4; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.mk-metricas-chart-tip {
+  position: absolute; top: -6px; transform: translate(-50%, -100%); background: var(--adm-primary); color: #fff;
+  font-size: 11px; padding: 3px 9px; border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 2;
+}
+
+.mk-metricas-goal { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.mk-metricas-goal-form { display: flex; align-items: flex-end; gap: 8px; }
+.mk-metricas-goal-form label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--adm-fg-muted); font-weight: 600; flex: 1; }
+.mk-metricas-goal-form .adm-input { padding: 6px 10px; font-size: 13px; max-width: 160px; }
+.mk-metricas-goal-progress { display: flex; flex-direction: column; gap: 4px; }
+
+.mk-metricas-bar { display: block; flex: 1; height: 8px; background: var(--adm-cream-200); border-radius: 4px; overflow: hidden; }
+.mk-metricas-bar > span { display: block; height: 100%; background: var(--net, var(--adm-primary)); border-radius: 4px; transition: width .4s ease; }
+
+/* ---- Filtros ---- */
+.mk-metricas-filters { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; }
+.mk-metricas-filters label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; font-weight: 600; color: var(--adm-fg-muted); }
+.mk-metricas-filters .adm-input { padding: 6px 10px; font-size: 13px; min-width: 170px; }
+
+/* ---- Tabla ---- */
+.mk-metricas-table-wrap { overflow-x: auto; }
+.mk-metricas-table th { cursor: pointer; user-select: none; white-space: nowrap; }
+.mk-metricas-table th.num, .mk-metricas-table td.num { text-align: right; }
+.mk-metricas-table td.strong { font-weight: 700; color: var(--adm-primary); }
+.mk-metricas-table td.nowrap { white-space: nowrap; }
+.mk-metricas-title-cell { max-width: 320px; }
+.mk-metricas-title-cell a { color: var(--adm-ink); text-decoration: none; }
+.mk-metricas-title-cell a:hover { color: var(--adm-primary); text-decoration: underline; }
+.mk-metricas-net { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; white-space: nowrap; }
+.mk-metricas-net::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--net); }
+.mk-metricas-pillar {
+  font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+  color: var(--pc); background: color-mix(in srgb, var(--pc) 12%, transparent);
+}
+.mk-metricas-unlinked {
+  margin-left: 6px; font-size: 10px; color: var(--adm-fg-muted); border: 1px dashed var(--adm-border-mid);
+  padding: 0 5px; border-radius: 4px; white-space: nowrap;
+}
+.mk-metricas-more { margin-top: 12px; }
+
+/* ---- Qué funciona ---- */
+.mk-metricas-rank-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px 28px; }
+.mk-metricas-rank h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--adm-fg-2); margin-bottom: 10px !important; }
+.mk-metricas-rank-row { display: grid; grid-template-columns: 130px 1fr 64px 26px; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; }
+.mk-metricas-rank-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--adm-fg-2); }
+.mk-metricas-rank-row .mk-metricas-bar > span { background: var(--adm-primary); }
+.mk-metricas-rank-val { text-align: right; font-weight: 700; color: var(--adm-primary); }
+.mk-metricas-rank-n { text-align: right; color: var(--adm-fg-muted); font-size: 11px; }
+.mk-metricas-star { color: #d99a3e; margin-right: 4px; }
+
+/* ---- Cómo conectar ---- */
+.mk-metricas-guide { border-top: 1px solid var(--adm-border); padding: 12px 0; font-size: 13px; color: var(--adm-fg-2); line-height: 1.6; }
+.mk-metricas-guide:first-of-type { margin-top: 12px; }
+.mk-metricas-guide summary {
+  cursor: pointer; font-weight: 700; color: var(--adm-ink); display: flex; align-items: center; gap: 10px; list-style-position: outside;
+}
+.mk-metricas-guide ol, .mk-metricas-guide ul { margin: 10px 0 0 20px !important; display: flex; flex-direction: column; gap: 6px; }
+.mk-metricas-guide p { margin-top: 8px !important; }
+.mk-metricas-guide code, .mk-metricas-copy code {
+  font-size: 12px; background: var(--adm-cream-200); padding: 1px 6px; border-radius: 4px; word-break: break-all;
+}
+.mk-metricas-copy { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.mk-metricas-copy button {
+  font: inherit; font-size: 11px; font-weight: 700; border: 1px solid var(--adm-border-mid); background: #fff;
+  color: var(--adm-primary); border-radius: 999px; padding: 2px 10px; cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .mk-metricas-section { padding: 16px; }
+  .mk-metricas-rank-row { grid-template-columns: 100px 1fr 56px 22px; }
+  .mk-metricas-follow-grid, .mk-metricas-rank-grid { grid-template-columns: 1fr; }
+}
