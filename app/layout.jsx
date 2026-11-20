@@ -39,7 +39,7 @@ export const metadata = {
     template: "%s | Data by Milo",
   },
   description:
-    "Tech, data e IA contado desde adentro de una corpo grande. Vida en la corpo, IA aplicada y reflexiones de carrera, para mujeres latinoamericanas que trabajan o quieren trabajar en tech.",
+    "Tech, data e IA contado desde adentro de una corpo. Vida en la corpo, IA aplicada y carrera, para mujeres de LATAM que trabajan o quieren trabajar en tech.",
   keywords: [
     "vida en la corpo tech",
     "trabajar en data LATAM",

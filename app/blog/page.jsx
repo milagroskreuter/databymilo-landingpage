@@ -17,6 +17,7 @@ export const metadata = {
     title: "edición corpo. | Data by Milo",
     description: "Historias largas, explicaciones y data traducida al español.",
     url: "https://databymilo.me/blog",
+    images: [{ url: "/og?title=edici%C3%B3n%20corpo.&type=blog", width: 1200, height: 630, alt: "edición corpo. | Data by Milo" }],
   },
 };
 

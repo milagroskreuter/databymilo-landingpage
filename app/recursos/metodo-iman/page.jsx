@@ -6,7 +6,7 @@ import { getResources } from "../../lib/resources";
 
 const TITLE = "Método Imán: aprendé a usar LinkedIn para conseguir tu trabajo soñado";
 const DESCRIPTION =
-  "La guía de 84 páginas con el método que usé para conseguir mis primeros 3 trabajos como analista: un perfil que los reclutadores encuentran, entienden y quieren contactar.";
+  "La guía de 84 páginas con el método que usé para conseguir mis primeros 3 trabajos como analista: un perfil de LinkedIn que los reclutadores quieren contactar.";
 
 export const metadata = {
   title: TITLE,

@@ -14,6 +14,7 @@ export const metadata = {
     description:
       "Cheatsheets, plantillas y guías de análisis de datos en español, para descargar.",
     url: "https://databymilo.me/recursos",
+    images: [{ url: "/og?title=La%20biblioteca%3A%20gu%C3%ADas%20y%20recursos%20de%20data&type=recursos", width: 1200, height: 630, alt: "La biblioteca: guías y recursos de data | Data by Milo" }],
   },
 };
 

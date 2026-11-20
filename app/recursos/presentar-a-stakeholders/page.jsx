@@ -7,13 +7,14 @@ import { getResources } from "../../lib/resources";
 export const metadata = {
   title: "La Presentación que Funciona",
   description:
-    "Cómo presentar data a no-técnicos sin morir en el intento. 35 páginas con framework, estructura BLUF, slides antes/después, prompts de IA y checklist imprimible.",
+    "Cómo presentar data a no-técnicos sin morir en el intento: framework, estructura BLUF, slides antes/después, prompts de IA y checklist. 35 páginas.",
   alternates: { canonical: "https://databymilo.me/recursos/presentar-a-stakeholders" },
   openGraph: {
     title: "La Presentación que Funciona | Data by Milo",
     description:
       "Cómo presentar data a no-técnicos sin morir en el intento. 35 páginas. Framework, BLUF, slides antes/después, prompts de IA y checklist imprimible. USD 7.",
     url: "https://databymilo.me/recursos/presentar-a-stakeholders",
+    images: [{ url: "/og?title=La%20Presentaci%C3%B3n%20que%20Funciona&type=gu%C3%ADa", width: 1200, height: 630, alt: "La Presentación que Funciona | Data by Milo" }],
   },
 };
 

@@ -10,6 +10,9 @@ export default async function sitemap() {
     { url: `${base}/recursos`, priority: 0.9, changeFrequency: "weekly" },
     { url: `${base}/blog`, priority: 0.8, changeFrequency: "weekly" },
     { url: `${base}/sobre`, priority: 0.7, changeFrequency: "monthly" },
+    // Landings de las guías pagas: son páginas propias, no salen de la tabla de recursos gratis.
+    { url: `${base}/recursos/metodo-iman`, priority: 0.9, changeFrequency: "monthly" },
+    { url: `${base}/recursos/presentar-a-stakeholders`, priority: 0.9, changeFrequency: "monthly" },
   ].map((r) => ({ ...r, lastModified: now }));
 
   const postRoutes = (await getAllPosts().catch(() => [])).map((post) => ({
