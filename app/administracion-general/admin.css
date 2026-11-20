@@ -24,6 +24,13 @@
   --adm-font-body:    var(--font-montserrat, 'Montserrat', -apple-system, sans-serif);
 }
 
+/* El sitio público reserva espacio arriba del body para su Topbar fija;
+   en el admin no hay Topbar, así que se anula ese espacio. */
+body:has(.adm-root),
+body:has(.adm-login-wrapper) {
+  padding-top: 0;
+}
+
 /* ---- Reset dentro del hub ---- */
 .adm-root *, .adm-login-wrapper * {
   box-sizing: border-box;

@@ -68,10 +68,6 @@ export default function AdminDashboard() {
             ))}
           </div>
         </div>
-
-        <div className="adm-alert adm-alert-info">
-          Los cambios en blog y recursos se guardan en archivos locales. Hac&eacute; <code style={{ background: "rgba(139,26,74,.1)", padding: "1px 6px", borderRadius: 4 }}>git push</code> para que aparezcan en producci&oacute;n.
-        </div>
       </div>
     </>
   );
