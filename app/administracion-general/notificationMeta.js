@@ -4,6 +4,12 @@ export const TYPE_META = {
   post_notified: { icon: "✎", label: "Nota avisada", color: "#7c3aed" },
   sale: { icon: "$", label: "Venta", color: "#17663e" },
   refund: { icon: "↩", label: "Reembolso", color: "#a3302a" },
+  // Marketing
+  marketing_reminder: { icon: "▦", label: "Calendario", color: "#0a66c2" },
+  marketing_weekly: { icon: "↗", label: "Resumen semanal", color: "#8b1a4a" },
+  metrics_issue: { icon: "!", label: "Métricas", color: "#c0392b" },
+  testimonial: { icon: "❦", label: "Testimonio", color: "#d99a3e" },
+  sponsor: { icon: "◇", label: "Sponsor", color: "#7c3aed" },
 };
 
 export function typeMeta(type) {
