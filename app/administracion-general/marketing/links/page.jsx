@@ -1,12 +1,8 @@
-import EnConstruccion from "../EnConstruccion";
+import LinksAdmin from "./LinksAdmin";
+import "./links-admin.css";
 
 export const metadata = { title: "Links · Hub" };
 
 export default function Page() {
-  return (
-    <EnConstruccion
-      title="Links"
-      description="Página de links de la bio, links cortos con tracking y recursos por campaña."
-    />
-  );
+  return <LinksAdmin />;
 }
