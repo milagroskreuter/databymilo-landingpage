@@ -1,5 +1,13 @@
 import { NextResponse } from "next/server";
 
+// Comparación en tiempo constante (el runtime edge no trae timingSafeEqual).
+function safeEqual(a, b) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
@@ -12,7 +20,7 @@ export function middleware(request) {
     const token = request.cookies.get("admin_token")?.value;
     const secret = process.env.ADMIN_SESSION_SECRET;
 
-    if (!token || !secret || token !== secret) {
+    if (!token || !secret || !safeEqual(token, secret)) {
       if (isAdminApi) {
         return Response.json({ error: "No autorizado" }, { status: 401 });
       }
