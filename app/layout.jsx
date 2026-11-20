@@ -121,11 +121,18 @@ export default function RootLayout({ children }) {
         <PublicOnly><Topbar /></PublicOnly>
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
         <Analytics />
-        {/* Google Tag Manager, después de hidratar para no frenar la primera carga.
-            GA4 (G-G8FD6CSP2G) se carga desde el contenedor de GTM: antes también se
-            cargaba directo acá y cada visita se contaba dos veces. */}
+        {/* Google Tag Manager y Google Analytics, después de hidratar para no frenar
+            la primera carga. GA4 se carga directo: el contenedor de GTM no tiene un tag
+            de GA4, así que sin este snippet no se registran visitas. */}
         <Script id="gtm" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TJFMZ3JG');`}
+        </Script>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-G8FD6CSP2G"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-G8FD6CSP2G');`}
         </Script>
       </body>
     </html>
