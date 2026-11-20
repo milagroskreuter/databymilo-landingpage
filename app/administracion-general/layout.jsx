@@ -31,6 +31,15 @@ export default function AdminLayout({ children }) {
 
   if (pathname === "/administracion-general/login") return <>{children}</>;
 
+  // Solo un item activo: el de la ruta más específica que coincida
+  // (así /newsletter/compose no marca también /newsletter).
+  const activeHref = NAV.filter(
+    (item) =>
+      item.href &&
+      (pathname === item.href ||
+        (item.href !== "/administracion-general" && pathname.startsWith(item.href + "/")))
+  ).reduce((best, item) => (item.href.length > best.length ? item.href : best), "");
+
   return (
     <AdminToastProvider>
     <div className="adm-root">
@@ -48,10 +57,7 @@ export default function AdminLayout({ children }) {
             if (item.section) {
               return <div key={i} className="adm-nav-section">{item.section}</div>;
             }
-            const isActive =
-              item.href === "/administracion-general"
-                ? pathname === "/administracion-general"
-                : pathname.startsWith(item.href);
+            const isActive = item.href === activeHref;
             return (
               <Link
                 key={item.href}
