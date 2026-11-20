@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const TABS = ["Suscriptoras", "Historial de envíos", "Edición Corpo"];
+import ListSubscribersPanel from "../ListSubscribersPanel";
 
 function StatCard({ label, value, sub, color }) {
   return (
@@ -41,7 +41,8 @@ function MetricPill({ label, value }) {
 }
 
 export default function NewsletterPage() {
-  const [tab, setTab] = useState(0);
+  // "carta" | "history" | "list:<slug>"
+  const [tab, setTab] = useState("carta");
   const [data, setData] = useState(null);
   const [broadcasts, setBroadcasts] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -72,31 +73,24 @@ export default function NewsletterPage() {
     setBLoading(false);
   }
 
-  // Lista "Edición Corpo": avisos de notas nuevas del blog
-  const [corpo, setCorpo] = useState(null);
-  const [cLoading, setCLoading] = useState(false);
+  // Listas que viven en Supabase (Edición Corpo + las personalizadas): una pestaña por lista
+  const [otherLists, setOtherLists] = useState([]);
 
-  async function loadCorpo() {
-    setCLoading(true);
-    const res = await fetch("/api/admin/corpo/subscribers");
-    if (res.ok) setCorpo(await res.json());
-    setCLoading(false);
-  }
+  useEffect(() => {
+    fetch("/api/admin/lists?names=1")
+      .then((r) => (r.ok ? r.json() : { lists: [] }))
+      .then((d) => setOtherLists((d.lists || []).filter((l) => l.source !== "resend")))
+      .catch(() => {});
+  }, []);
 
-  async function handleRemoveCorpo(email) {
-    if (!confirm(`¿Eliminar ${email} de Edición Corpo?`)) return;
-    const res = await fetch("/api/admin/corpo/subscribers", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    if (res.ok) { setMsg({ type: "success", text: `${email} eliminada de Edición Corpo` }); loadCorpo(); }
-    else setMsg({ type: "error", text: "Error al eliminar" });
-  }
+  // /newsletter?lista=<slug> abre directo la pestaña de esa lista
+  useEffect(() => {
+    const l = new URLSearchParams(window.location.search).get("lista");
+    if (l) setTab(l === "carta" ? "carta" : `list:${l}`);
+  }, []);
 
   useEffect(() => { loadContacts(); }, []);
-  useEffect(() => { if (tab === 1 && !broadcasts) loadBroadcasts(); }, [tab]);
-  useEffect(() => { if (tab === 2 && !corpo) loadCorpo(); }, [tab]);
+  useEffect(() => { if (tab === "history" && !broadcasts) loadBroadcasts(); }, [tab]);
 
   async function handleRemove(id, email) {
     if (!confirm(`¿Eliminar ${email} de la lista?`)) return;
@@ -183,7 +177,8 @@ export default function NewsletterPage() {
     const matchFilter =
       filter === "all" ||
       (filter === "active" && !c.unsubscribed) ||
-      (filter === "unsub" && c.unsubscribed);
+      (filter === "unsub" && c.unsubscribed) ||
+      (filter === "both" && c.inBoth);
     return matchSearch && matchFilter;
   });
 
@@ -206,7 +201,8 @@ export default function NewsletterPage() {
           </div>
         )}
 
-        {/* KPIs */}
+        {/* KPIs (de La carta del domingo) */}
+        {tab === "carta" && (
         <div className="adm-stats-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(130px,1fr))", marginBottom: 24 }}>
           <StatCard label="Total suscriptoras" value={data?.total} sub="en la lista" />
           <StatCard label="Activas" value={data?.active} sub="reciben emails" color="var(--adm-primary)" />
@@ -215,31 +211,43 @@ export default function NewsletterPage() {
             value={data ? (data.total - data.active) : null}
             sub="ya no reciben"
           />
+          <StatCard label="En ambas listas" value={data ? contacts.filter(c => c.inBoth).length : null} sub="carta + edición corpo" color="var(--adm-accent)" />
           <StatCard label="Emails enviados" value={bList.filter(b => b.status === "sent").length || (bLoading ? "…" : "—")} sub="broadcasts" />
         </div>
+        )}
 
-        {/* Tabs */}
-        <div style={{ display: "flex", gap: 0, borderBottom: "2px solid var(--adm-border)", marginBottom: 20 }}>
-          {TABS.map((t, i) => (
+        {/* Tabs: una por lista + historial */}
+        <div style={{ display: "flex", gap: 0, borderBottom: "2px solid var(--adm-border)", marginBottom: 20, flexWrap: "wrap" }}>
+          {[
+            { key: "carta", label: "La carta del domingo" },
+            ...otherLists.map((l) => ({ key: `list:${l.slug}`, label: l.name })),
+            { key: "history", label: "Historial de envíos" },
+          ].map((t) => (
             <button
-              key={i}
-              onClick={() => setTab(i)}
+              key={t.key}
+              onClick={() => setTab(t.key)}
               style={{
                 background: "none", border: "none", cursor: "pointer",
                 padding: "10px 20px",
-                fontFamily: "var(--adm-font-body)", fontSize: 13, fontWeight: tab === i ? 700 : 400,
-                color: tab === i ? "var(--adm-primary)" : "var(--adm-fg-muted)",
-                borderBottom: tab === i ? "2px solid var(--adm-primary)" : "2px solid transparent",
+                fontFamily: "var(--adm-font-body)", fontSize: 13, fontWeight: tab === t.key ? 700 : 400,
+                color: tab === t.key ? "var(--adm-primary)" : "var(--adm-fg-muted)",
+                borderBottom: tab === t.key ? "2px solid var(--adm-primary)" : "2px solid transparent",
                 marginBottom: -2,
               }}
             >
-              {t}
+              {t.label}
             </button>
           ))}
+          <Link
+            href="/administracion-general/listas"
+            style={{ marginLeft: "auto", alignSelf: "center", fontSize: 12, fontWeight: 600, color: "var(--adm-primary)", textDecoration: "none", padding: "0 4px" }}
+          >
+            + Crear o gestionar listas
+          </Link>
         </div>
 
-        {/* TAB: Suscriptoras */}
-        {tab === 0 && (
+        {/* TAB: La carta del domingo */}
+        {tab === "carta" && (
           <div className="adm-table-wrap" style={{ padding: 0 }}>
             {/* Toolbar */}
             <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--adm-border)", display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
@@ -259,6 +267,7 @@ export default function NewsletterPage() {
                 <option value="all">Todas ({data?.total ?? "…"})</option>
                 <option value="active">Activas ({data?.active ?? "…"})</option>
                 <option value="unsub">Desuscriptas ({data ? data.total - data.active : "…"})</option>
+                <option value="both">En ambas listas ({data ? contacts.filter(c => c.inBoth).length : "…"})</option>
               </select>
               <div style={{ flex: 1 }} />
               <button
@@ -334,6 +343,15 @@ export default function NewsletterPage() {
                         <td style={{ color: "var(--adm-fg-muted)" }}>{[c.first_name, c.last_name].filter(Boolean).join(" ") || "—"}</td>
                         <td>
                           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+                            {c.inBoth && (
+                              <span
+                                className="adm-badge"
+                                title="Está activa en La carta del domingo y en Edición Corpo"
+                                style={{ fontSize: 10, background: "var(--adm-accent)", color: "#fff", border: "1px solid var(--adm-accent)" }}
+                              >
+                                ✦ ambas listas
+                              </span>
+                            )}
                             {(c.tags || []).map(t => (
                               <span key={t} className="adm-badge adm-badge-primary" style={{ fontSize: 10 }}>{t}</span>
                             ))}
@@ -409,7 +427,7 @@ export default function NewsletterPage() {
         )}
 
         {/* TAB: Historial */}
-        {tab === 1 && (
+        {tab === "history" && (
           <div className="adm-table-wrap" style={{ padding: 0 }}>
             {bLoading ? (
               <div style={{ padding: 32, textAlign: "center", color: "var(--adm-fg-muted)" }}>Cargando historial…</div>
@@ -473,58 +491,9 @@ export default function NewsletterPage() {
           </div>
         )}
 
-        {/* TAB: Edición Corpo */}
-        {tab === 2 && (
-          <div className="adm-table-wrap" style={{ padding: 0 }}>
-            <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--adm-border)", fontSize: 12, color: "var(--adm-fg-2)", lineHeight: 1.6 }}>
-              Estas personas pidieron que les avisen cada vez que subís una nota nueva al blog.
-              El aviso sale solo al publicar. Hoy hay{" "}
-              <strong>{corpo ? corpo.active : "…"}</strong> activas de{" "}
-              <strong>{corpo ? corpo.total : "…"}</strong> en total.
-            </div>
-            {cLoading && !corpo ? (
-              <div style={{ padding: 32, textAlign: "center", color: "var(--adm-fg-muted)" }}>Cargando…</div>
-            ) : (corpo?.subscribers ?? []).length === 0 ? (
-              <div style={{ padding: 40, textAlign: "center", color: "var(--adm-fg-muted)", fontFamily: "var(--adm-font-body)" }}>
-                <div style={{ fontSize: 32, marginBottom: 12 }}>✎</div>
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>Todavía no hay suscriptoras a Edición Corpo</div>
-                <div style={{ fontSize: 12 }}>Aparecen cuando alguien tilda la opción en un formulario o se suma desde el blog.</div>
-              </div>
-            ) : (
-              <table className="adm-table">
-                <thead>
-                  <tr>
-                    <th>Email</th>
-                    <th>Nombre</th>
-                    <th>Desde</th>
-                    <th>Estado</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {corpo.subscribers.map((s) => (
-                    <tr key={s.email}>
-                      <td style={{ fontWeight: 500 }}>{s.email}</td>
-                      <td style={{ color: "var(--adm-fg-muted)" }}>{s.first_name || "—"}</td>
-                      <td style={{ color: "var(--adm-fg-muted)", fontSize: 12, whiteSpace: "nowrap" }}>
-                        {new Date(s.created_at).toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" })}
-                      </td>
-                      <td>
-                        <span className={`adm-badge ${s.subscribed ? "adm-badge-active" : "adm-badge-inactive"}`}>
-                          {s.subscribed ? "Activa" : "Desuscripta"}
-                        </span>
-                      </td>
-                      <td style={{ textAlign: "right" }}>
-                        <button className="adm-btn adm-btn-danger adm-btn-sm" onClick={() => handleRemoveCorpo(s.email)}>
-                          Eliminar
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+        {/* TAB: listas de Supabase (Edición Corpo y personalizadas) */}
+        {tab.startsWith("list:") && (
+          <ListSubscribersPanel key={tab} slug={tab.slice(5)} />
         )}
       </div>
     </>

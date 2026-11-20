@@ -1,4 +1,7 @@
 import { Resend } from "resend";
+import { getSupabaseAdmin } from "@/lib/supabase";
+import { listAllContacts } from "@/lib/resend-contacts";
+import { getList, fetchSubscribers, listUnsubUrl } from "@/lib/lists";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +17,9 @@ function inlineFormat(text) {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#8b1a4a;text-decoration:underline;">$1</a>');
 }
 
-function buildHtml(subject, body, headerStyle = "oscuro") {
-  const unsubPlaceholder = "{{ RESEND_UNSUBSCRIBE_URL }}";
+function buildHtml(subject, body, headerStyle = "oscuro", unsubUrl) {
+  // En broadcasts Resend reemplaza el placeholder; en envíos individuales hay que pasar el link real.
+  const unsubPlaceholder = unsubUrl || "{{ RESEND_UNSUBSCRIBE_URL }}";
 
   const headerHtml = headerStyle === "claro"
     ? `<tr><td style="background:linear-gradient(135deg,#fce8f0 0%,#fdf5ec 100%);border-radius:12px 12px 0 0;padding:32px 40px;text-align:center;border-bottom:1px solid rgba(139,26,74,.12);">
@@ -142,7 +146,7 @@ function interpolate(text, contact) {
 }
 
 export async function POST(request) {
-  const { subject, subjectB, body, sendAt, to, tagFilter, headerStyle } = await request.json().catch(() => ({}));
+  const { subject, subjectB, body, sendAt, to, tagFilter, headerStyle, listSlug } = await request.json().catch(() => ({}));
   if (!subject || !body) {
     return Response.json({ error: "Faltan subject o body" }, { status: 400 });
   }
@@ -150,14 +154,63 @@ export async function POST(request) {
 
   const resend = new Resend(process.env.RESEND_API_KEY);
 
+  // Envío a una lista de Supabase (Edición Corpo o una lista personalizada).
+  // La carta del domingo sigue usando la audiencia de Resend (más abajo).
+  if (listSlug && listSlug !== "carta" && !to) {
+    if (sendAt) {
+      return Response.json(
+        { error: "Las listas todavía no admiten envíos programados. Enviá ahora." },
+        { status: 400 }
+      );
+    }
+    if (subjectB) {
+      return Response.json({ error: "El test A/B solo está disponible para La carta del domingo." }, { status: 400 });
+    }
+
+    const supabase = getSupabaseAdmin();
+    const list = await getList(supabase, listSlug).catch(() => null);
+    if (!list) return Response.json({ error: "Esa lista no existe" }, { status: 404 });
+
+    const subs = await fetchSubscribers(supabase, listSlug, { onlyActive: true });
+    if (subs.length === 0) {
+      return Response.json({ error: `"${list.name}" todavía no tiene suscriptoras activas.` }, { status: 400 });
+    }
+
+    let sent = 0;
+    let firstError = null;
+    for (let i = 0; i < subs.length; i += 100) {
+      const chunk = subs.slice(i, i + 100);
+      const { error } = await resend.batch.send(
+        chunk.map((s) => {
+          const contact = { email: s.email, firstName: s.first_name || "" };
+          const unsub = listUnsubUrl(s.email, listSlug);
+          return {
+            from: "Milo · Data by Milo <hola@databymilo.me>",
+            to: s.email,
+            replyTo: "hola@databymilo.me",
+            subject: interpolate(subject, contact),
+            html: buildHtml(interpolate(subject, contact), interpolate(body, contact), hs, unsub),
+            headers: { "List-Unsubscribe": `<${unsub}>` },
+          };
+        })
+      );
+      if (error) firstError = firstError || error;
+      else sent += chunk.length;
+    }
+
+    if (sent === 0) {
+      return Response.json({ error: firstError?.message || "Error al enviar" }, { status: 500 });
+    }
+    return Response.json({ ok: true, mode: "list", list: list.name, sent, total: subs.length });
+  }
+
   // A/B testing: split audience and send two subjects
   if (subjectB && !to) {
-    const { data: audienceData } = await resend.contacts.list({ audienceId: AUDIENCE_ID });
-    let contacts = (audienceData?.data ?? []).filter(c => !c.unsubscribed);
+    const allContacts = await listAllContacts(resend, AUDIENCE_ID);
+    let contacts = allContacts.filter(c => !c.unsubscribed);
 
     // Apply tag filter if requested
     if (tagFilter) {
-      const { getSupabaseAdmin } = await import("@/lib/supabase");
       const supabase = getSupabaseAdmin();
       const { data: tags } = await supabase.from("contact_tags").select("email, tags").contains("tags", [tagFilter]);
       const tagEmails = new Set((tags || []).map(t => t.email));
@@ -174,7 +227,7 @@ export async function POST(request) {
           from: "Milo · Data by Milo <hola@databymilo.me>",
           to: c.email, replyTo: "hola@databymilo.me",
           subject: interpolate(subj, c),
-          html: buildHtml(interpolate(subj, c), interpolate(body, c), hs),
+          html: buildHtml(interpolate(subj, c), interpolate(body, c), hs, listUnsubUrl(c.email, "carta")),
           scheduledAt: sendAt || undefined,
         })
       ));
@@ -186,20 +239,19 @@ export async function POST(request) {
 
   // Send to contacts with a specific tag
   if (tagFilter && !to && !subjectB) {
-    const { getSupabaseAdmin } = await import("@/lib/supabase");
     const supabase = getSupabaseAdmin();
     const { data: tags } = await supabase.from("contact_tags").select("email").contains("tags", [tagFilter]);
     const tagEmails = new Set((tags || []).map(t => t.email));
 
-    const { data: audienceData } = await resend.contacts.list({ audienceId: AUDIENCE_ID });
-    const filtered = (audienceData?.data ?? []).filter(c => !c.unsubscribed && tagEmails.has(c.email));
+    const allContacts = await listAllContacts(resend, AUDIENCE_ID);
+    const filtered = allContacts.filter(c => !c.unsubscribed && tagEmails.has(c.email));
 
     const results = await Promise.allSettled(filtered.map(c =>
       resend.emails.send({
         from: "Milo · Data by Milo <hola@databymilo.me>",
         to: c.email, replyTo: "hola@databymilo.me",
         subject: interpolate(subject, c),
-        html: buildHtml(interpolate(subject, c), interpolate(body, c), hs),
+        html: buildHtml(interpolate(subject, c), interpolate(body, c), hs, listUnsubUrl(c.email, "carta")),
         scheduledAt: sendAt || undefined,
       })
     ));
@@ -218,7 +270,7 @@ export async function POST(request) {
           to: toEmail,
           replyTo: "hola@databymilo.me",
           subject: interpolate(subject, contact),
-          html: buildHtml(interpolate(subject, contact), interpolate(body, contact), hs),
+          html: buildHtml(interpolate(subject, contact), interpolate(body, contact), hs, listUnsubUrl(toEmail, "carta")),
           scheduledAt: sendAt || undefined,
         });
       })

@@ -10,6 +10,7 @@ const NAV = [
   { href: "/administracion-general/notificaciones", label: "Notificaciones", icon: "◈" },
   { section: "Newsletter" },
   { href: "/administracion-general/newsletter", label: "Suscriptores", icon: "✉" },
+  { href: "/administracion-general/listas", label: "Listas", icon: "☰" },
   { href: "/administracion-general/newsletter/compose", label: "Escribir email", icon: "✦" },
   { section: "Contenido" },
   { href: "/administracion-general/blog", label: "Blog", icon: "✎" },

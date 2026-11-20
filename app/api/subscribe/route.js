@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { rateLimit, getIp } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase";
-import { subscribeCorpo, LISTS } from "@/lib/corpo";
+import { getLists, subscribeToList } from "@/lib/lists";
 import { notifyAdmin } from "@/lib/notify";
 
 export const dynamic = "force-dynamic";
@@ -62,32 +62,45 @@ export async function POST(request) {
   let lists = ["carta"];
   if (body?.lists !== undefined) {
     lists = Array.isArray(body.lists)
-      ? [...new Set(body.lists.filter((l) => typeof l === "string" && l in LISTS))]
+      ? [...new Set(body.lists.filter((l) => typeof l === "string" && l.length <= 40))]
       : [];
     if (lists.length === 0) {
       return Response.json({ error: "Elegí al menos una lista" }, { status: 400 });
     }
   }
 
-  const statuses = {};
-  const failed = [];
-
-  if (lists.includes("carta")) {
+  // Nombres de las listas y validación: solo se acepta "carta" y listas activas.
+  const names = { carta: "La carta del domingo" };
+  const needsDb = lists.some((l) => l !== "carta");
+  let supabase = null;
+  if (needsDb) {
     try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      statuses.carta = await subscribeCarta(resend, email, firstName);
+      supabase = getSupabaseAdmin();
+      const open = await getLists(supabase, { onlyActive: true });
+      for (const l of open) names[l.slug] = l.name;
     } catch (err) {
-      console.error("Subscribe carta error:", err);
-      failed.push("carta");
+      console.error("Subscribe lists error:", err);
+      return Response.json({ error: "No se pudo guardar" }, { status: 500 });
+    }
+    if (lists.some((l) => !names[l])) {
+      return Response.json({ error: "Esa lista no está disponible" }, { status: 400 });
     }
   }
 
-  if (lists.includes("corpo")) {
+  const statuses = {};
+  const failed = [];
+
+  for (const slug of lists) {
     try {
-      statuses.corpo = await subscribeCorpo(getSupabaseAdmin(), email, firstName);
+      if (slug === "carta") {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        statuses.carta = await subscribeCarta(resend, email, firstName);
+      } else {
+        statuses[slug] = await subscribeToList(supabase, slug, email, firstName);
+      }
     } catch (err) {
-      console.error("Subscribe corpo error:", err);
-      failed.push("corpo");
+      console.error(`Subscribe ${slug} error:`, err);
+      failed.push(slug);
     }
   }
 
@@ -100,13 +113,13 @@ export async function POST(request) {
   const changed = Object.entries(statuses).filter(([, s]) => s !== "existing");
   if (changed.length > 0) {
     const allBack = changed.every(([, s]) => s === "resubscribed");
-    const names = changed.map(([l]) => LISTS[l]).join(" y ");
+    const listNames = changed.map(([l]) => names[l]).join(" y ");
     await notifyAdmin({
       type: "subscribe",
       title: `${allBack ? "Volvió a suscribirse" : "Nueva suscripción"}: ${email}`,
       body: [
         firstName ? `Nombre: ${firstName}` : null,
-        `Lista${changed.length > 1 ? "s" : ""}: ${names}`,
+        `Lista${changed.length > 1 ? "s" : ""}: ${listNames}`,
       ]
         .filter(Boolean)
         .join("\n"),

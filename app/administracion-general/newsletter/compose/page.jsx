@@ -195,7 +195,9 @@ export default function ComposePage() {
   const [tipIndex] = useState(() => Math.floor(Math.random() * TIPS.length));
   const [headerStyle, setHeaderStyle] = useState("oscuro");
 
+  // "all" = La carta del domingo · "list:<slug>" = otra lista · "search" = contactos puntuales
   const [sendMode, setSendMode] = useState("all");
+  const [sendLists, setSendLists] = useState([]);
   const [contactSearch, setContactSearch] = useState("");
   const [contacts, setContacts] = useState(null);
   const [selectedContacts, setSelectedContacts] = useState([]);
@@ -321,6 +323,21 @@ export default function ComposePage() {
     return () => clearTimeout(draftTimer.current);
   }, [subject, body, headerStyle, sendAt, view, draftId]);
 
+  // Listas de Supabase disponibles como destino; ?lista=<slug> la deja preseleccionada
+  useEffect(() => {
+    fetch("/api/admin/lists?names=1")
+      .then((r) => (r.ok ? r.json() : { lists: [] }))
+      .then((d) => {
+        const others = (d.lists || []).filter((l) => l.source !== "resend");
+        setSendLists(others);
+        const wanted = new URLSearchParams(window.location.search).get("lista");
+        if (wanted && wanted !== "carta" && others.some((l) => l.slug === wanted)) {
+          setSendMode(`list:${wanted}`);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     if (sendMode === "search" && !contacts) {
       fetch("/api/admin/newsletter/contacts")
@@ -361,12 +378,22 @@ export default function ComposePage() {
   async function handleSend(e) {
     e.preventDefault();
     const isAll = sendMode === "all";
-    const recipients = isAll ? null : selectedContacts;
-    if (!isAll && (!recipients || recipients.length === 0)) {
+    const isList = sendMode.startsWith("list:");
+    const listObj = isList ? sendLists.find((l) => `list:${l.slug}` === sendMode) : null;
+    const recipients = isAll || isList ? null : selectedContacts;
+    if (!isAll && !isList && (!recipients || recipients.length === 0)) {
       setMsg({ type: "error", text: "Seleccioná al menos un destinatario." });
       return;
     }
-    const dest = isAll ? "todas las suscriptoras activas" : recipients.length === 1 ? recipients[0].email : `${recipients.length} destinatarias`;
+    if (isList && sendAt) {
+      setMsg({ type: "error", text: "Las listas todavía no admiten envíos programados. Sacá la fecha y enviá ahora." });
+      return;
+    }
+    const dest = isAll
+      ? "todas las suscriptoras activas"
+      : isList
+        ? `todas las suscriptoras activas de "${listObj?.name || "la lista"}"`
+        : recipients.length === 1 ? recipients[0].email : `${recipients.length} destinatarias`;
     if (!confirm(`¿Enviar este email a ${dest}${sendAt ? " el " + new Date(sendAt).toLocaleString("es-AR") : " ahora"}?`)) return;
 
     setLoading(true);
@@ -374,9 +401,10 @@ export default function ComposePage() {
 
     const payload = { subject, body, headerStyle };
     if (sendAt) payload.sendAt = new Date(sendAt).toISOString();
-    if (showAB && subjectB.trim()) payload.subjectB = subjectB.trim();
-    if (tagFilter) payload.tagFilter = tagFilter;
-    if (!isAll) {
+    if (isAll && showAB && subjectB.trim()) payload.subjectB = subjectB.trim();
+    if (isAll && tagFilter) payload.tagFilter = tagFilter;
+    if (isList) payload.listSlug = sendMode.slice(5);
+    if (!isAll && !isList) {
       payload.to = recipients.map(c => ({ email: c.email, firstName: c.first_name || "", lastName: c.last_name || "" }));
     }
 
@@ -497,9 +525,18 @@ export default function ComposePage() {
                 <div className="adm-form-group">
                   <label className="adm-label">Para</label>
                   <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-                    <button type="button" onClick={() => { setSendMode("all"); setSelectedContacts([]); }} className={`adm-btn adm-btn-sm ${sendMode === "all" ? "adm-btn-primary" : "adm-btn-secondary"}`}>Toda la lista activa</button>
+                    <button type="button" onClick={() => { setSendMode("all"); setSelectedContacts([]); }} className={`adm-btn adm-btn-sm ${sendMode === "all" ? "adm-btn-primary" : "adm-btn-secondary"}`}>La carta del domingo</button>
+                    {sendLists.map((l) => (
+                      <button key={l.slug} type="button" onClick={() => { setSendMode(`list:${l.slug}`); setSelectedContacts([]); }} className={`adm-btn adm-btn-sm ${sendMode === `list:${l.slug}` ? "adm-btn-primary" : "adm-btn-secondary"}`}>{l.name}</button>
+                    ))}
                     <button type="button" onClick={() => setSendMode("search")} className={`adm-btn adm-btn-sm ${sendMode === "search" ? "adm-btn-primary" : "adm-btn-secondary"}`}>Contacto específico</button>
                   </div>
+                  {sendMode.startsWith("list:") && (
+                    <div style={{ fontSize: 11, color: "var(--adm-fg-muted)", marginBottom: 6, lineHeight: 1.5 }}>
+                      Se envía solo a las suscriptoras activas de esta lista, cada una con su propio link para darse de baja.
+                      Las listas no admiten envío programado ni test A/B por ahora.
+                    </div>
+                  )}
                   {sendMode === "search" && (
                     <div>
                       <input className="adm-input" placeholder="Buscar por nombre o email…" value={contactSearch} onChange={e => setContactSearch(e.target.value)} style={{ marginBottom: 6 }} />
@@ -541,11 +578,11 @@ export default function ComposePage() {
                     <label className="adm-label" style={{ margin: 0 }}>Asunto</label>
                     <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
                       <span style={{ fontSize: 11, fontFamily: "var(--adm-font-body)", color: subjectLen > 60 ? "#b82020" : subjectLen > 40 ? "#c97a00" : "var(--adm-fg-muted)" }}>{subjectLen}/60</span>
-                      <button type="button" onClick={() => setShowAB(v => !v)} style={{ fontSize: 10, fontFamily: "var(--adm-font-body)", background: showAB ? "var(--adm-primary)" : "none", color: showAB ? "#fff" : "var(--adm-primary)", border: "1px solid var(--adm-primary)", borderRadius: 4, padding: "1px 8px", cursor: "pointer", fontWeight: 700 }}>A/B</button>
+                      {sendMode === "all" && <button type="button" onClick={() => setShowAB(v => !v)} style={{ fontSize: 10, fontFamily: "var(--adm-font-body)", background: showAB ? "var(--adm-primary)" : "none", color: showAB ? "#fff" : "var(--adm-primary)", border: "1px solid var(--adm-primary)", borderRadius: 4, padding: "1px 8px", cursor: "pointer", fontWeight: 700 }}>A/B</button>}
                     </div>
                   </div>
                   <input className="adm-input" value={subject} onChange={e => setSubject(e.target.value)} placeholder="la carta del domingo · 17 nov" required />
-                  {showAB && (
+                  {sendMode === "all" && showAB && (
                     <div style={{ marginTop: 8 }}>
                       <label className="adm-label" style={{ fontSize: 11, marginBottom: 4 }}>Asunto alternativo (versión B — 50% de la lista)</label>
                       <input className="adm-input" value={subjectB} onChange={e => setSubjectB(e.target.value)} placeholder="otra variante del asunto…" />
@@ -563,7 +600,7 @@ export default function ComposePage() {
                 </div>
 
                 {/* Tag filter */}
-                {availableTags.length > 0 && (
+                {sendMode === "all" && availableTags.length > 0 && (
                   <div className="adm-form-group">
                     <label className="adm-label">Enviar solo a segmento (opcional)</label>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>

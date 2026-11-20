@@ -1,13 +1,40 @@
 import Link from "next/link";
 import Footer from "../components/sections/Footer";
+import { getSupabaseAdmin } from "@/lib/supabase";
+import { getList } from "@/lib/lists";
 
 export const metadata = {
   title: "Te diste de baja",
   robots: { index: false },
 };
 
-export default function DesuscribirsePage({ searchParams }) {
-  const isCorpo = searchParams?.l === "corpo";
+export const dynamic = "force-dynamic";
+
+export default async function DesuscribirsePage({ searchParams }) {
+  const slug = typeof searchParams?.l === "string" ? searchParams.l : "";
+  const isCorpo = slug === "corpo";
+
+  // Listas personalizadas: se muestra el nombre de la lista de la que se dio de baja
+  let customName = null;
+  if (slug && slug !== "carta" && !isCorpo && slug.length <= 40) {
+    try {
+      const list = await getList(getSupabaseAdmin(), slug);
+      customName = list?.name ?? null;
+    } catch {}
+  }
+
+  const message = isCorpo
+    ? "Listo, no te aviso más cuando suba una nota nueva. Si seguís en la carta del domingo, esos mails siguen llegando."
+    : customName
+      ? `Listo, saliste de "${customName}". Si seguís en otras listas, esos mails siguen llegando.`
+      : "No más mails de mi parte. Hasta cuando quieras — los recursos siguen disponibles sin necesidad de nada.";
+  const href = isCorpo ? "/blog" : customName ? "/" : "/recursos";
+  const cta = isCorpo
+    ? "Ir a la edición corpo →"
+    : customName
+      ? "Volver al inicio →"
+      : "Ver la biblioteca de recursos →";
+
   return (
     <>
       <main>
@@ -53,13 +80,11 @@ export default function DesuscribirsePage({ searchParams }) {
               lineHeight: 1.6,
               margin: "0 0 40px",
             }}>
-              {isCorpo
-                ? "Listo, no te aviso más cuando suba una nota nueva. Si seguís en la carta del domingo, esos mails siguen llegando."
-                : "No más mails de mi parte. Hasta cuando quieras — los recursos siguen disponibles sin necesidad de nada."}
+              {message}
             </p>
 
             <Link
-              href={isCorpo ? "/blog" : "/recursos"}
+              href={href}
               style={{
                 fontFamily: "var(--font-body)",
                 fontWeight: 700,
@@ -72,7 +97,7 @@ export default function DesuscribirsePage({ searchParams }) {
                 paddingBottom: 2,
               }}
             >
-              {isCorpo ? "Ir a la edición corpo →" : "Ver la biblioteca de recursos →"}
+              {cta}
             </Link>
           </section>
         </div>
