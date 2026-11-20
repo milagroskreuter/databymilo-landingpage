@@ -128,7 +128,7 @@ export async function POST(request) {
   try {
     const { data: existing } = await supabase
       .from("sales")
-      .select("status")
+      .select("status, price")
       .eq("transaction", transaction)
       .maybeSingle();
     const prev = existing?.status ?? null;
@@ -161,12 +161,24 @@ export async function POST(request) {
     const { error } = await supabase.from("sales").upsert(row, { onConflict: "transaction" });
     if (error) throw new Error(error.message);
 
-    const wasPaid = PAID_STATUSES.includes(prev);
     const isPaid = PAID_STATUSES.includes(nextStatus);
-    const amount = money(row.price ?? null, row.currency);
+    const amount = money(row.price ?? existing?.price ?? null, row.currency);
+
+    // Cada aviso sale una sola vez: se "reclama" la marca con un update condicional,
+    // así si Hotmart manda dos avisos a la vez, solo el primero que la marca avisa.
+    async function claim(column) {
+      const { data: claimed, error: claimError } = await supabase
+        .from("sales")
+        .update({ [column]: new Date().toISOString() })
+        .eq("transaction", transaction)
+        .is(column, null)
+        .select("transaction");
+      if (claimError) throw new Error(claimError.message);
+      return (claimed?.length ?? 0) > 0;
+    }
 
     // 2) Venta nueva
-    if (isPaid && !wasPaid) {
+    if (isPaid && (await claim("notified_sale_at"))) {
       if (email && !isTest) {
         const { error: listError } = await supabase.from("list_subscribers").upsert(
           { list_slug: BUYERS_LIST, email, first_name: buyer.first_name || buyer.name || null, subscribed: true },
@@ -186,8 +198,8 @@ export async function POST(request) {
       });
     }
 
-    // 3) Reembolso o contracargo de una venta que estaba cobrada
-    if (REVERSED.has(nextStatus) && prev !== nextStatus) {
+    // 3) Reembolso o contracargo (las pruebas de Hotmart no avisan: ya avisó "Prueba recibida")
+    if (REVERSED.has(nextStatus) && !isTest && (await claim("notified_refund_at"))) {
       await notifyAdmin({
         type: "refund",
         title: `${nextStatus === "chargeback" ? "Contracargo" : "Reembolso"}: ${product.name || "producto"}${amount ? ` · ${amount}` : ""}`,
