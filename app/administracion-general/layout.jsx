@@ -2,10 +2,12 @@
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { AdminToastProvider } from "./AdminToast";
+import NotificationBell from "./NotificationBell";
 import "./admin.css";
 
 const NAV = [
   { href: "/administracion-general", label: "Dashboard", icon: "◆" },
+  { href: "/administracion-general/notificaciones", label: "Notificaciones", icon: "◈" },
   { section: "Newsletter" },
   { href: "/administracion-general/newsletter", label: "Suscriptores", icon: "✉" },
   { href: "/administracion-general/newsletter/compose", label: "Escribir email", icon: "✦" },
@@ -33,8 +35,11 @@ export default function AdminLayout({ children }) {
     <div className="adm-root">
       <aside className="adm-sidebar">
         <div className="adm-logo">
-          <span className="adm-logo-brand">Data by Milo</span>
-          <span className="adm-logo-label">Hub de admin</span>
+          <div>
+            <span className="adm-logo-brand">Data by Milo</span>
+            <span className="adm-logo-label">Hub de admin</span>
+          </div>
+          <NotificationBell />
         </div>
 
         <nav className="adm-nav">

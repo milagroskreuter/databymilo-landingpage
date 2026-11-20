@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import CorpoCheckbox from "./CorpoCheckbox";
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
@@ -11,6 +12,7 @@ export default function NewsletterPopup() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
+  const [corpo, setCorpo] = useState(false);
 
   useEffect(() => {
     try {
@@ -51,7 +53,11 @@ export default function NewsletterPopup() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmed, name: name.trim() }),
+        body: JSON.stringify({
+          email: trimmed,
+          name: name.trim(),
+          lists: corpo ? ["carta", "corpo"] : ["carta"],
+        }),
       });
       if (!res.ok) throw new Error();
       setSent(true);
@@ -198,6 +204,7 @@ export default function NewsletterPopup() {
                   ✦ {error}
                 </div>
               )}
+              <CorpoCheckbox checked={corpo} onChange={setCorpo} style={{ marginBottom: 20 }} />
               <button
                 type="submit"
                 className="btn btn-primary"

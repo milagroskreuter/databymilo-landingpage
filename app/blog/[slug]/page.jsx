@@ -6,6 +6,7 @@ import Footer from "../../components/sections/Footer";
 import SectionDivider from "../../components/SectionDivider";
 import TypeEyebrow from "../../components/primitives/TypeEyebrow";
 import ShareButtons from "../../components/ShareButtons";
+import EdicionCorpoForm from "../../components/EdicionCorpoForm";
 import { getAllPosts, getPostBySlug, getRelatedPosts, formatDate } from "../../lib/blog";
 
 export async function generateStaticParams() {
@@ -398,6 +399,7 @@ export default async function BlogPostPage({ params }) {
             </div>
             <Signature />
             <ShareButtons slug={post.slug} title={post.title} />
+            <EdicionCorpoForm />
             <RelatedPosts posts={related} />
           </article>
           <SectionDivider />

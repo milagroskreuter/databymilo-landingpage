@@ -1,4 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { notifyNewPost } from "@/lib/corpo";
 
 export const dynamic = "force-dynamic";
 
@@ -71,6 +72,10 @@ export async function PUT(request, { params }) {
     await saveVersion(supabase, params.slug, { title, content, excerpt, tags, published: isScheduled ? false : published });
     const action = isScheduled ? "schedule" : (published ? "publish" : "draft");
     await logActivity(supabase, action, "post", params.slug, title);
+
+    // Si la nota quedó publicada y todavía no se avisó, avisar a Edición Corpo.
+    // Editar una nota ya avisada no vuelve a mandar nada.
+    if (data.published) await notifyNewPost(data);
 
     return Response.json({ post: data });
   } catch (err) {

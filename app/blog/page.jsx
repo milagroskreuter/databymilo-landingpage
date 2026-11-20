@@ -3,6 +3,7 @@ import CTABlock from "../components/sections/CTABlock";
 import Footer from "../components/sections/Footer";
 import SectionDivider from "../components/SectionDivider";
 import TypeEyebrow from "../components/primitives/TypeEyebrow";
+import EdicionCorpoForm from "../components/EdicionCorpoForm";
 import { getAllPosts, getAllTags, formatDate } from "../lib/blog";
 
 export const dynamic = "force-dynamic";
@@ -247,6 +248,8 @@ export default async function BlogIndexPage({ searchParams }) {
                 ))}
               </div>
             )}
+
+            <EdicionCorpoForm />
           </section>
           <SectionDivider />
           <CTABlock />

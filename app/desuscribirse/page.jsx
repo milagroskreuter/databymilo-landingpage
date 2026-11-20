@@ -6,7 +6,8 @@ export const metadata = {
   robots: { index: false },
 };
 
-export default function DesuscribirsePage() {
+export default function DesuscribirsePage({ searchParams }) {
+  const isCorpo = searchParams?.l === "corpo";
   return (
     <>
       <main>
@@ -52,11 +53,13 @@ export default function DesuscribirsePage() {
               lineHeight: 1.6,
               margin: "0 0 40px",
             }}>
-              No más mails de mi parte. Hasta cuando quieras — los recursos siguen disponibles sin necesidad de nada.
+              {isCorpo
+                ? "Listo, no te aviso más cuando suba una nota nueva. Si seguís en la carta del domingo, esos mails siguen llegando."
+                : "No más mails de mi parte. Hasta cuando quieras — los recursos siguen disponibles sin necesidad de nada."}
             </p>
 
             <Link
-              href="/recursos"
+              href={isCorpo ? "/blog" : "/recursos"}
               style={{
                 fontFamily: "var(--font-body)",
                 fontWeight: 700,
@@ -69,7 +72,7 @@ export default function DesuscribirsePage() {
                 paddingBottom: 2,
               }}
             >
-              Ver la biblioteca de recursos →
+              {isCorpo ? "Ir a la edición corpo →" : "Ver la biblioteca de recursos →"}
             </Link>
           </section>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Reveal from "../primitives/Reveal";
+import CorpoCheckbox from "../CorpoCheckbox";
 
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
@@ -10,6 +11,7 @@ export default function Newsletter() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [corpo, setCorpo] = useState(false);
 
   const burst = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -99,7 +101,10 @@ export default function Newsletter() {
                     const res = await fetch("/api/subscribe", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ email: trimmed }),
+                      body: JSON.stringify({
+                        email: trimmed,
+                        lists: corpo ? ["carta", "corpo"] : ["carta"],
+                      }),
                     });
                     if (!res.ok) throw new Error();
                     burst({ currentTarget: submitTarget });
@@ -123,6 +128,7 @@ export default function Newsletter() {
                     {loading ? "Enviando…" : "sumame a la carta"}
                   </button>
                 </div>
+                <CorpoCheckbox checked={corpo} onChange={setCorpo} tone="dark" style={{ marginTop: 14 }} />
                 {error && (
                   <div
                     style={{

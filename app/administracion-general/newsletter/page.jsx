@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const TABS = ["Suscriptoras", "Historial de envíos"];
+const TABS = ["Suscriptoras", "Historial de envíos", "Edición Corpo"];
 
 function StatCard({ label, value, sub, color }) {
   return (
@@ -72,8 +72,31 @@ export default function NewsletterPage() {
     setBLoading(false);
   }
 
+  // Lista "Edición Corpo": avisos de notas nuevas del blog
+  const [corpo, setCorpo] = useState(null);
+  const [cLoading, setCLoading] = useState(false);
+
+  async function loadCorpo() {
+    setCLoading(true);
+    const res = await fetch("/api/admin/corpo/subscribers");
+    if (res.ok) setCorpo(await res.json());
+    setCLoading(false);
+  }
+
+  async function handleRemoveCorpo(email) {
+    if (!confirm(`¿Eliminar ${email} de Edición Corpo?`)) return;
+    const res = await fetch("/api/admin/corpo/subscribers", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    if (res.ok) { setMsg({ type: "success", text: `${email} eliminada de Edición Corpo` }); loadCorpo(); }
+    else setMsg({ type: "error", text: "Error al eliminar" });
+  }
+
   useEffect(() => { loadContacts(); }, []);
   useEffect(() => { if (tab === 1 && !broadcasts) loadBroadcasts(); }, [tab]);
+  useEffect(() => { if (tab === 2 && !corpo) loadCorpo(); }, [tab]);
 
   async function handleRemove(id, email) {
     if (!confirm(`¿Eliminar ${email} de la lista?`)) return;
@@ -444,6 +467,60 @@ export default function NewsletterPage() {
                       </tr>
                     );
                   })}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+
+        {/* TAB: Edición Corpo */}
+        {tab === 2 && (
+          <div className="adm-table-wrap" style={{ padding: 0 }}>
+            <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--adm-border)", fontSize: 12, color: "var(--adm-fg-2)", lineHeight: 1.6 }}>
+              Estas personas pidieron que les avisen cada vez que subís una nota nueva al blog.
+              El aviso sale solo al publicar. Hoy hay{" "}
+              <strong>{corpo ? corpo.active : "…"}</strong> activas de{" "}
+              <strong>{corpo ? corpo.total : "…"}</strong> en total.
+            </div>
+            {cLoading && !corpo ? (
+              <div style={{ padding: 32, textAlign: "center", color: "var(--adm-fg-muted)" }}>Cargando…</div>
+            ) : (corpo?.subscribers ?? []).length === 0 ? (
+              <div style={{ padding: 40, textAlign: "center", color: "var(--adm-fg-muted)", fontFamily: "var(--adm-font-body)" }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>✎</div>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Todavía no hay suscriptoras a Edición Corpo</div>
+                <div style={{ fontSize: 12 }}>Aparecen cuando alguien tilda la opción en un formulario o se suma desde el blog.</div>
+              </div>
+            ) : (
+              <table className="adm-table">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Nombre</th>
+                    <th>Desde</th>
+                    <th>Estado</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {corpo.subscribers.map((s) => (
+                    <tr key={s.email}>
+                      <td style={{ fontWeight: 500 }}>{s.email}</td>
+                      <td style={{ color: "var(--adm-fg-muted)" }}>{s.first_name || "—"}</td>
+                      <td style={{ color: "var(--adm-fg-muted)", fontSize: 12, whiteSpace: "nowrap" }}>
+                        {new Date(s.created_at).toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" })}
+                      </td>
+                      <td>
+                        <span className={`adm-badge ${s.subscribed ? "adm-badge-active" : "adm-badge-inactive"}`}>
+                          {s.subscribed ? "Activa" : "Desuscripta"}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: "right" }}>
+                        <button className="adm-btn adm-btn-danger adm-btn-sm" onClick={() => handleRemoveCorpo(s.email)}>
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             )}

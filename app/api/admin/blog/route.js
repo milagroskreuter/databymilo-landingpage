@@ -1,4 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { notifyNewPost } from "@/lib/corpo";
 
 export const dynamic = "force-dynamic";
 
@@ -96,6 +97,10 @@ export async function POST(request) {
 
     const action = isScheduled ? "schedule" : (published !== false ? "publish" : "draft");
     await logActivity(supabase, action, "post", slug, title);
+
+    // Nota publicada ahora → aviso a Edición Corpo (idempotente, nunca lanza).
+    // Las programadas las avisa el cron cuando llega su fecha.
+    if (data.published) await notifyNewPost(data);
 
     return Response.json({ post: data }, { status: 201 });
   } catch (err) {
