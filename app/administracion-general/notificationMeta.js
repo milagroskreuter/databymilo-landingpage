@@ -2,6 +2,8 @@ export const TYPE_META = {
   subscribe: { icon: "✦", label: "Suscripción", color: "#1a7a4a" },
   unsubscribe: { icon: "✕", label: "Baja", color: "#c0392b" },
   post_notified: { icon: "✎", label: "Nota avisada", color: "#7c3aed" },
+  sale: { icon: "$", label: "Venta", color: "#17663e" },
+  refund: { icon: "↩", label: "Reembolso", color: "#a3302a" },
 };
 
 export function typeMeta(type) {

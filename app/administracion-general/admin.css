@@ -1083,3 +1083,8 @@ table.adm-table {
   .adm-dash-summary { font-size: 15px; }
   .adm-card { padding: 16px; }
 }
+
+/* Ventas */
+.adm-sales { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+.adm-sales-empty { display: flex; flex-direction: column; gap: 6px; }
+@media (max-width: 760px) { .adm-sales { grid-template-columns: minmax(0, 1fr); gap: 20px; } }

@@ -606,6 +606,77 @@ function ActivityCard({ items }) {
   );
 }
 
+function fmtMoney(t) {
+  if (!t) return "—";
+  const v = t.value.toLocaleString("es-AR", { maximumFractionDigits: 2 });
+  return t.currency ? `${t.currency} ${v}` : v;
+}
+
+/** Varias monedas: "USD 45 · BRL 120". */
+function fmtTotals(totals) {
+  if (!totals?.length) return "—";
+  return totals.map(fmtMoney).join(" · ");
+}
+
+function SalesCard({ sales }) {
+  if (!sales) return null;
+  if (sales.error) return <CardError>No se pudieron leer las ventas: {sales.error}</CardError>;
+  const { thisMonth, byProduct, recent, refunds } = sales;
+  if (!thisMonth.count && !recent.length) {
+    return (
+      <div className="adm-sales-empty">
+        <p className="adm-card-note">
+          Todavía no hay ventas registradas. Cada compra en Hotmart va a aparecer acá sola,
+          con su notificación en la campanita.
+        </p>
+        <p className="adm-card-note">Las compradoras se suman solas a la lista <strong>Compradoras</strong>.</p>
+      </div>
+    );
+  }
+  return (
+    <div className="adm-sales">
+      <div>
+        <div className="adm-mini-label">Por ebook · este mes</div>
+        {byProduct.length ? (
+          <RankList
+            unit="ventas"
+            rows={byProduct.map((p) => ({
+              key: p.key,
+              title: `${p.name} · ${fmtTotals(p.totals)}`,
+              value: p.count,
+              href: p.slug ? `${BASE}/recursos/${p.slug}` : `${BASE}/recursos`,
+            }))}
+          />
+        ) : (
+          <CardError>Sin ventas este mes todavía.</CardError>
+        )}
+        {refunds > 0 && (
+          <p className="adm-card-note" style={{ marginTop: 10 }}>
+            ↩ {plural(refunds, "reembolso", "reembolsos")} este mes.
+          </p>
+        )}
+      </div>
+      <div>
+        <div className="adm-mini-label">Últimas ventas</div>
+        <ul className="adm-feed">
+          {recent.map((s) => (
+            <li key={s.transaction} className="adm-feed-item">
+              <span className="adm-feed-ico" style={{ color: "#17663e", background: "#17663e14" }} aria-hidden="true">$</span>
+              <span className="adm-feed-txt">
+                <span className="adm-feed-title">
+                  <strong>{fmtMoney(s.amount)}</strong> · {s.product || "Producto"}
+                  {s.buyer ? ` · ${s.buyer}` : ""}
+                </span>
+                <span className="adm-feed-time">{timeAgo(s.at)}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 // ─── Página ──────────────────────────────────────────────────────────────────
 
 const SHORTCUTS = [
@@ -649,6 +720,8 @@ export default function AdminDashboard() {
   const traffic = data?.traffic;
   const trafficOk = traffic && !traffic.error;
   const first = loading && !data;
+  const sales = data?.sales;
+  const salesOk = sales && !sales.error;
 
   return (
     <>
@@ -674,6 +747,32 @@ export default function AdminDashboard() {
 
         {/* Números principales */}
         <div className="adm-stats-grid adm-dash-kpis">
+          <Kpi
+            loading={first}
+            label="Ingresos del mes"
+            value={salesOk ? (sales.thisMonth.totals[0] ? fmtMoney(sales.thisMonth.totals[0]) : "0") : "—"}
+            trend={
+              salesOk &&
+              sales.thisMonth.totals.length <= 1 &&
+              sales.prevPeriod.totals.length <= 1 && (
+                <Trend
+                  d={delta(sales.thisMonth.totals[0]?.value ?? 0, sales.prevPeriod.totals[0]?.value ?? 0)}
+                  label="vs. mismo tramo del mes pasado"
+                />
+              )
+            }
+            sub={
+              salesOk
+                ? [
+                    plural(sales.thisMonth.count, "venta", "ventas"),
+                    sales.thisMonth.totals.length > 1 ? `+ ${fmtTotals(sales.thisMonth.totals.slice(1))}` : null,
+                    sales.usesNet ? "lo que te queda después de Hotmart" : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")
+                : sales?.error && "No disponible"
+            }
+          />
           <Kpi
             loading={first}
             label="Suscriptoras"
@@ -716,6 +815,18 @@ export default function AdminDashboard() {
             sub={data?.top.resources[0]?.downloads ? `La más bajada: ${data.top.resources[0].title}` : "en total"}
           />
         </div>
+
+        {/* Ventas */}
+        <Card
+          title="Ventas"
+          action={
+            salesOk && sales.prevMonth.count > 0 ? (
+              <span className="adm-card-hint">Mes pasado: {fmtTotals(sales.prevMonth.totals)}</span>
+            ) : null
+          }
+        >
+          {first ? <SkeletonList /> : <SalesCard sales={sales} />}
+        </Card>
 
         {/* Crecimiento + newsletter */}
         <div className="adm-dash-row adm-dash-row-main">

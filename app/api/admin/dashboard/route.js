@@ -29,6 +29,81 @@ function arDayEnd(key) {
   return new Date(`${key}T23:59:59.999Z`).getTime() + AR_OFFSET_MS;
 }
 
+/** Inicio del mes (Argentina) desplazado `offset` meses, en ISO UTC. */
+function monthStartIso(offset = 0) {
+  const ar = new Date(Date.now() - AR_OFFSET_MS);
+  const d = Date.UTC(ar.getUTCFullYear(), ar.getUTCMonth() + offset, 1);
+  return new Date(d + AR_OFFSET_MS).toISOString();
+}
+
+const BUYERS_LIST = "compradoras";
+const PAID_STATUSES = new Set(["approved", "completed"]);
+
+/** Ingresos del mes: lo que te queda (comisión) si Hotmart lo informó, si no el precio pagado. */
+function buildSales(rows) {
+  const now = Date.now();
+  const thisStart = ms(monthStartIso(0));
+  const prevStart = ms(monthStartIso(-1));
+  // Mismo tramo del mes pasado (del 1 al día de hoy) para comparar parejo
+  const prevSameDay = prevStart + (now - thisStart);
+
+  const amountOf = (s) =>
+    s.net_amount != null
+      ? { value: Number(s.net_amount), currency: s.net_currency || s.currency || "" }
+      : { value: Number(s.price || 0), currency: s.currency || "" };
+
+  const sum = (list) => {
+    const byCur = {};
+    for (const s of list) {
+      const a = amountOf(s);
+      byCur[a.currency] = (byCur[a.currency] || 0) + a.value;
+    }
+    return Object.entries(byCur)
+      .map(([currency, value]) => ({ currency, value: Math.round(value * 100) / 100 }))
+      // USD primero (es la moneda de tus precios); el resto, de mayor a menor
+      .sort((a, b) => (b.currency === "USD") - (a.currency === "USD") || b.value - a.value);
+  };
+
+  const paid = rows.filter((s) => PAID_STATUSES.has(s.status) && s.approved_at);
+  const inRange = (s, from, to) => {
+    const t = ms(s.approved_at);
+    return t >= from && t < to;
+  };
+  const thisMonth = paid.filter((s) => inRange(s, thisStart, now + 1));
+  const prevPeriod = paid.filter((s) => inRange(s, prevStart, prevSameDay));
+  const prevMonth = paid.filter((s) => inRange(s, prevStart, thisStart));
+
+  const byProduct = {};
+  for (const s of thisMonth) {
+    const key = s.resource_slug || s.product_name || "Otro";
+    const p = (byProduct[key] ||= { key, name: s.product_name || key, slug: s.resource_slug, count: 0, list: [] });
+    p.count++;
+    p.list.push(s);
+  }
+
+  const refunds = rows.filter(
+    (s) => (s.status === "refunded" || s.status === "chargeback") && ms(s.updated_at) >= thisStart
+  ).length;
+
+  return {
+    thisMonth: { count: thisMonth.length, totals: sum(thisMonth) },
+    prevPeriod: { count: prevPeriod.length, totals: sum(prevPeriod) },
+    prevMonth: { count: prevMonth.length, totals: sum(prevMonth) },
+    byProduct: Object.values(byProduct)
+      .map(({ list, ...p }) => ({ ...p, totals: sum(list) }))
+      .sort((a, b) => b.count - a.count),
+    refunds,
+    recent: paid.slice(0, 5).map((s) => ({
+      transaction: s.transaction,
+      product: s.product_name,
+      buyer: s.buyer_name ? s.buyer_name.split(" ")[0] : null,
+      amount: amountOf(s),
+      at: s.approved_at,
+    })),
+    usesNet: thisMonth.some((s) => s.net_amount != null),
+  };
+}
+
 async function safe(fn) {
   try {
     return await fn();
@@ -256,6 +331,14 @@ export async function GET() {
           .gte("created_at", yearAgo),
       ]);
 
+      // Ventas de Hotmart desde el inicio del mes pasado (sin las de prueba)
+      const sales = await supabase
+        .from("sales")
+        .select("transaction, status, product_name, resource_slug, buyer_name, price, currency, net_amount, net_currency, approved_at, purchased_at, updated_at")
+        .eq("is_test", false)
+        .or(`approved_at.gte."${monthStartIso(-1)}",updated_at.gte."${monthStartIso(-1)}"`)
+        .order("approved_at", { ascending: false, nullsFirst: false });
+
       return {
         lists,
         rowsBySlug,
@@ -266,6 +349,8 @@ export async function GET() {
         notifs: notifs.data ?? [],
         activity: activity.data ?? [],
         cartaUnsubs: cartaUnsubs.data ?? [],
+        sales: sales.error ? null : sales.data ?? [],
+        salesError: sales.error?.message ?? null,
       };
     }),
   ]);
@@ -292,7 +377,10 @@ export async function GET() {
   }
   const audience = await safe(() =>
     buildAudience({
-      lists: resendData.error ? db.lists.filter((l) => l.slug !== "carta") : db.lists,
+      // "Compradoras" es una lista de clientas, no de suscriptoras: va en Ventas.
+      lists: db.lists.filter(
+        (l) => l.slug !== BUYERS_LIST && !(resendData.error && l.slug === "carta")
+      ),
       rowsBySlug: db.rowsBySlug,
       contacts: resendData.contacts,
       cartaUnsubDates,
@@ -381,6 +469,7 @@ export async function GET() {
     newsletter: newsletter.error
       ? newsletter
       : { ...newsletter, upcomingSunday: sunday, cartaScheduled },
+    sales: db.sales ? buildSales(db.sales) : { error: db.salesError || "No se pudieron leer las ventas" },
     unread: db.unread,
     activity,
   });
