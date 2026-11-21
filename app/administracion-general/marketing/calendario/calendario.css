@@ -230,6 +230,10 @@
 .mk-cal-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 14px; }
 .mk-cal-ta-sm { min-height: 64px; }
 .mk-cal-meta { font-size: 11.5px; color: var(--adm-fg-muted); }
+.mk-cal-versions { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px dashed var(--adm-border-mid); border-radius: 8px; }
+.mk-cal-versions ul { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--adm-fg-2); display: flex; flex-direction: column; gap: 3px; }
+.mk-cal-versions-add { display: flex; gap: 6px; flex-wrap: wrap; }
+.mk-cal-versions-add:empty { display: none; }
 .mk-cal-modal .adm-select, .mk-cal-series-form .adm-select { padding: 9px 10px; }
 
 /* Estrellas de puntaje */

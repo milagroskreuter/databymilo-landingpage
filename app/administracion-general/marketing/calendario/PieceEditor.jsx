@@ -1,7 +1,7 @@
 "use client";
 // Editor de una pieza de contenido (modal). Sirve para crear y para editar.
 import { useEffect, useRef, useState } from "react";
-import { NETWORKS, STATUSES, FORMATS } from "@/lib/marketing/constants";
+import { NETWORKS, STATUSES, FORMATS, NETWORK_BY_ID, STATUS_BY_ID, FORMAT_BY_ID } from "@/lib/marketing/constants";
 import { arDateKey, arTime, arToISO } from "@/lib/marketing/content/dates";
 import { useToast } from "../../AdminToast";
 import { api } from "./api";
@@ -27,6 +27,16 @@ function toForm(piece) {
     permalink: p.permalink || "",
     score: p.score ?? null,
   };
+}
+
+// Redes para las que se arma una versión propia de cada idea (Facebook y Threads usan la de Instagram).
+const VERSION_NETWORKS = ["instagram", "linkedin"];
+
+/** Formato equivalente en la otra red (un reel en LinkedIn se sube como video). */
+function formatFor(network, format) {
+  if (network === "linkedin" && (format === "reel" || format === "short")) return "video";
+  if (network === "instagram" && (format === "video" || format === "articulo")) return "reel";
+  return format || null;
 }
 
 function fromForm(f) {
@@ -60,6 +70,20 @@ export default function PieceEditor({ piece, pillars = [], series = [], onClose,
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const titleRef = useRef(null);
+  const groupId = piece?.variant_of || piece?.id || null;
+  const [versions, setVersions] = useState([]);
+
+  useEffect(() => {
+    if (!groupId) return;
+    let alive = true;
+    api
+      .listContent({ group: groupId })
+      .then((items) => alive && setVersions(items.filter((v) => v.id !== piece.id)))
+      .catch(() => alive && setVersions([]));
+    return () => {
+      alive = false;
+    };
+  }, [groupId, piece?.id]);
 
   useEffect(() => {
     if (isNew) titleRef.current?.focus();
@@ -105,6 +129,30 @@ export default function PieceEditor({ piece, pillars = [], series = [], onClose,
       await api.deleteContent(piece.id);
       toast?.({ text: "Pieza borrada" });
       onDeleted?.(piece.id);
+    } catch (err) {
+      setError(err.message);
+      setSaving(false);
+    }
+  }
+
+  async function createVersion(network) {
+    setSaving(true);
+    setError("");
+    try {
+      const base = fromForm(form);
+      const label = NETWORK_BY_ID[network]?.label || network;
+      const item = await api.createContent({
+        ...base,
+        network,
+        format: formatFor(network, base.format),
+        caption: "",
+        status: base.status === "publicado" ? "idea" : base.status,
+        notes: [`Versión para ${label} de “${base.title}”: adaptá el texto a esta red.`, base.notes].filter(Boolean).join("\n\n"),
+        variant_of: groupId,
+        source: "repurpose",
+      });
+      toast?.({ text: `Versión para ${label} creada` });
+      onSaved?.(item);
     } catch (err) {
       setError(err.message);
       setSaving(false);
@@ -247,6 +295,34 @@ export default function PieceEditor({ piece, pillars = [], series = [], onClose,
             <span className="adm-label">Permalink (link a la publicación)</span>
             <input className="adm-input" type="url" value={form.permalink} onChange={set("permalink")} placeholder="https://" />
           </label>
+
+          {!isNew && (VERSION_NETWORKS.includes(form.network) || versions.length > 0) && (
+            <div className="mk-cal-versions">
+              <span className="adm-label">Versiones por red</span>
+              {versions.length > 0 ? (
+                <ul>
+                  {versions.map((v) => (
+                    <li key={v.id}>
+                      <strong>{NETWORK_BY_ID[v.network]?.label || "Sin red"}</strong>
+                      {v.format ? ` · ${FORMAT_BY_ID[v.format]?.label || v.format}` : ""}
+                      {` · ${STATUS_BY_ID[v.status]?.label || v.status}`}
+                      {v.scheduled_at ? ` · ${new Date(v.scheduled_at).toLocaleDateString("es-AR", { day: "numeric", month: "short", timeZone: "America/Argentina/Buenos_Aires" })}` : " · sin fecha"}
+                      {v.id === piece.variant_of ? " (original)" : ""}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mk-cal-meta">Todavía no tiene versión para otra red.</p>
+              )}
+              <div className="mk-cal-versions-add">
+                {VERSION_NETWORKS.filter((n) => n !== form.network && !versions.some((v) => v.network === n)).map((n) => (
+                  <button key={n} type="button" className="adm-btn adm-btn-secondary adm-btn-sm" onClick={() => createVersion(n)} disabled={saving}>
+                    + Versión para {NETWORK_BY_ID[n].label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {!isNew && (
             <p className="mk-cal-meta">

@@ -3,14 +3,14 @@ import { createContent, listContent } from "@/lib/marketing/content";
 
 export const dynamic = "force-dynamic";
 
-// GET  ?status=&network=&pillar_id=&series_id=&from=&to=&q=&ideas=1 → { items }
+// GET  ?status=&network=&pillar_id=&series_id=&group=&from=&to=&q=&ideas=1 → { items }
 // POST { title, status, network, ... }                              → { item }
 
 export async function GET(request) {
   try {
     const sp = new URL(request.url).searchParams;
     const filters = Object.fromEntries(
-      ["status", "network", "pillar_id", "series_id", "from", "to", "q", "limit"]
+      ["status", "network", "pillar_id", "series_id", "group", "from", "to", "q", "limit"]
         .map((k) => [k, sp.get(k)])
         .filter(([, v]) => v)
     );
