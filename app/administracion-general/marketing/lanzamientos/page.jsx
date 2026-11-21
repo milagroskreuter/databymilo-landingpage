@@ -1,12 +1,7 @@
-import EnConstruccion from "../EnConstruccion";
+import LanzamientosClient from "./LanzamientosClient";
 
 export const metadata = { title: "Lanzamientos · Hub" };
 
 export default function Page() {
-  return (
-    <EnConstruccion
-      title="Lanzamientos"
-      description="Planificá cada lanzamiento con su checklist, piezas y fechas clave."
-    />
-  );
+  return <LanzamientosClient />;
 }
