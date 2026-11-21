@@ -1,0 +1,164 @@
+/* Área Marca y diseño — prefijo .mk-marca- */
+.mk-marca { display: flex; flex-direction: column; gap: 18px; }
+.mk-marca-stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.mk-marca-row { display: flex; align-items: center; gap: 10px; }
+.mk-marca-row-tight { gap: 4px; }
+.mk-marca-wrap { flex-wrap: wrap; }
+.mk-marca-grow { flex: 1; min-width: 0; }
+.mk-marca-push { margin-left: auto; }
+.mk-marca-auto { width: auto; }
+.mk-marca-hint { font-size: 12px; color: var(--adm-fg-muted); line-height: 1.5; }
+.mk-marca-danger { color: #b82020 !important; }
+.mk-marca-loading { padding: 40px; text-align: center; color: var(--adm-fg-muted); }
+.mk-marca-h2 { font-family: var(--adm-font-display); font-style: italic; font-size: 20px; color: var(--adm-primary); }
+.mk-marca-ta { min-height: 0; }
+.mk-marca-intro a { color: var(--adm-primary); font-weight: 600; }
+
+.mk-marca-tabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--adm-border); }
+.mk-marca-tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 14px; font-family: var(--adm-font-body); font-size: 13px; font-weight: 600; color: var(--adm-fg-2); cursor: pointer; }
+.mk-marca-tab:hover { color: var(--adm-primary); }
+.mk-marca-tab.is-active { color: var(--adm-primary); border-bottom-color: var(--adm-primary); }
+
+.mk-marca-section { display: flex; flex-direction: column; gap: 14px; }
+.mk-marca-section-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.mk-marca-grid2, .mk-marca-grid3, .mk-marca-grid4 { display: grid; gap: 0 14px; }
+.mk-marca-grid2 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.mk-marca-grid3 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.mk-marca-grid4 { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+
+/* Paleta */
+.mk-marca-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.mk-marca-swatch { width: 110px; height: 76px; border-radius: 10px; padding: 8px; display: flex; flex-direction: column; justify-content: flex-end; border: 1px solid var(--adm-border); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.45); font-size: 12px; font-weight: 700; }
+.mk-marca-swatch small { font-weight: 500; opacity: .9; }
+.mk-marca-colors { display: flex; flex-direction: column; gap: 8px; }
+.mk-marca-color-row { display: grid; grid-template-columns: 40px 100px 140px 130px 1fr auto; gap: 8px; align-items: center; }
+.mk-marca-color-input { width: 40px; height: 36px; border: 1px solid var(--adm-border-mid); border-radius: 7px; padding: 2px; background: #fff; cursor: pointer; }
+@media (max-width: 900px) { .mk-marca-color-row { grid-template-columns: 40px 1fr 1fr; } }
+
+/* Tipografía */
+.mk-marca-font { border: 1px solid var(--adm-border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.mk-marca-font-sample { font-size: 28px; color: var(--adm-primary); line-height: 1.2; }
+
+/* Bios */
+.mk-marca-bios { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.mk-marca-bio-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 13px; }
+.mk-marca-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.mk-marca-count { margin-left: auto; font-size: 11px; color: var(--adm-fg-muted); }
+.mk-marca-count.is-over, .mk-marca-words.is-over { color: #b82020; font-weight: 600; }
+.mk-marca-words { font-size: 12px; color: var(--adm-fg-2); }
+
+/* Logo */
+.mk-marca-logo-previews { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.mk-marca-wordmark { border-radius: 10px; padding: 26px; display: flex; justify-content: center; font-family: var(--adm-font-display); font-style: italic; font-weight: 700; font-size: 28px; gap: 10px; }
+.mk-marca-wordmark.is-dark { background: #8b1a4a; color: #fdf5ec; }
+.mk-marca-wordmark.is-dark .mk-marca-wordmark-dot { color: #fbe7a8; }
+.mk-marca-wordmark.is-light { background: #fdf5ec; color: #8b1a4a; border: 1px solid var(--adm-border); }
+.mk-marca-wordmark.is-light .mk-marca-wordmark-dot { color: #d4447a; }
+.mk-marca-logo-file { border: 1px dashed var(--adm-border-mid); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; justify-content: center; }
+.mk-marca-logo-file img { max-width: 100%; max-height: 80px; object-fit: contain; }
+
+/* Biblioteca */
+.mk-marca-seg { display: inline-flex; border: 1px solid var(--adm-border-mid); border-radius: 8px; overflow: hidden; align-self: flex-start; }
+.mk-marca-seg button { background: #fff; border: none; padding: 8px 16px; font-family: var(--adm-font-body); font-size: 12px; font-weight: 600; color: var(--adm-fg-2); cursor: pointer; }
+.mk-marca-seg button.is-active { background: var(--adm-primary); color: #fff; }
+.mk-marca-lib { display: grid; grid-template-columns: 1fr; gap: 18px; align-items: start; }
+.mk-marca-lib.has-detail { grid-template-columns: minmax(0, 1fr) 320px; }
+@media (max-width: 960px) { .mk-marca-lib.has-detail { grid-template-columns: 1fr; } }
+.mk-marca-drop { border: 2px dashed var(--adm-border-mid); border-radius: 12px; padding: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; background: #fff; }
+.mk-marca-drop.is-drag { border-color: var(--adm-primary); background: var(--adm-tinted); }
+.mk-marca-drop-tags { flex: 1; min-width: 200px; }
+.mk-marca-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.mk-marca-chip { border: 1px solid var(--adm-border-mid); background: #fff; border-radius: 999px; padding: 4px 12px; font-size: 12px; color: var(--adm-fg-2); cursor: pointer; font-family: var(--adm-font-body); }
+.mk-marca-chip small { color: var(--adm-fg-muted); margin-left: 3px; }
+.mk-marca-chip.is-active { background: var(--adm-primary); border-color: var(--adm-primary); color: #fff; }
+.mk-marca-chip.is-active small { color: #fadbe8; }
+.mk-marca-grid, .mk-marca-canva-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.mk-marca-canva-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.mk-marca-card { border: 1px solid var(--adm-border); background: #fff; border-radius: 10px; overflow: hidden; padding: 0; text-align: left; cursor: pointer; display: flex; flex-direction: column; font-family: var(--adm-font-body); }
+.mk-marca-card.is-static { cursor: default; }
+.mk-marca-card:hover:not(.is-static), .mk-marca-card.is-open { border-color: var(--adm-primary); box-shadow: 0 0 0 3px rgba(139,26,74,.08); }
+.mk-marca-card-img { aspect-ratio: 1; background: var(--adm-cream-200); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.mk-marca-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.mk-marca-card-body { padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
+.mk-marca-card-name { font-size: 12px; font-weight: 600; color: var(--adm-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-marca-card-tags { font-size: 11px; color: var(--adm-fg-muted); }
+.mk-marca-file-icon { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--adm-primary); letter-spacing: .1em; }
+.mk-marca-detail { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 12px; }
+.mk-marca-detail-preview { background: var(--adm-cream-200); border-radius: 8px; display: flex; justify-content: center; min-height: 120px; align-items: center; }
+.mk-marca-detail-preview img { max-width: 100%; max-height: 320px; object-fit: contain; }
+.mk-marca-attrib { font-size: 11px; color: var(--adm-fg-2); }
+.mk-marca-attrib a { color: inherit; text-decoration: underline; }
+.mk-marca-snippets { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.mk-marca-snippet { display: flex; flex-direction: column; gap: 10px; }
+.mk-marca-snippet-head { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.mk-marca-snippet-body { font-size: 13px; color: var(--adm-fg-2); white-space: pre-wrap; line-height: 1.55; }
+
+/* Modal */
+.mk-marca-modal-bg { position: fixed; inset: 0; background: rgba(26,10,16,.45); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.mk-marca-modal { background: #fff; border-radius: 14px; width: min(860px, 100%); max-height: 88vh; display: flex; flex-direction: column; gap: 12px; padding: 18px; overflow: hidden; }
+.mk-marca-modal-head { display: flex; justify-content: space-between; align-items: center; }
+.mk-marca-modal-foot { display: flex; justify-content: flex-end; }
+.mk-marca-picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; overflow-y: auto; }
+.mk-marca-picker-item { aspect-ratio: 1; border: 2px solid transparent; border-radius: 8px; overflow: hidden; padding: 0; cursor: pointer; background: var(--adm-cream-200); }
+.mk-marca-picker-item img { width: 100%; height: 100%; object-fit: cover; }
+.mk-marca-picker-item.is-selected, .mk-marca-picker-item:hover { border-color: var(--adm-primary); }
+
+/* Plantillas */
+.mk-marca-tpl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 960px) { .mk-marca-tpl { grid-template-columns: 1fr; } }
+.mk-marca-tpl-preview { position: sticky; top: 16px; }
+.mk-marca-preview-frame { width: 100%; max-width: 480px; background: var(--adm-cream-200); border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(139,26,74,.12); }
+.mk-marca-preview-frame img { width: 100%; height: 100%; display: block; }
+.mk-marca-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.mk-marca-strip-item { position: relative; width: 72px; flex-shrink: 0; border: 2px solid transparent; border-radius: 6px; overflow: hidden; padding: 0; cursor: pointer; background: var(--adm-cream-200); }
+.mk-marca-strip-item img { width: 100%; height: 100%; display: block; }
+.mk-marca-strip-item.is-active { border-color: var(--adm-primary); }
+.mk-marca-strip-warn { position: absolute; top: 2px; right: 2px; background: #b82020; color: #fff; border-radius: 50%; width: 16px; height: 16px; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+/* Fotos */
+.mk-marca-photos { columns: 4 200px; column-gap: 12px; }
+.mk-marca-photo { break-inside: avoid; margin: 0 0 12px; border-radius: 10px; overflow: hidden; background: #eee; border: 1px solid var(--adm-border); }
+.mk-marca-photo img { width: 100%; display: block; }
+.mk-marca-photo figcaption { background: #fff; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+/* Moodboard */
+.mk-marca-pinterest { min-height: 120px; overflow-x: auto; }
+.mk-marca-mood-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.mk-marca-mood-item { position: relative; margin: 0; border-radius: 10px; overflow: hidden; aspect-ratio: 4 / 5; background: var(--adm-cream-200); }
+.mk-marca-mood-item img { width: 100%; height: 100%; object-fit: cover; }
+.mk-marca-mood-badge { position: absolute; left: 6px; bottom: 6px; background: rgba(139,26,74,.88); color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+.mk-marca-mood-remove { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; border-radius: 50%; border: none; background: rgba(255,255,255,.9); cursor: pointer; font-size: 11px; }
+
+/* Setup (Canva, Unsplash) */
+.mk-marca-setup ol { padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: var(--adm-fg-2); line-height: 1.6; }
+.mk-marca-setup code, .mk-marca code { font-size: 12px; background: var(--adm-tinted); padding: 1px 5px; border-radius: 4px; word-break: break-all; }
+.mk-marca-setup a { color: var(--adm-primary); }
+
+/* Coherencia */
+.mk-marca-check { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 20px; align-items: start; }
+@media (max-width: 960px) { .mk-marca-check { grid-template-columns: 1fr; } }
+.mk-marca-check-drop { flex-direction: column; justify-content: center; text-align: center; min-height: 220px; }
+.mk-marca-check-img { max-width: 100%; max-height: 360px; border-radius: 8px; }
+.mk-marca-result-head { display: flex; gap: 16px; align-items: center; }
+.mk-marca-score { width: 88px; height: 88px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; border: 4px solid; }
+.mk-marca-score strong { font-family: var(--adm-font-display); font-size: 30px; line-height: 1; }
+.mk-marca-score span { font-size: 10px; color: var(--adm-fg-muted); }
+.mk-marca-score.is-good, .mk-marca-score-pill.is-good { border-color: #17663e; color: #17663e; }
+.mk-marca-score.is-mid, .mk-marca-score-pill.is-mid { border-color: #d99a3e; color: #a86d17; }
+.mk-marca-score.is-bad, .mk-marca-score-pill.is-bad { border-color: #b82020; color: #b82020; }
+.mk-marca-result-summary { font-size: 14px; color: var(--adm-ink); line-height: 1.5; margin-bottom: 6px; }
+.mk-marca-result-title { margin-top: 6px; }
+.mk-marca-mini-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--adm-border); display: inline-block; }
+.mk-marca-checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.mk-marca-checklist li { display: flex; gap: 10px; font-size: 13px; line-height: 1.5; padding: 10px; border-radius: 8px; }
+.mk-marca-checklist li.is-fail { background: #fdf0f0; }
+.mk-marca-checklist li.is-ok { background: #eef7f1; }
+.mk-marca-checklist p { color: var(--adm-fg-2); }
+.mk-marca-check-mark { font-weight: 700; width: 16px; flex-shrink: 0; }
+.is-fail .mk-marca-check-mark { color: #b82020; }
+.is-ok .mk-marca-check-mark { color: #17663e; }
+.mk-marca-fix { color: var(--adm-primary) !important; font-weight: 600; }
+.mk-marca-history { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.mk-marca-history-item { width: 100%; display: flex; align-items: center; gap: 10px; background: none; border: none; padding: 8px; border-radius: 8px; cursor: pointer; text-align: left; font-family: var(--adm-font-body); font-size: 13px; color: var(--adm-ink); }
+.mk-marca-history-item:hover { background: var(--adm-tinted); }
+.mk-marca-score-pill { border: 2px solid; border-radius: 999px; padding: 1px 8px; font-size: 12px; font-weight: 700; }
