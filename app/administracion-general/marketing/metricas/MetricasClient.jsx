@@ -510,9 +510,6 @@ export default function MetricasClient() {
   }, [enriched, nets, days]);
 
   const toggleNet = (n) => setPickedNets((cur) => (cur.includes(n) ? cur.filter((x) => x !== n) : [...cur, n]));
-  const needsAttention = (data?.accounts || []).some(
-    (a) => a.connected && (a.last_error || data.alerts.some((x) => x.network === a.network))
-  );
 
   return (
     <>
@@ -540,6 +537,24 @@ export default function MetricasClient() {
 
         {data && (
           <>
+            {/* Una tarjeta por red: estado, último dato y acciones (pegar token, cargar LinkedIn a mano, etc.) */}
+            <div className="mk-metricas-status-grid">
+              {data.accounts.map((acc) => (
+                <StatusCard
+                  key={acc.network}
+                  acc={acc}
+                  alerts={data.alerts}
+                  busy={busy}
+                  onSync={onSync}
+                  onDisconnect={onDisconnect}
+                  onLinkedin={onLinkedin}
+                  onLinkedinManual={onLinkedinManual}
+                  onYoutube={onYoutube}
+                  onInstagramToken={onInstagramToken}
+                />
+              ))}
+            </div>
+
             {/* Filtros: valen para todo lo de abajo */}
             <div className="mk-metricas-filterbar">
               <div className="mk-metricas-filtergroup">
@@ -570,13 +585,11 @@ export default function MetricasClient() {
               )}
             </div>
 
-            <ConnectionStrip accounts={data.accounts} alerts={data.alerts} />
-
             {!dataNets.length ? (
               <section className="adm-card mk-metricas-section">
                 <h2 className="adm-card-title">Todavía no hay datos</h2>
                 <p className="mk-metricas-muted">
-                  Conectá una red o cargá LinkedIn en la sección <a href="#conexiones">Conexiones</a>, al final de esta página. Apenas haya datos, acá
+                  Conectá una red o cargá LinkedIn en las tarjetas de cada red, arriba de todo. Apenas haya datos, acá
                   vas a ver los números, los gráficos y las comparaciones.
                 </p>
               </section>
@@ -604,55 +617,12 @@ export default function MetricasClient() {
               </>
             )}
 
-            <section className="mk-metricas-conexiones" id="conexiones">
-              <details open={needsAttention || !dataNets.length}>
-                <summary>
-                  <h2>Conexiones y carga de datos</h2>
-                  <span className="mk-metricas-muted">Conectar redes, pegar tokens, cargar LinkedIn</span>
-                </summary>
-                <div className="mk-metricas-status-grid">
-                  {data.accounts.map((acc) => (
-                    <StatusCard
-                      key={acc.network}
-                      acc={acc}
-                      alerts={data.alerts}
-                      busy={busy}
-                      onSync={onSync}
-                      onDisconnect={onDisconnect}
-                      onLinkedin={onLinkedin}
-                      onLinkedinManual={onLinkedinManual}
-                      onYoutube={onYoutube}
-                      onInstagramToken={onInstagramToken}
-                    />
-                  ))}
-                </div>
-                <ComoConectar accounts={data.accounts} env={data.env} />
-              </details>
-            </section>
+            <div id="conexiones">
+              <ComoConectar accounts={data.accounts} env={data.env} />
+            </div>
           </>
         )}
       </div>
     </>
-  );
-}
-
-// Una línea por red: dice si está al día, sin tener que abrir las tarjetas.
-function ConnectionStrip({ accounts, alerts }) {
-  return (
-    <div className="mk-metricas-strip" aria-label="Estado de las conexiones">
-      {accounts.map((a) => {
-        const issue = a.last_error || alerts.some((x) => x.network === a.network);
-        const state = !a.connected ? "off" : issue ? "warn" : "ok";
-        const when = a.network === "linkedin" ? a.last_import_at : a.last_sync_at;
-        const text = !a.connected ? "Sin conectar" : issue ? "Con problemas" : when ? `Al día · ${ago(when)}` : "Conectada";
-        return (
-          <a key={a.network} href="#conexiones" className={`mk-metricas-stripitem ${state}`}>
-            <i style={{ background: netColor(a.network) }} />
-            <b>{networkLabel(a.network)}</b>
-            <span>{text}</span>
-          </a>
-        );
-      })}
-    </div>
   );
 }

@@ -90,7 +90,7 @@ export default function Evolucion({ data, nets, days, busy, onSaveGoal }) {
               <strong>Todavía no hay dos días de datos para dibujar una línea.</strong>
               <span>
                 Hoy tenemos un solo dato por red. Desde mañana el gráfico empieza a mostrarse.{" "}
-                {active.includes("linkedin") && "Para LinkedIn podés acelerarlo cargando a mano los seguidores de semanas anteriores (con “Cargar a mano” en Conexiones, eligiendo la fecha)."}
+                {active.includes("linkedin") && "Para LinkedIn podés acelerarlo cargando a mano los seguidores de semanas anteriores (con “Cargar a mano” en la tarjeta de LinkedIn, arriba, eligiendo la fecha)."}
               </span>
             </div>
           )}
