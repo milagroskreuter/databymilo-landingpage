@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NETWORK_BY_ID, FORMAT_BY_ID, networkLabel } from "@/lib/marketing/constants";
 import { interactions, audience, engagementRate, arWeekdayHour } from "@/lib/marketing/metrics/calc";
 import ComoConectar from "./ComoConectar";
+import LinkedinManual from "./LinkedinManual";
 import "./metricas.css";
 
 const API = "/api/admin/marketing/metrics";
@@ -112,11 +113,12 @@ function FollowersChart({ points, color, goal }) {
 }
 
 // ─── Tarjetas de estado ──────────────────────────────────────────────────────
-function StatusCard({ acc, alerts, busy, onSync, onDisconnect, onLinkedin, onYoutube }) {
+function StatusCard({ acc, alerts, busy, onSync, onDisconnect, onLinkedin, onLinkedinManual, onYoutube }) {
   const label = networkLabel(acc.network);
   const left = daysLeft(acc.token_expires_at);
   const fileRef = useRef(null);
   const [channel, setChannel] = useState("");
+  const [manualOpen, setManualOpen] = useState(false);
   const issue = alerts.find((a) => a.network === acc.network);
 
   let state = { cls: "off", text: "No conectado" };
@@ -242,12 +244,26 @@ function StatusCard({ acc, alerts, busy, onSync, onDisconnect, onLinkedin, onYou
             <button className="adm-btn adm-btn-sm adm-btn-primary" disabled={busy} onClick={() => fileRef.current?.click()}>
               Subir archivo de LinkedIn
             </button>
+            <button className="adm-btn adm-btn-sm adm-btn-secondary" disabled={busy} onClick={() => setManualOpen(true)}>
+              Cargar a mano
+            </button>
+            {manualOpen && (
+              <LinkedinManual
+                busy={busy}
+                onClose={() => setManualOpen(false)}
+                onSave={async (data) => {
+                  await onLinkedinManual(data);
+                  setManualOpen(false);
+                }}
+              />
+            )}
             <details className="mk-metricas-howto">
               <summary>¿De dónde lo saco?</summary>
               <ol>
                 <li>Entrá a tu perfil de LinkedIn y abrí <strong>Analytics</strong> (Estadísticas) → <strong>Impresiones de publicaciones</strong>.</li>
                 <li>Elegí el período más largo (<strong>últimos 365 días</strong>) y tocá <strong>Exportar</strong>.</li>
                 <li>Se baja un .xlsx: subilo acá. Podés subirlo todas las semanas; no se duplica nada.</li>
+                <li>Si LinkedIn no te deja exportar, usá <strong>Cargar a mano</strong>: copiás los números de Rendimiento una vez por semana.</li>
               </ol>
             </details>
           </>
@@ -659,7 +675,28 @@ export default function MetricasClient() {
     );
   };
   const onYoutube = (channel) =>
-    run(() => api("/youtube", { method: "POST", body: JSON.stringify({ channel }) }), (r) => `Canal guardado: ${r.channel.title}.`);
+    run(
+      () => api("/youtube", { method: "POST", body: JSON.stringify({ channel }) }),
+      (r) => {
+        const bad = (r.sync?.results || []).find((x) => x.network === "youtube" && x.ok === false);
+        if (bad) throw new Error(`Canal guardado (${r.channel.title}), pero no se pudo leer: ${bad.error}`);
+        return `Canal guardado: ${r.channel.title}.`;
+      }
+    );
+  // Falla si el servidor rechaza los datos, así la ventana muestra el error y sigue abierta.
+  const onLinkedinManual = async (data) => {
+    setBusy(true);
+    try {
+      const r = await api("/linkedin/manual", { method: "POST", body: JSON.stringify(data) });
+      const parts = [];
+      if (r.followers) parts.push(`${r.followers.followers} seguidores al ${dayLabel(r.followers.day)}`);
+      if (r.posts) parts.push(`${r.posts} ${r.posts === 1 ? "publicación" : "publicaciones"}`);
+      setFlash({ type: "success", text: `LinkedIn guardado: ${parts.join(" y ")}.` });
+    } finally {
+      await load();
+      setBusy(false);
+    }
+  };
   const onSaveGoal = (network, month, target) =>
     run(() => api("/goals", { method: "PUT", body: JSON.stringify({ network, month, target_followers: target }) }), "Meta guardada.");
 
@@ -718,6 +755,7 @@ export default function MetricasClient() {
                   onSync={onSync}
                   onDisconnect={onDisconnect}
                   onLinkedin={onLinkedin}
+                  onLinkedinManual={onLinkedinManual}
                   onYoutube={onYoutube}
                 />
               ))}
