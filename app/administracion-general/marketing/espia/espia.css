@@ -1,0 +1,85 @@
+/* Espía de competencia (Marketing). Reusa las clases de Métricas; lo propio con prefijo .mk-espia- */
+
+.mk-espia-add { display: flex; gap: 6px; flex-wrap: wrap; }
+.mk-espia-add .adm-input { width: 240px; max-width: 100%; padding: 6px 10px; font-size: 12.5px; }
+
+/* ---- Cuentas ---- */
+.mk-espia-acc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.mk-espia-acc {
+  background: var(--adm-card-bg); border: 1px solid var(--adm-border); border-top: 3px solid #c13584;
+  border-radius: var(--adm-radius); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
+}
+.mk-espia-acc.on { border-color: var(--adm-primary); box-shadow: 0 0 0 1px var(--adm-primary); }
+.mk-espia-acc-head { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.mk-espia-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; background: var(--adm-tinted); }
+.mk-espia-avatar-empty { display: grid; place-items: center; font-weight: 700; color: var(--adm-primary); }
+.mk-espia-acc-id { display: flex; flex-direction: column; min-width: 0; }
+.mk-espia-acc-id > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-espia-acc-user {
+  font-family: var(--adm-font-display); font-style: italic; font-weight: 700; font-size: 16px; color: var(--adm-ink); text-decoration: none;
+}
+.mk-espia-acc-user:hover { color: var(--adm-primary); }
+.mk-espia-acc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin: 0; }
+.mk-espia-acc-stats .wide { grid-column: 1 / -1; }
+.mk-espia-acc-stats dt { font-size: 11px; color: var(--adm-fg-muted); }
+.mk-espia-acc-stats dd { margin: 0; font-size: 14px; font-weight: 700; color: var(--adm-fg-2); }
+.mk-espia-acc-stats small { font-size: 11px; font-weight: 600; }
+.mk-espia-acc-stats small.up { color: #17663e; }
+.mk-espia-acc-stats small.down { color: #a3302a; }
+.mk-espia-acc-when { margin-left: auto; font-size: 11px; }
+
+/* ---- Filtros ---- */
+.mk-espia-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.mk-espia-sort { font-size: 12px; color: var(--adm-fg-muted); display: inline-flex; align-items: center; gap: 6px; }
+.mk-espia-sort .adm-select { padding: 4px 8px; font-size: 12px; width: auto; }
+.mk-espia-check { font-size: 12px; color: var(--adm-fg-2); display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+
+/* ---- Publicaciones ---- */
+.mk-espia-posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.mk-espia-post {
+  border: 1px solid var(--adm-border); border-radius: var(--adm-radius); padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 8px; background: var(--adm-card-bg); min-width: 0;
+}
+.mk-espia-post-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+.mk-espia-post-who { font-weight: 700; color: var(--adm-fg-2); }
+.mk-espia-mult {
+  margin-left: auto; font-weight: 800; font-size: 15px; color: var(--adm-fg-2); white-space: nowrap;
+}
+.mk-espia-mult small { font-weight: 500; font-size: 10.5px; color: var(--adm-fg-muted); }
+.mk-espia-mult.hot { color: var(--adm-primary); }
+.mk-espia-hook { font-weight: 600; font-size: 13.5px; line-height: 1.45; color: var(--adm-ink); margin: 0; overflow-wrap: anywhere; }
+.mk-espia-caption {
+  font-size: 12.5px; line-height: 1.5; color: var(--adm-fg-2); white-space: pre-wrap; margin: 0;
+  max-height: 260px; overflow: auto; overflow-wrap: anywhere;
+}
+.mk-espia-post .mk-metricas-link { align-self: flex-start; padding: 0; }
+.mk-espia-post-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+.mk-espia-nums { font-size: 12px; color: var(--adm-fg-2); font-variant-numeric: tabular-nums; }
+.mk-espia-actions { display: inline-flex; align-items: center; gap: 6px; }
+.mk-espia-star {
+  background: none; border: 1px solid var(--adm-border-mid); border-radius: 999px; width: 30px; height: 30px;
+  font-size: 15px; cursor: pointer; color: var(--adm-fg-muted); line-height: 1;
+}
+.mk-espia-star.on { color: #c98a00; border-color: #e6c36a; background: #fdf6e3; }
+.mk-espia-more { margin-top: 12px; }
+
+/* ---- Patrones ---- */
+.mk-espia-patterns { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; margin-top: 14px; }
+.mk-espia-pattern { min-width: 0; }
+.mk-espia-pattern-title { font-size: 14px; font-weight: 700; color: var(--adm-ink); margin: 0 0 2px; }
+.mk-espia-pattern .mk-metricas-muted { margin: 0 0 8px; }
+.mk-espia-advice {
+  margin: 8px 0 0; font-size: 12.5px; font-weight: 600; color: var(--adm-primary);
+  background: var(--adm-tinted); border-radius: 6px; padding: 6px 10px;
+}
+
+/* ---- Ganchos ---- */
+.mk-espia-hooks { margin: 12px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; }
+.mk-espia-hooks li { display: flex; flex-direction: column; gap: 2px; }
+.mk-espia-hooks-text { font-size: 13.5px; font-weight: 600; color: var(--adm-ink); overflow-wrap: anywhere; }
+
+@media (max-width: 640px) {
+  .mk-espia-posts { grid-template-columns: 1fr; }
+  .mk-espia-add, .mk-espia-add .adm-input { width: 100%; }
+  .mk-espia-patterns { grid-template-columns: 1fr; }
+}

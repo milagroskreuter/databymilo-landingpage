@@ -21,6 +21,7 @@ const NAV = [
   { href: "/administracion-general/marketing/ideas", label: "Ideas", icon: "✧" },
   { href: "/administracion-general/marketing/marca", label: "Marca y diseño", icon: "◐" },
   { href: "/administracion-general/marketing/metricas", label: "Métricas de redes", icon: "↗" },
+  { href: "/administracion-general/marketing/espia", label: "Espía de competencia", icon: "◉" },
   { href: "/administracion-general/marketing/links", label: "Links", icon: "⌁" },
   { href: "/administracion-general/marketing/lanzamientos", label: "Lanzamientos", icon: "➶" },
   { href: "/administracion-general/marketing/sponsors", label: "Sponsors", icon: "◇" },
