@@ -4,7 +4,12 @@ import { NETWORK_BY_ID, FORMAT_BY_ID, networkLabel } from "@/lib/marketing/const
 import { interactions, audience, engagementRate, arWeekdayHour } from "@/lib/marketing/metrics/calc";
 import ComoConectar from "./ComoConectar";
 import LinkedinManual from "./LinkedinManual";
+import { netColor, periodStart } from "./fmt";
+import { ResumenTiles, CompararRedes } from "./Resumen";
+import Evolucion from "./Evolucion";
+import Posteos from "./Posteos";
 import "./metricas.css";
+import "./metricas-charts.css";
 
 const API = "/api/admin/marketing/metrics";
 const DAY_MS = 86400000;
@@ -19,7 +24,6 @@ const compact = (n) => {
   if (a >= 1e3) return `${(n / 1e3).toFixed(1).replace(".", ",")} k`;
   return nf(n);
 };
-const signed = (n) => (n == null ? "—" : `${n > 0 ? "+" : ""}${nf(n)}`);
 const dayLabel = (day) =>
   new Date(`${day}T12:00:00Z`).toLocaleDateString("es-AR", { day: "numeric", month: "short", timeZone: "UTC" });
 const dateTime = (iso) =>
@@ -38,11 +42,6 @@ const ago = (iso) => {
   return d <= 0 ? "hoy" : d === 1 ? "ayer" : `hace ${d} días`;
 };
 const daysLeft = (iso) => (iso ? Math.ceil((new Date(iso).getTime() - Date.now()) / DAY_MS) : null);
-const netColor = (id) => NETWORK_BY_ID[id]?.color || "#9a8a90";
-const monthKey = (day) => day.slice(0, 7);
-const monthName = (ym) =>
-  new Date(`${ym}-15T12:00:00Z`).toLocaleDateString("es-AR", { month: "long", timeZone: "UTC" });
-
 async function api(path, opts = {}) {
   const res = await fetch(`${API}${path}`, {
     cache: "no-store",
@@ -52,65 +51,6 @@ async function api(path, opts = {}) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
   return data;
-}
-
-// ─── Gráfico de seguidores ───────────────────────────────────────────────────
-function FollowersChart({ points, color, goal }) {
-  const [hover, setHover] = useState(null);
-  const ref = useRef(null);
-  if (points.length < 2) {
-    return <div className="mk-metricas-chart-empty">{points.length ? "Hace falta más de un día de datos para el gráfico." : "Sin datos en este período."}</div>;
-  }
-  const W = 600, H = 150, padX = 6, padTop = 12, padBottom = 22;
-  const vals = points.map((p) => p.followers);
-  let min = Math.min(...vals), max = Math.max(...vals);
-  // La meta entra en la escala solo si está cerca (si no, aplastaría la línea).
-  if (goal && goal <= max * 1.25 && goal >= min * 0.8) {
-    max = Math.max(max, goal);
-    min = Math.min(min, goal);
-  }
-  if (max === min) {
-    max += 1;
-    min -= 1;
-  }
-  const t0 = new Date(points[0].day).getTime();
-  const t1 = new Date(points[points.length - 1].day).getTime();
-  const x = (day) => padX + ((new Date(day).getTime() - t0) / Math.max(1, t1 - t0)) * (W - padX * 2);
-  const y = (v) => padTop + (1 - (v - min) / (max - min)) * (H - padTop - padBottom);
-  const path = points.map((p, i) => `${i ? "L" : "M"}${x(p.day).toFixed(1)},${y(p.followers).toFixed(1)}`).join(" ");
-  const showGoal = goal && goal >= min && goal <= max;
-
-  function onMove(e) {
-    const rect = ref.current.getBoundingClientRect();
-    const rx = ((e.clientX - rect.left) / rect.width) * W;
-    let best = 0;
-    points.forEach((p, i) => {
-      if (Math.abs(x(p.day) - rx) < Math.abs(x(points[best].day) - rx)) best = i;
-    });
-    setHover(points[best]);
-  }
-
-  return (
-    <div className="mk-metricas-chart">
-      {hover && (
-        <div className="mk-metricas-chart-tip" style={{ left: `${(x(hover.day) / W) * 100}%` }}>
-          {dayLabel(hover.day)} · <strong>{nf(hover.followers)}</strong>
-        </div>
-      )}
-      <svg ref={ref} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
-        {showGoal && (
-          <>
-            <line x1={padX} x2={W - padX} y1={y(goal)} y2={y(goal)} className="mk-metricas-goal-line" />
-            <text x={W - padX} y={y(goal) - 4} textAnchor="end" className="mk-metricas-axis">meta {compact(goal)}</text>
-          </>
-        )}
-        <path d={path} fill="none" stroke={color} strokeWidth="2.2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-        {hover && <circle cx={x(hover.day)} cy={y(hover.followers)} r="4" fill={color} />}
-        <text x={padX} y={H - 6} className="mk-metricas-axis">{dayLabel(points[0].day)}</text>
-        <text x={W - padX} y={H - 6} textAnchor="end" className="mk-metricas-axis">{dayLabel(points[points.length - 1].day)}</text>
-      </svg>
-    </div>
-  );
 }
 
 // ─── Tarjetas de estado ──────────────────────────────────────────────────────
@@ -311,122 +251,6 @@ function StatusCard({ acc, alerts, busy, onSync, onDisconnect, onLinkedin, onLin
         )}
       </div>
     </div>
-  );
-}
-
-// ─── Seguidores + metas ──────────────────────────────────────────────────────
-function GoalEditor({ network, month, goal, onSave, busy }) {
-  const [val, setVal] = useState(goal ?? "");
-  useEffect(() => setVal(goal ?? ""), [goal]);
-  const changed = String(val) !== String(goal ?? "");
-  return (
-    <form
-      className="mk-metricas-goal-form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSave(network, month, val === "" ? 0 : Number(val));
-      }}
-    >
-      <label>
-        Meta de {monthName(month)}
-        <input
-          className="adm-input"
-          type="number"
-          min="0"
-          inputMode="numeric"
-          placeholder="Sin meta"
-          value={val}
-          onChange={(e) => setVal(e.target.value)}
-        />
-      </label>
-      {changed && (
-        <button className="adm-btn adm-btn-sm adm-btn-primary" disabled={busy}>
-          Guardar
-        </button>
-      )}
-    </form>
-  );
-}
-
-function FollowersSection({ data, busy, onSaveGoal }) {
-  const [range, setRange] = useState(90);
-  const today = data.today;
-  const month = monthKey(today);
-  const since = new Date(new Date(`${today}T00:00:00Z`).getTime() - range * DAY_MS).toISOString().slice(0, 10);
-
-  const byNet = useMemo(() => {
-    const m = {};
-    for (const s of data.snapshots) (m[s.network] ||= []).push(s);
-    return m;
-  }, [data.snapshots]);
-  const goals = useMemo(() => {
-    const m = {};
-    for (const g of data.goals) m[`${g.network}|${g.month.slice(0, 7)}`] = g.target_followers;
-    return m;
-  }, [data.goals]);
-
-  const networks = data.accounts.filter((a) => a.connected || byNet[a.network]?.length).map((a) => a.network);
-
-  return (
-    <section className="adm-card mk-metricas-section">
-      <div className="mk-metricas-section-head">
-        <h2 className="adm-card-title">Seguidores</h2>
-        <div className="mk-metricas-seg">
-          {[30, 90, 180, 365].map((d) => (
-            <button key={d} className={range === d ? "on" : ""} onClick={() => setRange(d)}>
-              {d} días
-            </button>
-          ))}
-        </div>
-      </div>
-      {!networks.length ? (
-        <p className="mk-metricas-muted">Cuando conectes una red o importes LinkedIn, acá vas a ver cómo crecen tus seguidores.</p>
-      ) : (
-        <div className="mk-metricas-follow-grid">
-          {networks.map((network) => {
-            const all = byNet[network] || [];
-            const points = all.filter((s) => s.day >= since);
-            const last = all[all.length - 1];
-            const first = points[0];
-            const monthStart = [...all].reverse().find((s) => s.day < `${month}-01`) || all.find((s) => monthKey(s.day) === month);
-            const goal = goals[`${network}|${month}`];
-            const pct = goal && last ? Math.min(100, Math.round((last.followers / goal) * 100)) : null;
-            const lastDayOfMonth = new Date(Date.UTC(+month.slice(0, 4), +month.slice(5, 7), 0)).getUTCDate();
-            const remainingDays = Math.max(1, lastDayOfMonth - Number(today.slice(8, 10)) + 1);
-            const missing = goal && last ? goal - last.followers : null;
-            return (
-              <div key={network} className="mk-metricas-follow" style={{ "--net": netColor(network) }}>
-                <div className="mk-metricas-follow-head">
-                  <span className="mk-metricas-dot" />
-                  <span className="mk-metricas-follow-name">{networkLabel(network)}</span>
-                  <span className="mk-metricas-follow-value">{last ? nf(last.followers) : "—"}</span>
-                </div>
-                <div className="mk-metricas-follow-sub">
-                  {first && last && <span>{signed(last.followers - first.followers)} en {range} días</span>}
-                  {monthStart && last && <span> · {signed(last.followers - monthStart.followers)} este mes</span>}
-                </div>
-                <FollowersChart points={points} color={netColor(network)} goal={goal} />
-                <div className="mk-metricas-goal">
-                  <GoalEditor network={network} month={month} goal={goal} onSave={onSaveGoal} busy={busy} />
-                  {pct != null && (
-                    <div className="mk-metricas-goal-progress">
-                      <div className="mk-metricas-bar">
-                        <span style={{ width: `${pct}%` }} />
-                      </div>
-                      <span className="mk-metricas-muted">
-                        {missing > 0
-                          ? `Faltan ${nf(missing)} (≈ ${nf(Math.ceil(missing / remainingDays))} por día)`
-                          : "¡Meta cumplida!"}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </section>
   );
 }
 
@@ -652,8 +476,8 @@ export default function MetricasClient() {
   const [error, setError] = useState(null);
   const [flash, setFlash] = useState(null); // { type, text }
   const [busy, setBusy] = useState(false);
-  const [netFilter, setNetFilter] = useState("all");
-  const [days, setDays] = useState(90);
+  const [pickedNets, setPickedNets] = useState([]); // vacío = todas
+  const [days, setDays] = useState(30);
 
   const load = useCallback(async () => {
     try {
@@ -766,23 +590,47 @@ export default function MetricasClient() {
     run(() => api("/goals", { method: "PUT", body: JSON.stringify({ network, month, target_followers: target }) }), "Meta guardada.");
 
   const pillarById = useMemo(() => Object.fromEntries((data?.pillars || []).map((p) => [p.id, p])), [data]);
-  const posts = useMemo(() => {
-    if (!data) return [];
-    const since = Date.now() - days * DAY_MS;
-    return data.posts
-      .filter((p) => (netFilter === "all" || p.network === netFilter) && p.posted_at && new Date(p.posted_at).getTime() >= since)
-      .map((p) => ({
-        ...p,
-        _title: p.content?.title || (p.caption || "").split("\n")[0].slice(0, 90) || "(sin texto)",
-        _format: p.content?.format || p.media_type || null,
-        _pillar: pillarById[p.content?.pillar_id] || null,
-        _audience: audience(p),
-        _interactions: interactions(p),
-        _rate: engagementRate(p),
-      }));
-  }, [data, days, netFilter, pillarById]);
 
-  const postNetworks = useMemo(() => [...new Set((data?.posts || []).map((p) => p.network))], [data]);
+  // Todas las publicaciones ya con sus números calculados (alcance, interacciones, tasa).
+  const enriched = useMemo(
+    () =>
+      (data?.posts || [])
+        .filter((p) => p.posted_at)
+        .map((p) => ({
+          ...p,
+          _t: new Date(p.posted_at).getTime(),
+          _title: p.content?.title || (p.caption || "").split("\n")[0].slice(0, 90) || "(sin texto)",
+          _format: p.content?.format || p.media_type || null,
+          _pillar: pillarById[p.content?.pillar_id] || null,
+          _audience: audience(p),
+          _interactions: interactions(p),
+          _rate: engagementRate(p),
+        })),
+    [data, pillarById]
+  );
+
+  // Redes con algún dato (seguidores o publicaciones), en el orden de las tarjetas.
+  const dataNets = useMemo(() => {
+    if (!data) return [];
+    const has = new Set([...data.snapshots.map((s) => s.network), ...data.posts.map((p) => p.network)]);
+    return data.accounts.map((a) => a.network).filter((n) => has.has(n));
+  }, [data]);
+  const nets = pickedNets.length ? dataNets.filter((n) => pickedNets.includes(n)) : dataNets;
+
+  const posts = useMemo(() => {
+    const since = Date.now() - days * DAY_MS;
+    return enriched.filter((p) => nets.includes(p.network) && p._t >= since);
+  }, [enriched, nets, days]);
+  const prevPosts = useMemo(() => {
+    const to = Date.now() - days * DAY_MS;
+    const from = to - days * DAY_MS;
+    return enriched.filter((p) => nets.includes(p.network) && p._t >= from && p._t < to);
+  }, [enriched, nets, days]);
+
+  const toggleNet = (n) => setPickedNets((cur) => (cur.includes(n) ? cur.filter((x) => x !== n) : [...cur, n]));
+  const needsAttention = (data?.accounts || []).some(
+    (a) => a.connected && (a.last_error || data.alerts.some((x) => x.network === a.network))
+  );
 
   return (
     <>
@@ -810,61 +658,119 @@ export default function MetricasClient() {
 
         {data && (
           <>
-            <div className="mk-metricas-status-grid">
-              {data.accounts.map((acc) => (
-                <StatusCard
-                  key={acc.network}
-                  acc={acc}
-                  alerts={data.alerts}
-                  busy={busy}
-                  onSync={onSync}
-                  onDisconnect={onDisconnect}
-                  onLinkedin={onLinkedin}
-                  onLinkedinManual={onLinkedinManual}
-                  onYoutube={onYoutube}
-                  onInstagramToken={onInstagramToken}
-                />
-              ))}
-            </div>
-
-            <FollowersSection data={data} busy={busy} onSaveGoal={onSaveGoal} />
-
-            <div className="mk-metricas-filters">
-              <label>
-                Red
-                <select className="adm-input" value={netFilter} onChange={(e) => setNetFilter(e.target.value)}>
-                  <option value="all">Todas</option>
-                  {postNetworks.map((n) => (
-                    <option key={n} value={n}>{networkLabel(n)}</option>
+            {/* Filtros: valen para todo lo de abajo */}
+            <div className="mk-metricas-filterbar">
+              <div className="mk-metricas-filtergroup">
+                <span className="mk-metricas-filterlabel">Período</span>
+                <div className="mk-metricas-seg">
+                  {[[7, "7 días"], [30, "30 días"], [90, "90 días"], [365, "1 año"]].map(([d, label]) => (
+                    <button key={d} className={days === d ? "on" : ""} onClick={() => setDays(d)}>
+                      {label}
+                    </button>
                   ))}
-                </select>
-              </label>
-              <label>
-                Publicadas en
-                <select className="adm-input" value={days} onChange={(e) => setDays(Number(e.target.value))}>
-                  <option value={30}>Últimos 30 días</option>
-                  <option value={90}>Últimos 90 días</option>
-                  <option value={180}>Últimos 6 meses</option>
-                  <option value={365}>Último año</option>
-                </select>
-              </label>
-              <span className="mk-metricas-muted">{posts.length} publicaciones</span>
+                </div>
+              </div>
+              {dataNets.length > 1 && (
+                <div className="mk-metricas-filtergroup">
+                  <span className="mk-metricas-filterlabel">Redes</span>
+                  <div className="mk-metricas-chips">
+                    {dataNets.map((n) => (
+                      <button key={n} className={pickedNets.includes(n) ? "on" : ""} onClick={() => toggleNet(n)} aria-pressed={pickedNets.includes(n)}>
+                        <i style={{ background: netColor(n) }} />
+                        {networkLabel(n)}
+                      </button>
+                    ))}
+                    {pickedNets.length > 0 && (
+                      <button className="mk-metricas-clearchip" onClick={() => setPickedNets([])}>Ver todas</button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
-            <section className="adm-card mk-metricas-section">
-              <div className="mk-metricas-section-head">
-                <h2 className="adm-card-title">Rendimiento por publicación</h2>
-                <span className="mk-metricas-muted">Tocá un encabezado para ordenar</span>
-              </div>
-              <PostsTable posts={posts} />
+            <ConnectionStrip accounts={data.accounts} alerts={data.alerts} />
+
+            {!dataNets.length ? (
+              <section className="adm-card mk-metricas-section">
+                <h2 className="adm-card-title">Todavía no hay datos</h2>
+                <p className="mk-metricas-muted">
+                  Conectá una red o cargá LinkedIn en la sección <a href="#conexiones">Conexiones</a>, al final de esta página. Apenas haya datos, acá
+                  vas a ver los números, los gráficos y las comparaciones.
+                </p>
+              </section>
+            ) : (
+              <>
+                <ResumenTiles data={data} nets={nets} posts={posts} prevPosts={prevPosts} days={days} />
+                <CompararRedes data={data} nets={nets} posts={posts} />
+                <Evolucion data={data} nets={nets} days={days} busy={busy} onSaveGoal={onSaveGoal} />
+                <Posteos posts={posts} tableSlot={<PostsTable posts={posts} />} />
+                <WhatWorks posts={posts} pillars={data.pillars} />
+
+                <details className="mk-metricas-glossary">
+                  <summary>¿Qué significa cada número?</summary>
+                  <dl>
+                    <dt>Alcance</dt>
+                    <dd>Cuántas personas distintas vieron una publicación. En LinkedIn y YouTube la red informa impresiones o vistas, que cuentan cada vez que se mostró.</dd>
+                    <dt>Interacciones</dt>
+                    <dd>Likes, comentarios, guardados y compartidos sumados.</dd>
+                    <dt>Tasa de interacción</dt>
+                    <dd>Interacciones divididas por el alcance. Dice si la gente que te ve reacciona, sin importar cuántos te vean: sirve para comparar publicaciones grandes y chicas.</dd>
+                    <dt>Guardados y compartidos</dt>
+                    <dd>Son las señales más fuertes: alguien decidió volver a verlo o mandárselo a otra persona.</dd>
+                  </dl>
+                </details>
+              </>
+            )}
+
+            <section className="mk-metricas-conexiones" id="conexiones">
+              <details open={needsAttention || !dataNets.length}>
+                <summary>
+                  <h2>Conexiones y carga de datos</h2>
+                  <span className="mk-metricas-muted">Conectar redes, pegar tokens, cargar LinkedIn</span>
+                </summary>
+                <div className="mk-metricas-status-grid">
+                  {data.accounts.map((acc) => (
+                    <StatusCard
+                      key={acc.network}
+                      acc={acc}
+                      alerts={data.alerts}
+                      busy={busy}
+                      onSync={onSync}
+                      onDisconnect={onDisconnect}
+                      onLinkedin={onLinkedin}
+                      onLinkedinManual={onLinkedinManual}
+                      onYoutube={onYoutube}
+                      onInstagramToken={onInstagramToken}
+                    />
+                  ))}
+                </div>
+                <ComoConectar accounts={data.accounts} env={data.env} />
+              </details>
             </section>
-
-            <WhatWorks posts={posts} pillars={data.pillars} />
-
-            <ComoConectar accounts={data.accounts} env={data.env} />
           </>
         )}
       </div>
     </>
+  );
+}
+
+// Una línea por red: dice si está al día, sin tener que abrir las tarjetas.
+function ConnectionStrip({ accounts, alerts }) {
+  return (
+    <div className="mk-metricas-strip" aria-label="Estado de las conexiones">
+      {accounts.map((a) => {
+        const issue = a.last_error || alerts.some((x) => x.network === a.network);
+        const state = !a.connected ? "off" : issue ? "warn" : "ok";
+        const when = a.network === "linkedin" ? a.last_import_at : a.last_sync_at;
+        const text = !a.connected ? "Sin conectar" : issue ? "Con problemas" : when ? `Al día · ${ago(when)}` : "Conectada";
+        return (
+          <a key={a.network} href="#conexiones" className={`mk-metricas-stripitem ${state}`}>
+            <i style={{ background: netColor(a.network) }} />
+            <b>{networkLabel(a.network)}</b>
+            <span>{text}</span>
+          </a>
+        );
+      })}
+    </div>
   );
 }

@@ -1,0 +1,148 @@
+/* Métricas de redes: gráficos, comparadores y tarjetas de resumen. Prefijo .mk-metricas- */
+
+/* ---- Filtros ---- */
+.mk-metricas-filterbar { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; }
+.mk-metricas-filtergroup { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.mk-metricas-filterlabel { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--adm-fg-muted); }
+.mk-metricas-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.mk-metricas-chips button {
+  display: inline-flex; align-items: center; gap: 7px; background: var(--adm-card-bg); border: 1px solid var(--adm-border-mid);
+  border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 12px; font-weight: 600; color: var(--adm-fg-2); cursor: pointer;
+}
+.mk-metricas-chips button i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.mk-metricas-chips button:hover { border-color: var(--adm-primary); }
+.mk-metricas-chips button.on { background: var(--adm-primary); border-color: var(--adm-primary); color: #fff; }
+.mk-metricas-chips button.on i { box-shadow: 0 0 0 2px #fff; }
+.mk-metricas-chips .mk-metricas-clearchip { border-style: dashed; color: var(--adm-fg-muted); }
+.mk-metricas-chips button:focus-visible, .mk-metricas-seg button:focus-visible { outline: 2px solid var(--adm-primary); outline-offset: 2px; }
+
+/* ---- Estado de conexiones (una línea) ---- */
+.mk-metricas-strip { display: flex; flex-wrap: wrap; gap: 8px; }
+.mk-metricas-stripitem {
+  display: inline-flex; align-items: center; gap: 8px; background: var(--adm-card-bg); border: 1px solid var(--adm-border);
+  border-radius: 999px; padding: 6px 14px; font-size: 12px; color: var(--adm-fg-2); text-decoration: none;
+}
+.mk-metricas-stripitem i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.mk-metricas-stripitem b { color: var(--adm-ink); font-weight: 700; }
+.mk-metricas-stripitem.off { opacity: .6; }
+.mk-metricas-stripitem.warn { border-color: #e0a64a; background: #fdf6e6; }
+.mk-metricas-stripitem.ok span::before { content: "✓ "; color: #17663e; font-weight: 700; }
+.mk-metricas-stripitem.warn span::before { content: "! "; color: #9a5b00; font-weight: 700; }
+.mk-metricas-stripitem:hover { border-color: var(--adm-primary); }
+
+/* ---- Tarjetas de resumen ---- */
+.mk-metricas-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.mk-metricas-tile {
+  background: var(--adm-card-bg); border: 1px solid var(--adm-border); border-radius: var(--adm-radius); padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 6px; min-width: 0;
+}
+.mk-metricas-tile-label { font-size: 12px; font-weight: 600; color: var(--adm-fg-2); }
+.mk-metricas-tile-main { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+.mk-metricas-tile-value { font-size: 34px; font-weight: 700; line-height: 1.05; color: var(--adm-ink); }
+.mk-metricas-tile-sub { display: flex; flex-direction: column; gap: 4px; font-size: 12px; min-height: 18px; }
+.mk-metricas-delta { font-weight: 600; font-size: 12px; }
+.mk-metricas-delta.up { color: #17663e; }
+.mk-metricas-delta.down { color: #a3302a; }
+.mk-metricas-delta.flat { color: var(--adm-fg-muted); font-weight: 500; }
+.mk-metricas-delta-ref { font-weight: 500; color: var(--adm-fg-muted); }
+.mk-metricas-breakdown { display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--adm-fg-2); font-size: 11.5px; }
+.mk-metricas-breakdown span { display: inline-flex; align-items: center; gap: 5px; }
+.mk-metricas-breakdown i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+/* ---- Secciones ---- */
+.mk-metricas-sub { margin: 2px 0 0; font-size: 12.5px; color: var(--adm-fg-muted); line-height: 1.5; }
+.mk-metricas-empty {
+  display: flex; flex-direction: column; gap: 6px; background: var(--adm-tinted); border: 1px dashed var(--adm-border-mid);
+  border-radius: var(--adm-radius); padding: 18px; font-size: 13px; color: var(--adm-fg-2); line-height: 1.55;
+}
+.mk-metricas-empty strong { color: var(--adm-ink); }
+
+/* ---- Comparar redes / métricas lado a lado ---- */
+.mk-metricas-cmp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px 28px; }
+.mk-metricas-cmp h3 { margin: 0 0 2px; font-size: 13.5px; font-weight: 700; color: var(--adm-ink); }
+.mk-metricas-cmp-hint { margin: 0 0 10px; font-size: 12px; color: var(--adm-fg-muted); line-height: 1.5; }
+
+/* ---- Barras horizontales ---- */
+.mk-metricas-hbars { position: relative; display: flex; flex-direction: column; gap: 6px; }
+.mk-metricas-hrow {
+  display: grid; grid-template-columns: minmax(80px, 38%) 1fr auto; align-items: center; gap: 10px; padding: 5px 6px;
+  border-radius: 8px; outline: none; border: 1px solid transparent;
+}
+.mk-metricas-hrow.click { cursor: pointer; }
+.mk-metricas-hrow:hover, .mk-metricas-hrow:focus-visible { background: var(--adm-tinted); }
+.mk-metricas-hrow:focus-visible { border-color: var(--adm-primary); }
+.mk-metricas-hrow.on { background: var(--adm-tinted); border-color: var(--adm-primary); }
+.mk-metricas-hrow.nodata { opacity: .55; }
+.mk-metricas-hlabel { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.mk-metricas-hname { font-size: 12.5px; font-weight: 600; color: var(--adm-ink); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.mk-metricas-hsub { font-size: 11px; color: var(--adm-fg-muted); }
+.mk-metricas-htrack { position: relative; height: 22px; display: block; }
+.mk-metricas-hbar { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 4px 4px 0; max-width: 100%; min-width: 3px; transition: width .25s ease; }
+.mk-metricas-hmark { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--adm-ink); opacity: .75; border-radius: 1px; }
+.mk-metricas-hval { font-size: 13px; font-weight: 700; color: var(--adm-ink); min-width: 44px; text-align: right; }
+.mk-metricas-hrow.nodata .mk-metricas-hval { font-weight: 500; font-size: 11.5px; color: var(--adm-fg-muted); }
+
+.mk-metricas-rankhead { display: grid; grid-template-columns: minmax(80px, 38%) 1fr; gap: 10px; padding: 0 6px 4px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--adm-fg-muted); }
+.mk-metricas-rankhead em { text-transform: none; font-style: normal; font-weight: 500; letter-spacing: 0; }
+.mk-metricas-headline {
+  background: var(--adm-tinted); border-left: 3px solid var(--adm-primary); border-radius: 6px; padding: 10px 14px; margin: 4px 0 14px;
+  font-size: 13px; line-height: 1.55; color: var(--adm-fg-2);
+}
+.mk-metricas-chips-row, .mk-metricas-section .mk-metricas-chips { margin-bottom: 4px; }
+
+/* ---- Comparador de publicaciones ---- */
+.mk-metricas-compare { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--adm-border); }
+.mk-metricas-compare-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.mk-metricas-compare-head h3 { margin: 0; font-size: 15px; }
+.mk-metricas-picked { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.mk-metricas-picked li { display: grid; grid-template-columns: 24px 1fr auto; gap: 10px; align-items: baseline; font-size: 12.5px; color: var(--adm-fg-2); }
+.mk-metricas-picked b {
+  display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--adm-primary); color: #fff; font-size: 11px;
+}
+.mk-metricas-picked em { font-style: normal; color: var(--adm-fg-muted); font-size: 11.5px; }
+.mk-metricas-tabledetails { margin-top: 18px; }
+.mk-metricas-tabledetails summary, .mk-metricas-glossary summary { cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--adm-primary); }
+.mk-metricas-tabledetails[open] > summary { margin-bottom: 12px; }
+
+/* ---- Líneas ---- */
+.mk-metricas-line { position: relative; width: 100%; }
+.mk-metricas-line svg { display: block; overflow: visible; }
+.mk-metricas-grid { stroke: var(--adm-border); stroke-width: 1; }
+.mk-metricas-cross { stroke: var(--adm-fg-muted); stroke-width: 1; opacity: .6; }
+.mk-metricas-axis { font-size: 11px; fill: var(--adm-fg-muted); }
+.mk-metricas-legend { list-style: none; margin: 0 0 8px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.mk-metricas-legend li { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--adm-fg-2); }
+.mk-metricas-legend .sw { width: 12px; height: 4px; border-radius: 2px; display: inline-block; }
+
+/* ---- Tooltip ---- */
+.mk-metricas-tip {
+  position: absolute; z-index: 20; pointer-events: none; transform: translate(12px, -110%); background: var(--adm-ink); color: #fff;
+  border-radius: 8px; padding: 8px 11px; font-size: 12px; line-height: 1.45; max-width: 260px; box-shadow: 0 6px 20px rgba(26, 10, 16, .25);
+}
+.mk-metricas-tip.flip { transform: translate(calc(-100% - 12px), -110%); }
+.mk-metricas-tip .strong { font-weight: 700; font-size: 13px; }
+.mk-metricas-tip .muted { color: rgba(255, 255, 255, .72); }
+.mk-metricas-tip .key { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 7px; vertical-align: middle; }
+
+/* ---- Glosario y conexiones ---- */
+.mk-metricas-glossary { background: var(--adm-card-bg); border: 1px solid var(--adm-border); border-radius: var(--adm-radius); padding: 14px 18px; }
+.mk-metricas-glossary dl { margin: 12px 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; font-size: 12.5px; line-height: 1.5; }
+.mk-metricas-glossary dt { font-weight: 700; color: var(--adm-ink); }
+.mk-metricas-glossary dd { margin: 0; color: var(--adm-fg-2); }
+.mk-metricas-conexiones > details { background: var(--adm-card-bg); border: 1px solid var(--adm-border); border-radius: var(--adm-radius); padding: 14px 18px; }
+.mk-metricas-conexiones > details > summary { cursor: pointer; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; list-style-position: inside; }
+.mk-metricas-conexiones > details > summary h2 { display: inline; margin: 0; font-size: 16px; font-family: var(--adm-font-display); font-style: italic; color: var(--adm-ink); }
+.mk-metricas-conexiones > details[open] > summary { margin-bottom: 16px; }
+.mk-metricas-conexiones .mk-metricas-section { padding: 16px 0 0; border: none; box-shadow: none; background: transparent; }
+
+@media (max-width: 640px) {
+  .mk-metricas-hrow { grid-template-columns: 1fr auto; row-gap: 4px; }
+  .mk-metricas-hlabel { grid-column: 1 / -1; }
+  .mk-metricas-htrack { grid-column: 1; }
+  .mk-metricas-rankhead { grid-template-columns: 1fr; }
+  .mk-metricas-tile-value { font-size: 28px; }
+  .mk-metricas-glossary dl { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) { .mk-metricas-hbar { transition: none; } }
