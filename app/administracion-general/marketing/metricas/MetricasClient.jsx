@@ -114,12 +114,13 @@ function FollowersChart({ points, color, goal }) {
 }
 
 // ─── Tarjetas de estado ──────────────────────────────────────────────────────
-function StatusCard({ acc, alerts, busy, onSync, onDisconnect, onLinkedin, onLinkedinManual, onYoutube }) {
+function StatusCard({ acc, alerts, busy, onSync, onDisconnect, onLinkedin, onLinkedinManual, onYoutube, onInstagramToken }) {
   const label = networkLabel(acc.network);
   const left = daysLeft(acc.token_expires_at);
   const fileRef = useRef(null);
   const [channel, setChannel] = useState("");
   const [manualOpen, setManualOpen] = useState(false);
+  const [igToken, setIgToken] = useState("");
   const issue = alerts.find((a) => a.network === acc.network);
 
   let state = { cls: "off", text: "No conectado" };
@@ -168,7 +169,46 @@ function StatusCard({ acc, alerts, busy, onSync, onDisconnect, onLinkedin, onLin
       )}
 
       <div className="mk-metricas-status-actions">
-        {(acc.network === "instagram" || acc.network === "threads") &&
+        {acc.network === "instagram" && (
+          <>
+            {acc.connected && (
+              <button className="adm-btn adm-btn-sm adm-btn-secondary" disabled={busy} onClick={() => onSync("instagram")}>
+                Actualizar
+              </button>
+            )}
+            <form
+              className="mk-metricas-inline-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (igToken.trim()) onInstagramToken(igToken.trim()).then((ok) => ok && setIgToken(""));
+              }}
+            >
+              <input
+                className="adm-input"
+                type="password"
+                autoComplete="off"
+                placeholder={acc.connected ? "Pegar un token nuevo" : "Pegá el token de Instagram"}
+                value={igToken}
+                onChange={(e) => setIgToken(e.target.value)}
+              />
+              <button className="adm-btn adm-btn-sm adm-btn-primary" disabled={busy || !igToken.trim()}>
+                Guardar
+              </button>
+            </form>
+            {!acc.connected && (
+              <p className="mk-metricas-hint">
+                El token sale del panel de Meta. <a href="#como-conectar">Cómo conseguirlo</a>
+              </p>
+            )}
+            {acc.connected && (
+              <button className="mk-metricas-link" disabled={busy} onClick={() => onDisconnect("instagram")}>
+                Desconectar
+              </button>
+            )}
+          </>
+        )}
+
+        {acc.network === "threads" &&
           (acc.configured ? (
             <>
               <a className="adm-btn adm-btn-sm adm-btn-primary" href={`${API}/oauth/${acc.network}`}>
@@ -684,6 +724,30 @@ export default function MetricasClient() {
         return `Canal guardado: ${r.channel.title}.`;
       }
     );
+  // Devuelve true si Meta aceptó el token (para vaciar el campo).
+  const onInstagramToken = async (token) => {
+    setBusy(true);
+    setFlash(null);
+    let ok = false;
+    try {
+      const r = await api("/instagram/token", { method: "POST", body: JSON.stringify({ token }) });
+      const bad = (r.sync?.results || []).find((x) => x.network === "instagram" && x.ok === false);
+      if (bad) throw new Error(`Token guardado, pero no se pudo leer: ${bad.error}`);
+      ok = true;
+      setFlash({
+        type: "success",
+        text: `Instagram conectado${r.account?.username ? `: @${r.account.username}` : ""}${
+          r.account?.followers != null ? ` (${r.account.followers} seguidores)` : ""
+        }.`,
+      });
+    } catch (err) {
+      setFlash({ type: "error", text: err.message });
+    } finally {
+      await load();
+      setBusy(false);
+    }
+    return ok;
+  };
   // Falla si el servidor rechaza los datos, así la ventana muestra el error y sigue abierta.
   const onLinkedinManual = async (data) => {
     setBusy(true);
@@ -758,6 +822,7 @@ export default function MetricasClient() {
                   onLinkedin={onLinkedin}
                   onLinkedinManual={onLinkedinManual}
                   onYoutube={onYoutube}
+                  onInstagramToken={onInstagramToken}
                 />
               ))}
             </div>

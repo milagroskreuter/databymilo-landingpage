@@ -40,35 +40,41 @@ export default function ComoConectar({ accounts, env }) {
 
       <details className="mk-metricas-guide">
         <summary>
-          Instagram (cuenta Creador) <Status ok={env.instagram} />
+          Instagram (cuenta Creador) <Status ok={accounts.find((a) => a.network === "instagram")?.connected} />
         </summary>
+        <p className="mk-metricas-muted">
+          Las apps nuevas de Meta usan el “inicio de sesión unificado”: en vez de autorizar con un botón, generás un token en el panel de Meta y lo
+          pegás acá. No hace falta ninguna variable en Vercel.
+        </p>
         <ol>
           <li>
-            Entrá a <a href="https://developers.facebook.com/apps" target="_blank" rel="noopener noreferrer">developers.facebook.com/apps</a> con
-            tu cuenta de Facebook y tocá <strong>Crear app</strong>.
+            Entrá a <a href="https://developers.facebook.com/apps" target="_blank" rel="noopener noreferrer">developers.facebook.com/apps</a> y
+            abrí tu app (o creala con el caso de uso <strong>Manage messaging &amp; content on Instagram</strong>).
           </li>
           <li>
-            En “caso de uso” elegí <strong>Administrar mensajes y contenido en Instagram</strong> (Instagram API). Si te pregunta el tipo, elegí{" "}
-            <strong>Negocios</strong>. Ponele de nombre algo como “Data by Milo métricas”.
+            Andá a <strong>Use cases → Customize → API setup with Unified login</strong>. En <strong>1. Configure your app</strong> tocá{" "}
+            <strong>Create new configuration</strong>.
           </li>
           <li>
-            En el panel de la app andá a <strong>Instagram → Configuración de la API con inicio de sesión de Instagram</strong>. En{" "}
-            <strong>Configurar el inicio de sesión para empresas</strong>, pegá esta URL en “URL de redireccionamiento de OAuth”:
+            Abrí la vista previa de la configuración, tocá <strong>Edit permissions</strong> y agregá <code>instagram_manage_insights</code> (es el
+            que da las estadísticas). Después tocá <strong>Use this configuration</strong>.
+          </li>
+          <li>
+            En <strong>Redirect URL</strong> pegá esta dirección y guardá:
             <br />
             <Copy text={uri("instagram")} />
           </li>
           <li>
-            En esa misma pantalla vas a ver el <strong>Identificador de la app de Instagram</strong> y la <strong>Clave secreta de la app de Instagram</strong>{" "}
-            (ojo: no son los de Facebook que aparecen arriba). Cargalos en Vercel como <code>INSTAGRAM_APP_ID</code> y <code>INSTAGRAM_APP_SECRET</code>.
+            Más abajo, en <strong>Generate access tokens</strong>, tocá <strong>Add account</strong> e invitá tu cuenta de Instagram como{" "}
+            <strong>Instagram Tester</strong>. Aceptá la invitación en Instagram desde el navegador (Configuración → Permisos del sitio web → Apps y
+            sitios web → Invitaciones de evaluador).
           </li>
           <li>
-            Mientras la app esté “en desarrollo”, solo pueden conectarla las cuentas con un rol. En <strong>Roles de la app → Roles</strong> agregá tu
-            cuenta de Instagram como <strong>Evaluador de Instagram</strong> y aceptá la invitación desde Instagram (Configuración → Apps y sitios web →
-            Invitaciones de evaluador). No hace falta pasar por la revisión de Meta para usarla con tu propia cuenta.
+            Tocá <strong>Generate token</strong> y copialo enseguida: se muestra una sola vez. Pegalo en la tarjeta de Instagram, arriba.
           </li>
           <li>
-            Redeployá en Vercel y tocá <strong>Conectar Instagram</strong> arriba. El token dura 60 días y se renueva solo cada día que corre la lectura
-            automática; si algo falla, te llega un aviso.
+            Si el token vence o deja de funcionar, te llega un aviso: generá uno nuevo de la misma forma y pegalo otra vez. Los datos ya guardados
+            no se pierden.
           </li>
         </ol>
       </details>
