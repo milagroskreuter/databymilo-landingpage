@@ -123,7 +123,13 @@
   aspect-ratio: 9 / 18;
   box-shadow: 0 16px 40px rgba(139, 26, 74, 0.18);
 }
-.mk-links-a-phone iframe { width: 100%; height: 100%; border: 0; display: block; }
+.mk-links-a-mock { height: 100%; overflow-y: auto; padding: 22px 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 12px; }
+.mk-links-a-mock img { width: 64px; height: 64px; border-radius: 999px; object-fit: cover; }
+.mk-links-a-mock strong { font-family: var(--adm-font-display); font-style: italic; font-size: 20px; color: var(--adm-primary); }
+.mk-links-a-mock span { color: var(--adm-accent); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+.mk-links-a-mock p { margin: 4px 0 8px; color: var(--adm-fg-2); }
+.mk-links-a-mock-btn { width: 100%; background: #fff; border: 1.5px solid var(--adm-border-mid); border-radius: 12px; padding: 12px; font-weight: 600; }
+.mk-links-a-mock-btn.is-featured { background: var(--adm-primary); color: #fff; }
 
 /* ---------- Modal ---------- */
 .mk-links-a-overlay {

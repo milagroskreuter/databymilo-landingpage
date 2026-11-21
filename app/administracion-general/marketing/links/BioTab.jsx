@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { api, copyText, fmt } from "./util";
 
 const SOCIALS = [
@@ -15,7 +15,6 @@ export default function BioTab({ links, previewKey, onEdit, onPatch, onReorder, 
   const [saving, setSaving] = useState(false);
   const [dragId, setDragId] = useState(null);
   const [copied, setCopied] = useState("");
-  const iframeRef = useRef(null);
 
   useEffect(() => {
     api("/settings")
@@ -217,13 +216,23 @@ export default function BioTab({ links, previewKey, onEdit, onPatch, onReorder, 
 
       <aside className="mk-links-a-phone-wrap">
         <div className="adm-mini-label" style={{ marginBottom: 8 }}>
-          Así se ve en el celular
+          Maqueta en celular
         </div>
         <div className="mk-links-a-phone">
-          <iframe ref={iframeRef} key={previewKey} src={`/links?preview=${previewKey}`} title="Vista previa de /links" loading="lazy" />
+          <div className="mk-links-a-mock">
+            {page?.photo_url ? <img src={page.photo_url} alt="" /> : null}
+            <strong>{page?.name}</strong>
+            <span>{page?.handle}</span>
+            <p>{page?.bio}</p>
+            {bio.filter((l) => l.active).map((l) => (
+              <div key={l.id} className={`mk-links-a-mock-btn${l.featured ? " is-featured" : ""}`}>
+                {l.title}
+              </div>
+            ))}
+          </div>
         </div>
         <p className="mk-links-a-muted" style={{ marginTop: 8 }}>
-          Los clicks desde esta vista previa no se cuentan.
+          Maqueta simple de la página. Para verla de verdad, usá “Ver /links”.
         </p>
       </aside>
     </div>
