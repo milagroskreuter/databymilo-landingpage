@@ -1,12 +1,8 @@
-import EnConstruccion from "../EnConstruccion";
+import ComunidadClient from "./ComunidadClient";
+import "./comunidad.css";
 
 export const metadata = { title: "Comunidad · Hub" };
 
 export default function Page() {
-  return (
-    <EnConstruccion
-      title="Comunidad"
-      description="Testimonios, preguntas de la audiencia y menciones."
-    />
-  );
+  return <ComunidadClient />;
 }

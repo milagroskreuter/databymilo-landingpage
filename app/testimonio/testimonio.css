@@ -1,0 +1,239 @@
+/* Formulario público /testimonio (área Comunidad de Marketing). */
+
+.mk-comunidad-tform-section {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 64px;
+  align-items: start;
+  padding: 72px 0 96px;
+}
+@media (max-width: 900px) {
+  .mk-comunidad-tform-section { grid-template-columns: 1fr; gap: 40px; padding: 48px 0 72px; }
+}
+
+.mk-comunidad-tform-intro { position: sticky; top: 120px; }
+@media (max-width: 900px) { .mk-comunidad-tform-intro { position: static; } }
+
+.mk-comunidad-tform-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 5vw, 60px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 16px 0 18px;
+}
+.mk-comunidad-tform-title em { font-style: italic; color: var(--rosa); }
+
+.mk-comunidad-tform-sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  margin: 0;
+  max-width: 460px;
+}
+.mk-comunidad-tform-hand { font-size: 26px; margin-top: 22px; transform: rotate(-2deg); display: inline-block; }
+
+.mk-comunidad-tform-card {
+  position: relative;
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 36px 32px;
+  box-shadow: 0 20px 56px rgba(139, 26, 74, 0.16), 0 2px 8px rgba(139, 26, 74, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+@media (max-width: 540px) { .mk-comunidad-tform-card { padding: 34px 20px 26px; } }
+
+.mk-comunidad-tform-badge {
+  position: absolute;
+  top: -18px;
+  right: 26px;
+  width: 50px;
+  height: 50px;
+  background: var(--butter);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 10px rgba(139, 26, 74, 0.14);
+  transform: rotate(10deg);
+}
+
+.mk-comunidad-tform-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.mk-comunidad-tform-row { display: flex; gap: 18px; align-items: flex-start; }
+.mk-comunidad-tform-row .mk-comunidad-tform-field { flex: 1; min-width: 0; }
+
+.mk-comunidad-tform-field { display: flex; flex-direction: column; gap: 8px; }
+.mk-comunidad-tform-field label {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--vino);
+}
+
+.mk-comunidad-tform-input {
+  width: 100%;
+  border: 1.5px dashed rgba(139, 26, 74, 0.35);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink);
+  background: var(--cream-50);
+  outline: none;
+  transition: border-color 180ms;
+}
+.mk-comunidad-tform-input:focus { border-color: var(--rosa); border-style: solid; }
+.mk-comunidad-tform-input::placeholder { color: var(--fg-muted); }
+.mk-comunidad-tform-textarea { resize: vertical; min-height: 130px; line-height: 1.5; }
+
+.mk-comunidad-tform-count {
+  align-self: flex-end;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--fg-muted);
+}
+
+.mk-comunidad-tform-optional {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--fg-muted);
+}
+
+.mk-comunidad-tform-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.mk-comunidad-tform-chip {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vino);
+  background: var(--rosa-50);
+  border: 1px solid rgba(139, 26, 74, 0.14);
+  border-radius: 999px;
+  padding: 5px 11px;
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+}
+.mk-comunidad-tform-chip:hover { background: var(--rosa-100); }
+.mk-comunidad-tform-chip.is-on { background: var(--vino); color: #fff; }
+
+.mk-comunidad-tform-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-top: 20px;
+}
+.mk-comunidad-tform-photo-btn {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(139, 26, 74, 0.4);
+  background: var(--rosa-50);
+  color: var(--vino);
+  font-family: var(--font-accent);
+  font-size: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  transform: rotate(-4deg);
+  transition: transform 200ms;
+}
+.mk-comunidad-tform-photo-btn:hover { transform: rotate(0deg) scale(1.04); }
+.mk-comunidad-tform-photo-btn.has-photo { border-style: solid; border-color: #fff; box-shadow: 0 6px 14px rgba(139, 26, 74, 0.2); }
+.mk-comunidad-tform-photo-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.mk-comunidad-tform-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--fg-3);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.mk-comunidad-tform-consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--cream-100);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  cursor: pointer;
+}
+.mk-comunidad-tform-consent input { margin-top: 3px; accent-color: var(--vino); width: 16px; height: 16px; flex-shrink: 0; }
+
+.mk-comunidad-tform-error {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #a3302a;
+  background: #fdecea;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.mk-comunidad-tform-submit {
+  width: 100%;
+  background: var(--vino);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  cursor: pointer;
+  transition: background 180ms, transform 120ms;
+}
+.mk-comunidad-tform-submit:hover:not(:disabled) { background: var(--rosa); transform: translateY(-1px); }
+.mk-comunidad-tform-submit:disabled { opacity: 0.6; cursor: wait; }
+
+.mk-comunidad-tform-micro {
+  margin: -8px 0 0;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--fg-3);
+}
+
+.mk-comunidad-tform-done { align-items: flex-start; }
+.mk-comunidad-tform-done-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--ink);
+  margin: 0;
+}
+.mk-comunidad-tform-done p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--fg-2);
+  margin: 0;
+}
