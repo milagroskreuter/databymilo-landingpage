@@ -40,7 +40,7 @@ export function Tip({ tip }) {
 
 // ─── Barras horizontales ─────────────────────────────────────────────────────
 // rows: [{ key, label, sub?, value, color, tip?: [{text,strong,muted}], href? }]
-export function HBars({ rows, format = compact, mark, selected, onToggle, max: maxProp, empty = "Sin datos todavía." }) {
+export function HBars({ rows, format = compact, mark, selected, onToggle, max: maxProp, empty = "Sin datos todavía.", noData = "Sin datos" }) {
   const { wrap, tip, show, hide } = useTip();
   const vals = rows.map((r) => r.value).filter((v) => v != null);
   const max = maxProp ?? Math.max(...vals, mark?.value ?? 0, 0);
@@ -76,7 +76,7 @@ export function HBars({ rows, format = compact, mark, selected, onToggle, max: m
                 <span className="mk-metricas-hmark" style={{ left: `${(mark.value / max) * 100}%` }} title={mark.label} />
               )}
             </span>
-            <span className="mk-metricas-hval">{has ? format(r.value) : "Sin datos"}</span>
+            <span className="mk-metricas-hval">{has ? format(r.value) : noData}</span>
           </div>
         );
       })}

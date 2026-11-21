@@ -8,6 +8,7 @@ import { netColor, periodStart } from "./fmt";
 import { ResumenTiles, CompararRedes } from "./Resumen";
 import Evolucion from "./Evolucion";
 import Posteos from "./Posteos";
+import QueFunciona from "./QueFunciona";
 import "./metricas.css";
 import "./metricas-charts.css";
 
@@ -351,125 +352,6 @@ function PostsTable({ posts }) {
   );
 }
 
-// ─── Qué funciona ────────────────────────────────────────────────────────────
-const WEEKDAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-const HOUR_SLOTS = [
-  { id: 0, label: "Madrugada (0–6)", from: 0, to: 6 },
-  { id: 1, label: "Mañana (6–9)", from: 6, to: 9 },
-  { id: 2, label: "Media mañana (9–12)", from: 9, to: 12 },
-  { id: 3, label: "Mediodía (12–15)", from: 12, to: 15 },
-  { id: 4, label: "Tarde (15–18)", from: 15, to: 18 },
-  { id: 5, label: "Tardecita (18–21)", from: 18, to: 21 },
-  { id: 6, label: "Noche (21–24)", from: 21, to: 24 },
-];
-const METRICS = [
-  { id: "interactions", label: "Interacciones promedio", get: (p) => p._interactions, fmt: (v) => nf(v, 0) },
-  { id: "audience", label: "Alcance promedio", get: (p) => p._audience, fmt: (v) => compact(Math.round(v)) },
-  { id: "rate", label: "Tasa de interacción", get: (p) => p._rate, fmt: (v) => `${nf(v, 1)}%` },
-];
-
-function rank(posts, keyFn, labelFn, metric) {
-  const groups = new Map();
-  for (const p of posts) {
-    const k = keyFn(p);
-    const v = metric.get(p);
-    if (k == null || v == null) continue;
-    const g = groups.get(k) || { key: k, sum: 0, n: 0 };
-    g.sum += v;
-    g.n += 1;
-    groups.set(k, g);
-  }
-  return [...groups.values()]
-    .map((g) => ({ ...g, label: labelFn(g.key), avg: g.sum / g.n }))
-    .sort((a, b) => b.avg - a.avg);
-}
-
-function RankBlock({ title, rows, metric, colorFn, note }) {
-  const max = Math.max(...rows.map((r) => r.avg), 0);
-  return (
-    <div className="mk-metricas-rank">
-      <h3>{title}</h3>
-      {!rows.length ? (
-        <p className="mk-metricas-muted">Sin datos suficientes.</p>
-      ) : (
-        rows.map((r, i) => (
-          <div key={r.key} className="mk-metricas-rank-row" title={`${r.n} publicaci${r.n === 1 ? "ón" : "ones"}`}>
-            <span className="mk-metricas-rank-label">
-              {i === 0 && rows.length > 1 && <span className="mk-metricas-star">★</span>}
-              {r.label}
-            </span>
-            <span className="mk-metricas-bar">
-              <span style={{ width: `${max ? (r.avg / max) * 100 : 0}%`, background: colorFn?.(r.key) }} />
-            </span>
-            <span className="mk-metricas-rank-val">{metric.fmt(r.avg)}</span>
-            <span className="mk-metricas-rank-n">{r.n}</span>
-          </div>
-        ))
-      )}
-      {note && <p className="mk-metricas-note">{note}</p>}
-    </div>
-  );
-}
-
-function WhatWorks({ posts, pillars }) {
-  const [metricId, setMetricId] = useState("interactions");
-  const metric = METRICS.find((m) => m.id === metricId);
-  const pillarById = Object.fromEntries(pillars.map((p) => [p.id, p]));
-  const linked = posts.filter((p) => p._pillar).length;
-  const timed = posts.filter((p) => !p.extra?.time_unknown);
-
-  return (
-    <section className="adm-card mk-metricas-section">
-      <div className="mk-metricas-section-head">
-        <h2 className="adm-card-title">Qué funciona</h2>
-        <div className="mk-metricas-seg">
-          {METRICS.map((m) => (
-            <button key={m.id} className={metricId === m.id ? "on" : ""} onClick={() => setMetricId(m.id)}>
-              {m.label}
-            </button>
-          ))}
-        </div>
-      </div>
-      {posts.length < 3 ? (
-        <p className="mk-metricas-muted">Con unas pocas publicaciones más con métricas, acá vas a ver qué formatos, pilares, días y horarios te rinden mejor.</p>
-      ) : (
-        <div className="mk-metricas-rank-grid">
-          <RankBlock title="Por formato" metric={metric} rows={rank(posts, (p) => p._format, (k) => FORMAT_BY_ID[k]?.label || k, metric)} />
-          <RankBlock
-            title="Por pilar"
-            metric={metric}
-            rows={rank(posts, (p) => p._pillar?.id, (k) => pillarById[k]?.name || "—", metric)}
-            colorFn={(k) => pillarById[k]?.color}
-            note={linked < posts.length ? `${posts.length - linked} publicaciones no tienen pieza o pilar asignado en el calendario.` : null}
-          />
-          <RankBlock title="Por red" metric={metric} rows={rank(posts, (p) => p.network, networkLabel, metric)} colorFn={netColor} />
-          <RankBlock
-            title="Por día de publicación"
-            metric={metric}
-            rows={rank(posts, (p) => (p.posted_at ? arWeekdayHour(p.posted_at).weekday : null), (k) => WEEKDAYS[k], metric)}
-          />
-          <RankBlock
-            title="Por horario (hora de Argentina)"
-            metric={metric}
-            rows={rank(
-              timed,
-              (p) => {
-                if (!p.posted_at) return null;
-                const h = arWeekdayHour(p.posted_at).hour;
-                return HOUR_SLOTS.find((s) => h >= s.from && h < s.to)?.id ?? null;
-              },
-              (k) => HOUR_SLOTS[k].label,
-              metric
-            )}
-            note={timed.length < posts.length ? "LinkedIn no informa la hora, así que no entra en este ranking." : null}
-          />
-        </div>
-      )}
-      <p className="mk-metricas-note">La última columna es la cantidad de publicaciones. Con pocas publicaciones por grupo, tomalo como pista y no como regla.</p>
-    </section>
-  );
-}
-
 // ─── Página ──────────────────────────────────────────────────────────────────
 export default function MetricasClient() {
   const [data, setData] = useState(null);
@@ -704,7 +586,7 @@ export default function MetricasClient() {
                 <CompararRedes data={data} nets={nets} posts={posts} />
                 <Evolucion data={data} nets={nets} days={days} busy={busy} onSaveGoal={onSaveGoal} />
                 <Posteos posts={posts} tableSlot={<PostsTable posts={posts} />} />
-                <WhatWorks posts={posts} pillars={data.pillars} />
+                <QueFunciona posts={posts} pillars={data.pillars} />
 
                 <details className="mk-metricas-glossary">
                   <summary>¿Qué significa cada número?</summary>
