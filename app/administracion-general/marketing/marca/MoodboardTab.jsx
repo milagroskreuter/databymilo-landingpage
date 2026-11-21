@@ -92,7 +92,7 @@ export default function MoodboardTab({ brand, saveKey }) {
         <div className="mk-marca-section-head">
           <div>
             <h2 className="mk-marca-h2">Imágenes de referencia</h2>
-            <p className="mk-marca-hint">Se guardan en la biblioteca. El chequeo de coherencia compara cada pieza con las primeras 3.</p>
+            <p className="mk-marca-hint">Se guardan en la biblioteca como referencia visual de la marca.</p>
           </div>
           <button className="adm-btn adm-btn-secondary adm-btn-sm" onClick={() => setPicking(true)}>
             + Agregar

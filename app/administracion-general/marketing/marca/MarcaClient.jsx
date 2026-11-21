@@ -7,7 +7,6 @@ import PlantillasTab from "./PlantillasTab";
 import FotosTab from "./FotosTab";
 import MoodboardTab from "./MoodboardTab";
 import CanvaTab from "./CanvaTab";
-import CoherenciaTab from "./CoherenciaTab";
 import "./marca.css";
 
 const TABS = [
@@ -17,7 +16,6 @@ const TABS = [
   { id: "fotos", label: "Fotos", Comp: FotosTab },
   { id: "moodboard", label: "Moodboard", Comp: MoodboardTab },
   { id: "canva", label: "Canva", Comp: CanvaTab },
-  { id: "coherencia", label: "Chequeo de coherencia", Comp: CoherenciaTab },
 ];
 
 export default function MarcaClient() {

@@ -392,7 +392,7 @@ export default function SistemaTab({ brand, saveKey }) {
   return (
     <div className="mk-marca-stack">
       <div className="adm-alert adm-alert-info mk-marca-intro">
-        Esta es la única fuente de verdad de la marca: la leen las plantillas, el chat IA y el chequeo de coherencia. Cada bloque se
+        Esta es la única fuente de verdad de la marca: la leen las plantillas y las piezas que armás. Cada bloque se
         guarda por separado.
         {ds && (
           <>
@@ -409,7 +409,7 @@ export default function SistemaTab({ brand, saveKey }) {
       <Section title="Tipografías" value={brand.typography} onSave={(v) => saveKey("typography", v)}>
         {(draft, setDraft) => <TypographyEditor draft={draft} setDraft={setDraft} />}
       </Section>
-      <Section title="Voz" hint="Cómo suena la marca. El chat IA escribe con esto." value={brand.voice} onSave={(v) => saveKey("voice", v)}>
+      <Section title="Voz" hint="Cómo suena la marca: tono, palabras sí y palabras no." value={brand.voice} onSave={(v) => saveKey("voice", v)}>
         {(draft, setDraft) => <VoiceEditor draft={draft} setDraft={setDraft} />}
       </Section>
       <Section title="Reglas visuales" value={brand.rules} onSave={(v) => saveKey("rules", v)}>

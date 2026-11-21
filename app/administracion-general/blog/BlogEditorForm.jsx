@@ -371,15 +371,6 @@ export default function BlogEditorForm({ initial, submitLabel, onSubmit, slug, b
             </button>
           )}
           {slug && <Link href={`/blog/${slug}`} target="_blank" className="adm-btn adm-btn-secondary adm-btn-sm">Ver</Link>}
-          {slug && (
-            <Link
-              href={`/administracion-general/marketing/chat?repurpose=${encodeURIComponent(slug)}`}
-              className="adm-btn adm-btn-secondary adm-btn-sm"
-              title={dirty ? "Guardá los cambios antes: el chat usa la versión guardada del post" : "Abrir el chat de Marketing para convertir este post en piezas para redes"}
-            >
-              ✴ Reutilizar en redes
-            </Link>
-          )}
           <Link href={backHref||"/administracion-general/blog"} className="adm-btn adm-btn-secondary adm-btn-sm">← Volver</Link>
         </div>
       </div>

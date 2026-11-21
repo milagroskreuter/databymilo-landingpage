@@ -14,7 +14,6 @@ const BASE = "/administracion-general/marketing";
 const AREAS = [
   { href: `${BASE}/calendario`, icon: "▦", label: "Calendario", desc: "Mes, semana, tablero por estado y series." },
   { href: `${BASE}/ideas`, icon: "✧", label: "Ideas", desc: "Banco de ideas con puntaje y etiquetas." },
-  { href: `${BASE}/chat`, icon: "✴", label: "Chat IA", desc: "Pedile ideas, guiones y captions con tu voz." },
   { href: `${BASE}/marca`, icon: "◐", label: "Marca y diseño", desc: "Paleta, tipografías, voz y bios." },
   { href: `${BASE}/metricas`, icon: "↗", label: "Métricas de redes", desc: "Seguidores y rendimiento por pieza." },
   { href: `${BASE}/links`, icon: "⌁", label: "Links", desc: "Links con seguimiento y embudo a ventas." },
