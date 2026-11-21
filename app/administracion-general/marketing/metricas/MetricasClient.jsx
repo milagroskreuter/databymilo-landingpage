@@ -45,6 +45,7 @@ const monthName = (ym) =>
 
 async function api(path, opts = {}) {
   const res = await fetch(`${API}${path}`, {
+    cache: "no-store",
     ...opts,
     headers: opts.body && !(opts.body instanceof FormData) ? { "Content-Type": "application/json" } : undefined,
   });
